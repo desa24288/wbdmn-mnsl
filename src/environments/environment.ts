@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api: {
+    url: 'http://198.41.35.169:',
+    port: 8080,
+    app: '/webadm_ds'
+  }
 };
 
 /*
