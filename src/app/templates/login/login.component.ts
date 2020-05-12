@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     public usuarioService: UsuarioService
   ) {
     this.lForm = this.formBuilder.group({
-      rutbeneficiario: [null, [Validators.required, rutValidator]],
+      rutusuario: [null, [Validators.required, rutValidator]],
       password: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
     });
   }
@@ -46,13 +46,13 @@ export class LoginComponent implements OnInit {
   autenticacion(value: any) {
     this.load = true;
     // se autentica con el servidor
-    const rutbeneficiario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
-    this.usuarioService.auth(new Login(rutbeneficiario, value.password)).subscribe(
+    const rutusuario = Utils.formatRut(this.lForm.controls.rutusuario.value);
+    this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
       data => {
         const uiwebadmin = {
           token: data.token
         };
-        localStorage.setItem('uiwebadmin', JSON.stringify(uiwebadmin));
+        localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadmin));
         this.load = false;
         this.router.navigate(['home']);
       }, err => {
@@ -65,50 +65,6 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
-  /*
-  onRecovery() {
-
-    this.bsModalRefRecovery = this.bsModalService.show(RecuperarpassComponent, this.setModalRecuperar());
-    this.bsModalRefRecovery.content.onClose.subscribe(estado => {
-      if (estado === true) {
-      }
-    });
-  }
-  */
-
-  /*
-  cambiarpassword() {
-    this.bsModalRefCambiar = this.bsModalService.show(TransitoriapassComponent, this.setModalCambiar(this.lForm.controls['login'].value));
-    this.bsModalRefCambiar.content.onClose.subscribe(estado => {
-      if (estado === true) {
-      }
-    });
-  }
-
-  setModalRecuperar() {
-    let dtModal: any = {};
-    dtModal = {
-      keyboard: false,
-      backdrop: 'static',
-      class: 'modal-dialog-centered modal-md'
-    };
-    return dtModal;
-  }
-
-  setModalCambiar(login: string) {
-    let dtModal: any = {};
-    dtModal = {
-      keyboard: false,
-      backdrop: 'static',
-      class: 'modal-dialog-centered modal-md',
-      initialState: {
-        'login': login
-      }
-    };
-    return dtModal;
-  }
-  */
 
   uimensaje(status: string, texto: string, time: number = 0) {
     this.alerts = [];

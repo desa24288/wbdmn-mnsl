@@ -42,7 +42,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     // cierra la sesion del usuario
     this.usuarioService.logout().subscribe(
       data => {
-        localStorage.removeItem('uiwebadmin');
+        localStorage.removeItem('uiwebadminminsal');
         this.router.navigate(['login']);
       }, err => {
         console.log(err.statusText);
@@ -51,7 +51,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   loadprofile() {
-    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadmin'));
+    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadminminsal'));
     if (uiwebadmin !== null) {
       const decodedoken = this.getDecodedAccessToken(uiwebadmin.token);
       this.profile = new Profile();

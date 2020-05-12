@@ -42,6 +42,11 @@ import { ConsultabonoComponent } from './views/gestion/consulta/consultabono/con
 import { BloqueoComponent } from './views/prestacion/bloqueo/bloqueo.component';
 import { EditarbloqueoComponent } from './views/prestacion/editarbloqueo/editarbloqueo.component';
 import { ConsultaadjuntoComponent } from './views/gestion/consulta/consultaadjunto/consultaadjunto.component';
+import { ClavesusuariosComponent } from './views/administradorusuarios/clavesusuarios/clavesusuarios.component';
+import { MantencionusuariosComponent } from './views/administradorusuarios/mantencionusuarios/mantencionusuarios.component';
+import { PropiedadescuentaComponent } from './views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
+import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
+import { MantenedorperfilesComponent } from './views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +70,12 @@ import { ConsultaadjuntoComponent } from './views/gestion/consulta/consultaadjun
     ConsultabonoComponent,
     BloqueoComponent,
     EditarbloqueoComponent,
-    ConsultaadjuntoComponent
+    ConsultaadjuntoComponent,
+    ClavesusuariosComponent,
+    MantencionusuariosComponent,
+    PropiedadescuentaComponent,
+    PerfilamientomodulosComponent,
+    MantenedorperfilesComponent
   ],
   imports: [
     BrowserModule,

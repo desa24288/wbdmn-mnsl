@@ -10,7 +10,7 @@ export class TokenService {
 
   public get() {
     let token = '';
-    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadmin'));
+    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadminminsal'));
     if (uiwebadmin !== null) {
       token = uiwebadmin.token;
     }
@@ -26,7 +26,7 @@ export class TokenService {
 
   public post() {
     let token = '';
-    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadmin'));
+    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadminminsal'));
     if (uiwebadmin !== null) {
       token = uiwebadmin.token;
     }

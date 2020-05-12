@@ -347,7 +347,7 @@ export class EditarbloqueoComponent implements OnInit, AfterViewInit {
   }
 
   loadprofile() {
-    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadmin'));
+    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadminminsal'));
     if (uiwebadmin !== null) {
       const decodedoken = this.getDecodedAccessToken(uiwebadmin.token);
       this.profile = new Profile();

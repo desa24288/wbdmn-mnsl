@@ -61,6 +61,35 @@
         </div>
       </li>
 
+
+       <!-- Administración de Usuarios-->
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuHerramienta" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Administración Usuarios
+        </a>
+        <div class="dropdown-menu" routerLinkActive="active" aria-labelledby="navbarDropdownMenuHerramienta">
+
+          <!-- <ng-container *ngFor="let formulario of rol['Formularios']"> -->
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" routerLink="/claveusuarios">
+              Administrador de Claves de Usuarios</a>
+          </ng-container>
+
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" routerLink="/mantencionusuarios">
+              Mantención de Usuarios</a>
+          </ng-container>
+
+
+        </div>
+      </li>
+      <!-- -->
+
     </ul>
 
     <!-- Configuracion -->

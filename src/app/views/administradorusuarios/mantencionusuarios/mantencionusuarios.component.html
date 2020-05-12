@@ -1,0 +1,178 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext" style="margin-bottom: -2px;">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ cabecera }}</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container"> 
+  <div class="card">
+    <div class="card-header"> 
+      <div class="row">
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="GRABAR" (click)="onGuardar()"
+            [disabled]="!btnGrabar">
+            <i class="fas fa-save"></i>
+            Grabar</button>
+            <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="LIMPIAR" (click)="onLimpiar()">
+              <i class="fas fa-broom"></i>
+              Limpiar</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1 btn-cerrar" tooltip="CERRAR" (click)="onCerrar()"><i
+          class="fas fa-window-close"></i>
+        Cerrar</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- uForm -->
+      <form novalidate [formGroup]="uForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="form-group col-sm-2">
+            <label for="ruttrabajador" class="col-form-label-sm">RUT USUARIO</label>
+            <input type="text" class="form-control form-control-sm text-uppercase" formControlName="rutusuario">
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="nomtrabajador" class="col-form-label-sm">NOMBRE USUARIO</label>
+            <input type="text" class="form-control form-control-sm" formControlName="nomusuario">
+          </div>
+        </div>
+      </form>
+      <!-- END uForm -->
+      <!-- mForm  -->
+      <form novalidate [formGroup]="mForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="card-header col-md-12 text-center">Seleccione Perfiles para el Usuario</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-5">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Perfiles Disponibles</div>
+              <div class="card-body">
+                <div class="card table-responsive mt-1" style="height: 100px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let perfil of perfildisponibles">
+                        <td>
+                          <input formControlName='perfildisplist' class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangePerfildisp($event, perfil)" id='lm-{{ perfil.CodPerfildisp }}'
+                            [checked]="perfil.Seleccionado_1">
+                          <label class="pointer" for='lm-{{ perfil.CodPerfildisp }}'>
+                            <p class="medium">{{ perfil.CodPerfildisp }}. {{ perfil.GloPerfildisp }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group  mt-5 col-sm-1 text-center">
+            <button type="button" class="btn btn-primary btn-sm" tooltip="AGREGAR PERFIL" (click)="onAgregarperfil()">
+              >></button><br><br><br>
+            <button type="button" class="btn btn-primary btn-sm" tooltip="QUITAR PERFIL" (click)="onQuitarperfil()">
+              <<</button>
+          </div>
+          <div class="form-group col-sm-5">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Perfiles Asignados al Usuario</div>
+              <div class="card-body">
+                <div class="card table-responsive mt-1" style="height: 100px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let perfil of perfilasignados">
+                        <td>
+                          <input formControlName='perfilasiglist' class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangePerfilasig($event, perfil)" id='lm-{{ perfil.CodPerfilasig }}'
+                            [checked]="perfil.Seleccionado_1">
+                          <label class="pointer" for='lm-{{ perfil.CodPerfilasig }}'>
+                            <p class="medium">{{ perfil.CodPerfilasig }}. {{ perfil.GloPerfilasig }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="card-header col-md-12 text-center">Seleccione Compines para el Usuario</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-5">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Compines Disponibles
+              </div>
+              <div class="card-body">
+                <div class="card table-responsive mt-1" style="height: 100px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let compin of compindisponibles">
+                        <td>
+                          <input formControlName='compindisplist' class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangeCompindisp($event, compin)" id='lm-{{ compin.CodCompindisp }}'
+                            [checked]="compin.Seleccionado_1">
+                          <label class="pointer" for='lm-{{ compin.CodCompindisp }}'>
+                            <p class="medium">{{ compin.CodCompindisp }}. {{ compin.GloCompindisp }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group  mt-5 col-sm-1 text-center">
+            <button type="button" class="btn btn-primary btn-sm" tooltip="AGREGAR COMPIN" (click)="onAgregarcompin()">
+              >></button><br><br><br>
+            <button type="button" class="btn btn-primary btn-sm" tooltip="QUITAR COMPIN" (click)="onQuitarcompin()">
+              <<</button>
+          </div>
+          <div class="form-group col-sm-5">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Compines Asignados al Usuario
+              </div>
+              <div class="card-body">
+                <div class="card table-responsive mt-1" style="height: 100px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let compin of compinasignados">
+                        <td>
+                          <input formControlName='compinasiglist' class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangeCompinasig($event, compin)" id='lm-{{ compin.CodCompinasig }}'
+                            [checked]="compin.Seleccionado_1">
+                          <label class="pointer" for='lm-{{ compin.CodCompinasig }}'>
+                            <p class="medium">{{ compin.CodCompinasig }}. {{ compin.GloCompinasig }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- END mForm -->
+     
+
+      <div *ngFor="let alert of alerts">
+        <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+        </alert>
+      </div>
+    </div>
+
+    
+  </div>
+</div>
+
+<swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+<swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+<swal #alertSwalConfirmar title="" text="" type="question" [showCancelButton]="true"> </swal>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>

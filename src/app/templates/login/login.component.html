@@ -7,7 +7,7 @@
 <div class="background-fondo">
 
   <div class="mt-5 text-center">
-    <h3>PORTAL DE ADMINISTRACION CANALES VIRTUALES</h3>
+    <h3>PORTAL DE ADMINISTRACION WEB</h3>
   </div>
 
   <div class="card mx-auto mt-5" style="width: 300px;">
@@ -19,12 +19,12 @@
         <div class="col">
           <form novalidate [formGroup]="lForm" autocomplete="off" spellcheck="false">
             <div class="form-group">
-              <label for="rutbeneficiario">Usuario</label>
-              <input type="text" class="form-control" placeholder="Ingrese rut" formControlName="rutbeneficiario"
+              <label for="rutusuario">Usuario</label>
+              <input type="text" class="form-control" placeholder="Ingrese rut" formControlName="rutusuario"
                 formatRut>
 
               <p class="text-danger text-form-valid"
-                *ngIf="lForm.controls['rutbeneficiario'].invalid && (lForm.controls['rutbeneficiario'].dirty || lForm.controls['rutbeneficiario'].touched)">
+                *ngIf="lForm.controls['rutusuario'].invalid && (lForm.controls['rutusuario'].dirty || lForm.controls['rutusuario'].touched)">
                 Requerido, Rut Invalido</p>
 
             </div>
