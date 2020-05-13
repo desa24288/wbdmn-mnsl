@@ -1,12 +1,12 @@
 export class Estadousuario {
-    id: number;
-    nombre: number;
+    CodEstadousuario: number;
+    GloEstadousuario: string;
 
     constructor(
-        id?: number,
-        nombre?: number
+        CodEstadousuario?: number,
+        GloEstadousuario?: string
     ) {
-        this.id = id;
-        this.nombre = nombre;
+        this.CodEstadousuario = CodEstadousuario;
+        this.GloEstadousuario = GloEstadousuario;
     }
 }

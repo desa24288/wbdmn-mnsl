@@ -387,11 +387,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   compare_serviciosalud(c1: any, c2: any): boolean {
-    return c1 && c2 ? c1 === c2 : c1 === c2;
+    return c1 && c2 ? c1.CodServiciosalud === c2.CodServiciosalud : c1 === c2;
   }
 
   compare_estadousuarios(c1: any, c2: any): boolean {
-    return c1 && c2 ? c1 === c2 : c1 === c2;
+    return c1 && c2 ? c1.CodEstadousuario === c2.CodEstadousuario : c1 === c2;
   }
 
 
