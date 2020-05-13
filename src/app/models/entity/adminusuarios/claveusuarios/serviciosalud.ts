@@ -1,12 +1,12 @@
 export class Serviciosalud {
-    id: number;
-    nombre: number;
+    CodServiciosalud: number;
+    GloServiciosalud: string;
 
     constructor(
-        id?: number,
-        nombre?: number
+        CodServiciosalud?: number,
+        GloServiciosalud?: string
     ) {
-        this.id = id;
-        this.nombre = nombre;
+        this.CodServiciosalud = CodServiciosalud;
+        this.GloServiciosalud = GloServiciosalud;
     }
 }

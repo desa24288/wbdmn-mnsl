@@ -14,6 +14,7 @@ import { BloqueoComponent } from './views/prestacion/bloqueo/bloqueo.component';
 import { ConsultaadjuntoComponent } from './views/gestion/consulta/consultaadjunto/consultaadjunto.component';
 import { ClavesusuariosComponent } from './views/administradorusuarios/clavesusuarios/clavesusuarios.component';
 import { MantencionusuariosComponent } from './views/administradorusuarios/mantencionusuarios/mantencionusuarios.component';
+import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -31,6 +32,7 @@ const routes: Routes = [
 
   { path: 'claveusuarios', component: ClavesusuariosComponent, canActivate: [AuthGuard] },
   { path: 'mantencionusuarios', component: MantencionusuariosComponent, canActivate: [AuthGuard] },
+  { path: 'perfilamiento', component: PerfilamientomodulosComponent, canActivate: [AuthGuard] },
 
   { path: '**', component: ErrorComponent }
 ];

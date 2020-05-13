@@ -5,6 +5,10 @@ import * as jwt_decode from 'jwt-decode';
 import { Profile } from 'src/app/models/entity/usuario/profile';
 import { Rol } from 'src/app/models/entity/usuario/rol';
 import { Formularios } from 'src/app/models/entity/usuario/formularios';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { PropiedadescuentaComponent } from 'src/app/views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
+import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
 
 @Component({
   selector: 'app-menu',
@@ -14,10 +18,12 @@ import { Formularios } from 'src/app/models/entity/usuario/formularios';
 export class MenuComponent implements OnInit, AfterViewInit {
   public profile: Profile;
   public rol: Rol;
+  public bsModalRef: BsModalRef;
 
   constructor(
     private router: Router,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private bsModalService: BsModalService,
   ) { }
 
   ngOnInit() {
@@ -33,6 +39,33 @@ export class MenuComponent implements OnInit, AfterViewInit {
   onHome() {
     this.router.navigate(['/home']);
   }
+
+  modalPropiedadcuenta() {
+    this.bsModalRef = this.bsModalService.show(PropiedadescuentaComponent, this.setModal());
+    this.bsModalRef.content.onClose.subscribe(estado => {
+      if (estado === true) {
+      }
+    });
+  }
+
+  modalMantenedorperfiles() {
+    this.bsModalRef = this.bsModalService.show(MantenedorperfilesComponent, this.setModal());
+    this.bsModalRef.content.onClose.subscribe(estado => {
+      if (estado === true) {
+      }
+    });
+  }
+
+  setModal() {
+    let dtModal: any = {};
+    dtModal = {
+      keyboard: false,
+      backdrop: 'static',
+      class: 'modal-dialog-centered',
+    };
+    return dtModal;
+  }
+
 
   onCerrar() {
     this.cerrarsesion();

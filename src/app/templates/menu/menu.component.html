@@ -85,6 +85,26 @@
               Mantención de Usuarios</a>
           </ng-container>
 
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" routerLink="/perfilamiento">
+              Perfilamiento Módulos</a>
+          </ng-container>
+
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" (click)="modalPropiedadcuenta()">
+              Propiedades Cuenta Usuario SLM</a>
+          </ng-container>
+
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" (click)="modalMantenedorperfiles()">
+              Mantenedor de Perfiles</a>
+          </ng-container>
 
         </div>
       </li>

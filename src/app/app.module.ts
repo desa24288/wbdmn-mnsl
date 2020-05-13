@@ -114,7 +114,9 @@ import { MantenedorperfilesComponent } from './views/administradorperfiles/mante
     ConfirmComponent,
     RegulafechaComponent,
     RegulaformapagoComponent,
-    EditarbloqueoComponent
+    EditarbloqueoComponent,
+    PropiedadescuentaComponent,
+    MantenedorperfilesComponent
   ]
 })
 export class AppModule { }
