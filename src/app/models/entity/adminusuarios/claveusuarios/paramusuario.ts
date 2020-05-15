@@ -1,15 +1,17 @@
 export class Paramusuario {
-    rut: string;
-    nombre: string;
-    estado: string;
+    Col_RutUsuario: string;
+    Col_NombreUsuario: string;
+    Col_CodEstadoUsuario: number;
+    Col_GloEstadoUsuario: string;
 
     constructor(
-        rut?: string,
-        nombre?: string,
-        estado?: string
+        Col_RutUsuario?: string,
+        Col_NombreUsuario?: string,
+        Col_CodEstadoUsuario?: number,
+        Col_GloEstadoUsuario?: string
     ) {
-        this.rut = rut;
-        this.nombre = nombre;
-        this.estado = estado;
+        this.Col_RutUsuario = Col_RutUsuario;
+        this.Col_NombreUsuario = Col_NombreUsuario;
+        this.Col_CodEstadoUsuario = Col_CodEstadoUsuario;
     }
 }

@@ -1,25 +1,25 @@
-export class Perfildisponible{
+export class Perfildisponible {
     // tslint:disable-next-line: variable-name
     AccionPen_1: string;
     // tslint:disable-next-line: variable-name
-    GloPerfildisp: string;
+    id_rollm: string;
     // tslint:disable-next-line: variable-name
-    CodPerfildisp: string;
+    computed: string;
     // tslint:disable-next-line: variable-name
     Seleccionado_1: boolean;
     constructor(
         // tslint:disable-next-line: variable-name
         AccionPen_1?: string,
         // tslint:disable-next-line: variable-name
-        GloPerfildisp?: string,
+        id_rollm?: string,
         // tslint:disable-next-line: variable-name
-        CodPerfildisp?: string,
+        computed?: string,
         // tslint:disable-next-line: variable-name
         Seleccionado_1?: boolean
     ) {
         this.AccionPen_1 = AccionPen_1;
-        this.GloPerfildisp = GloPerfildisp;
-        this.CodPerfildisp = CodPerfildisp;
+        this.id_rollm = id_rollm;
+        this.computed = computed;
         this.Seleccionado_1 = Seleccionado_1;
     }
 }

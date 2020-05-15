@@ -28,7 +28,11 @@
         <div class="form-row">
           <div class="form-group col-sm-2">
             <label for="ruttrabajador" class="col-form-label-sm">RUT USUARIO</label>
-            <input type="text" class="form-control form-control-sm text-uppercase" formControlName="rutusuario">
+            <input appSelecttext type="text" class="form-control form-control-sm text-uppercase" formControlName="rutusuario"
+              placeholder="Ingrese Rut" (focusout)="onBuscarusuario($event.target.value)" formatRut>
+            <p class="text-danger text-form-valid"
+            *ngIf="uForm.controls['rutusuario'].invalid && (uForm.controls['rutusuario'].dirty || uForm.controls['rutusuario'].touched)">
+            Requerido</p>
           </div>
           <div class="form-group col-sm-6">
             <label for="nomtrabajador" class="col-form-label-sm">NOMBRE USUARIO</label>
@@ -46,24 +50,22 @@
           <div class="form-group col-sm-5">
             <div class="card mr-3">
               <div class="card-header col-form-label-sm">Perfiles Disponibles</div>
-              <div class="card-body">
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
                       <tr *ngFor="let perfil of perfildisponibles">
                         <td>
                           <input formControlName='perfildisplist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangePerfildisp($event, perfil)" id='lm-{{ perfil.CodPerfildisp }}'
+                            (change)="onChangePerfildisp($event, perfil)" id='lm-{{ perfil.id_rollm }}'
                             [checked]="perfil.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ perfil.CodPerfildisp }}'>
-                            <p class="medium">{{ perfil.CodPerfildisp }}. {{ perfil.GloPerfildisp }}</p>
+                          <label class="pointer" for='lm-{{ perfil.id_rollm }}'>
+                            <p class="medium">{{ perfil.computed }}</p>
                           </label>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
             </div>
           </div>
           <div class="form-group  mt-5 col-sm-1 text-center">
@@ -72,27 +74,25 @@
             <button type="button" class="btn btn-primary btn-sm" tooltip="QUITAR PERFIL" (click)="onQuitarperfil()">
               <<</button>
           </div>
-          <div class="form-group col-sm-5">
+          <div class="form-group col-sm-6">
             <div class="card mr-3">
               <div class="card-header col-form-label-sm">Perfiles Asignados al Usuario</div>
-              <div class="card-body">
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
                       <tr *ngFor="let perfil of perfilasignados">
                         <td>
                           <input formControlName='perfilasiglist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangePerfilasig($event, perfil)" id='lm-{{ perfil.CodPerfilasig }}'
+                            (change)="onChangePerfilasig($event, perfil)" id='lm-{{ perfil.id_rollm }}'
                             [checked]="perfil.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ perfil.CodPerfilasig }}'>
-                            <p class="medium">{{ perfil.CodPerfilasig }}. {{ perfil.GloPerfilasig }}</p>
+                          <label class="pointer" for='lm-{{ perfil.id_rollm }}'>
+                            <p class="medium">{{ perfil.computed }}</p>
                           </label>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
             </div>
           </div>
         </div>
@@ -104,24 +104,22 @@
             <div class="card mr-3">
               <div class="card-header col-form-label-sm">Compines Disponibles
               </div>
-              <div class="card-body">
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
                       <tr *ngFor="let compin of compindisponibles">
                         <td>
                           <input formControlName='compindisplist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangeCompindisp($event, compin)" id='lm-{{ compin.CodCompindisp }}'
+                            (change)="onChangeCompindisp($event, compin)" id='lm-{{ compin.CodEstablecimiento }}'
                             [checked]="compin.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ compin.CodCompindisp }}'>
-                            <p class="medium">{{ compin.CodCompindisp }}. {{ compin.GloCompindisp }}</p>
+                          <label class="pointer" for='lm-{{ compin.CodEstablecimiento }}'>
+                            <p class="medium">{{ compin.GloEstablecimiento }}</p>
                           </label>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
             </div>
           </div>
           <div class="form-group  mt-5 col-sm-1 text-center">
@@ -130,28 +128,26 @@
             <button type="button" class="btn btn-primary btn-sm" tooltip="QUITAR COMPIN" (click)="onQuitarcompin()">
               <<</button>
           </div>
-          <div class="form-group col-sm-5">
+          <div class="form-group col-sm-6">
             <div class="card mr-3">
               <div class="card-header col-form-label-sm">Compines Asignados al Usuario
               </div>
-              <div class="card-body">
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
                       <tr *ngFor="let compin of compinasignados">
                         <td>
                           <input formControlName='compinasiglist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangeCompinasig($event, compin)" id='lm-{{ compin.CodCompinasig }}'
+                            (change)="onChangeCompinasig($event, compin)" id='lm-{{ compin.CodEstablecimiento }}'
                             [checked]="compin.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ compin.CodCompinasig }}'>
-                            <p class="medium">{{ compin.CodCompinasig }}. {{ compin.GloCompinasig }}</p>
+                          <label class="pointer" for='lm-{{ compin.CodEstablecimiento }}'>
+                            <p class="medium">{{ compin.GloEstablecimiento }}</p>
                           </label>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
             </div>
           </div>
         </div>
