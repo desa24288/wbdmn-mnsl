@@ -4,27 +4,37 @@ import { HttpClient } from '@angular/common/http';
 import { TokenService } from '../utils/token.service';
 import { Observable } from 'rxjs';
 /* Models */
+import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/paramusuario';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClaveusuariosService {
+  private TARGET_URL = environment.api.url.concat(environment.api.port.toString())
+    .concat(environment.api.app).concat('/mantenedor/mantenedor');
 
-  constructor() { }
+  constructor(
+    private httpClient: HttpClient,
+    private tokenService: TokenService
+  ) { }
 
-  public buscarUsuarios(serviciosalud: any): Observable<any> {
-    try {
-      return serviciosalud;
-    } catch (err) {
-      console.log('usuario', serviciosalud, ' no encontrado :(');
-    }
+  public listaUsuario(serviciosalud: number, estadousuarios: number): Observable<Paramusuario[]> {
+    return this.httpClient.get<Paramusuario[]>(
+      this.TARGET_URL.concat('/usuarios/')
+      .concat(serviciosalud.toString()).concat('/')
+      .concat(estadousuarios.toString())
+      , this.tokenService.get());
   }
 
-  public deleteUsuario(rut: any): Observable<any> {
-    try {
-      return rut;
-    } catch (err) {
-      console.log('Error en la acción');
-    }
+  public bloquearUsuario(rut: string): Observable<any> {
+    return this.httpClient.post<string>(
+      this.TARGET_URL.concat('/bloquear_clave/'),
+      { rutusuario: rut });
+  }
+
+  public deleteUsuario(rut: string): Observable<any> {
+    return this.httpClient.post<string>(
+      this.TARGET_URL.concat('/eliminar_usuario/'),
+      { rutusuario: rut });
   }
 }

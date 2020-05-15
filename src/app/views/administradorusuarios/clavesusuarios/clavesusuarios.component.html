@@ -17,7 +17,7 @@
         <div class="row">
           <div class="col-md-10">
             <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="BUSCAR LICENCIAS" (click)="onBuscar()"
-              [disabled]="load"><i class="fas fa-search"></i>
+              [disabled]="!pForm.valid"><i class="fas fa-search"></i>
               BUSCAR</button>
             <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="LIMPAIR FILTROS" (click)="onLimpiar()"
               [disabled]="load"><i class="fas fa-broom"></i>
@@ -33,15 +33,15 @@
     <div class="card">
       <div class="card-body">
         <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
-          <div class="row ml-1 mt-2">
+          <div class="row mt-1 mb-2">
             <div class="form-goup col-sm-4">
               <label for="serviciosalud">Servicio de Salud</label>
               <select class='form-control form-control-sm' name='serviciosalud'
               formControlName='serviciosalud' [compareWith]='compare_serviciosalud'
-              (change)="onSelectServiciosalud($event.target.value)" value="139 - COMPIN LME">
+              (change)="onSelectServiciosalud($event.target.value)">
                 <option *ngFor='let servicios of serviciosalud'
-                  value="{{ servicios }}">
-                  139 - COMPIN LME
+                  value="{{ servicios.NumServicioSalud }}">
+                 {{ servicios.NumServicioSalud }} - {{ servicios.GloServicioSalud }}
                 </option>
               </select>
               <p class="text-danger text-form-valid"
@@ -49,17 +49,17 @@
                 Requerido</p>
             </div>
             <div class="form-goup col-sm-4">
-              <label for="estadousuarios">Estado Usuarios</label>
-              <select class='form-control form-control-sm' name='estadousuarios'
-              formControlName='estadousuarios' [compareWith]='compare_estadousuarios'
-              (change)="onSelectEstadousuarios($event.target.value)" value="99 - TODOS">
-                <option *ngFor='let estados of estadosusuarios'
-                  value="{{ estados }}">
-                  99 - TODOS
+              <label for="estadousuario">Estado Usuarios</label>
+              <select class='form-control form-control-sm' name='estadousuario'
+              formControlName='estadousuario' [compareWith]='compare_estadousuarios'
+              (change)="onSelectEstadousuarios($event.target.value)">
+                <option *ngFor='let estado of estadosusuarios'
+                  value="{{ estado.CodEstadoUsr }}">
+                  {{ estado.CodEstadoUsr }} - {{ estado.GloEstadoUsr }}
                 </option>
               </select>
               <p class="text-danger text-form-valid"
-                *ngIf="pForm.controls['estadousuarios'].invalid && (pForm.controls['estadousuarios'].dirty || pForm.controls['estadousuarios'].touched)">
+                *ngIf="pForm.controls['estadousuario'].invalid && (pForm.controls['estadousuario'].dirty || pForm.controls['estadousuario'].touched)">
                 Requerido</p>
             </div>
           </div>
@@ -87,12 +87,12 @@
                 MODIFICAR USUARIO</span></button>
 
               <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ELIMINAR USUARIO"
-            [disabled]="load" (click)="onEliminarusuario()"><i class="far fa-window-maximize"></i><span
+            [disabled]="load" (click)="onAccion(2)"><i class="far fa-window-maximize"></i><span
               class="btn-span-tool">
               ELIMINAR USUARIO</span></button>
 
               <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="BLOQUEAR USUARIO"
-            [disabled]="load" (click)="onBloquearusuario()"><i class="far fa-window-maximize"></i><span
+            [disabled]="load" (click)="onAccion(1)"><i class="far fa-window-maximize"></i><span
               class="btn-span-tool">
               BLOQUEAR USUARIO</span></button>
 
@@ -119,31 +119,30 @@
             </tr>
           </thead>
           <tbody class="text-nowrap">
-            <tr *ngFor="let usuario of usuarios" class="ml-2">
-              <td><label class="pointer" for="lm--{{ usuario.rut }}">
-                <input type="checkbox" id="lm--{{ usuario.rut }}" (click)='onCheck($event, usuario)' 
-                class="mr-1" />
-                <!-- {{ usuario.FolioCompin }} -->
-                11111111-1
+            <tr *ngFor="let usuario of usuariospag" class="ml-2">
+              <td><label class="pointer" for="lm--{{ usuario.Col_RutUsuario }}">
+                <input type="checkbox" id="lm--{{ usuario.Col_RutUsuario }}" (click)='onCheck($event, usuario)' 
+                  class="mr-1" />
+                  {{ usuario.Col_RutUsuario }}
               </label>
               </td>
-              <!-- <td>{{ usuario.nombre }}</td>
-              <td>{{ usuario.estado }}</td> -->
-              <td>BRUCE WAYNE</td>
-              <td>VIGENTE</td>
+              <td>{{ usuario.Col_NombreUsuario }}</td>
+              <td>{{ usuario.Col_GloEstadoUsuario }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="row mt-2 justify-content-end">
-        <div class="col-sm-10" *ngIf="usuarios.length>8">
-          <pagination class="pagination-sm" [totalItems]="usuarios.length" [itemsPerPage]="8" [previousText]="'Anterior'"
-            [boundaryLinks]="true" [nextText]="'Siguiente'" [firstText]="'&laquo;'" [lastText]="'&raquo;'"
-            (pageChanged)="pageChanged($event)" [(ngModel)]="currentPage" [maxSize]="4">
-          </pagination>
-        </div>
-        <div class="col-sm-2">
-          TOTAL DE REGISTROS: ({{ usuarios.length }})
+      <div class="card-body">
+        <div class="row mt-2 justify-content-end">
+          <div class="col-sm-10" *ngIf="usuarios.length>8">
+            <pagination class="pagination-sm" [totalItems]="usuarios.length" [itemsPerPage]="8" [previousText]="'Anterior'"
+              [boundaryLinks]="true" [nextText]="'Siguiente'" [firstText]="'&laquo;'" [lastText]="'&raquo;'"
+              (pageChanged)="pageChanged($event)" [(ngModel)]="currentPage" [maxSize]="4">
+            </pagination>
+          </div>
+          <div class="col-sm-2">
+            TOTAL DE REGISTROS: ({{ usuarios.length }})
+          </div>
         </div>
       </div>
     </div>

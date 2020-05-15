@@ -1,12 +1,12 @@
 export class Estadousuario {
-    CodEstadousuario: number;
-    GloEstadousuario: string;
+    CodEstadoUsr: number;
+    GloEstadoUsr: string;
 
     constructor(
-        CodEstadousuario?: number,
-        GloEstadousuario?: string
+        CodEstadoUsr?: number,
+        GloEstadoUsr?: string
     ) {
-        this.CodEstadousuario = CodEstadousuario;
-        this.GloEstadousuario = GloEstadousuario;
+        this.CodEstadoUsr = CodEstadoUsr;
+        this.GloEstadoUsr = GloEstadoUsr;
     }
 }

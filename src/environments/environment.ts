@@ -7,7 +7,7 @@ export const environment = {
   api: {
     url: 'http://198.41.35.169:',
     port: 8080,
-    app: '/webadm_ds'
+    app: '/rest_adminusuario_qa'
   }
 };
 

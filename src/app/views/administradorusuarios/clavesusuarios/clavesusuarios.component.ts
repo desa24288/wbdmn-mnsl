@@ -48,6 +48,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   public estadosusuarios: Array<Estadousuario> = [];
   public usuariosseleccionados: Array<Paramusuario> = [];
   public usuarios: Array<Paramusuario> = [];
+  public usuariospag: Array<Paramusuario> = [];
 
   public usuario: Paramusuario = new Paramusuario();
   // private global: Configuracion = new Configuracion();
@@ -63,7 +64,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   ) {
     this.pForm = this.formBuilder.group({
       serviciosalud: [{ value: null, disabled: false }, Validators.required],
-      estadousuarios: [{ value: null, disabled: false }, Validators.required]
+      estadousuario: [{ value: null, disabled: false }, Validators.required]
     });
   }
 
@@ -72,22 +73,37 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.getBusqueda();
+      this.getParam();
     });
   }
 
+  async getParam() {
+    this.progressBar.start();
+    this.load = true;
+    try {
+      this.estadosusuarios = await this.parametroService.estadoUsuario().toPromise();
+      this.serviciosalud = await this.parametroService.servicioSalud().toPromise();
+      this.getBusqueda();
+      this.progressBar.complete();
+      this.load = false;
+    } catch (err) {
+      this.mensaje('danger', err.error.mensaje, 3000);
+      this.progressBar.complete();
+      this.load = false;
+    }
+  }
+
   pageChanged(event: PageChangedEvent): void {
+    this.usuariosseleccionados = [];
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
-    this.usuariosseleccionados = this.usuarios.slice(startItem, endItem);
+    this.usuariospag  = this.usuarios.slice(startItem, endItem);
   }
 
   onSelectServiciosalud(value: any) {
-    console.log(value);
   }
 
   onSelectEstadousuarios(value: any) {
-    console.log(value);
   }
 
   async onCheck(event: any, usuario: Paramusuario) {
@@ -117,44 +133,31 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   onBuscar() {
     if (this.pForm.valid) {
-      this.buscarusuarios();
+      this.buscarUsuarios();
     } else {
       this.validateAllFormFields(this.pForm);
     }
   }
 
-  async buscarusuarios() {
-    if (this.pForm.valid) {
+  async buscarUsuarios() {
       this.load = true;
-      const serviciosalud = this.pForm.controls.serviciosalud.value();
       this.progressBar.start();
-      this.claveusuariosService.buscarUsuarios(
-       serviciosalud
+      const serviciosalud = this.pForm.controls.serviciosalud.value;
+      const estadousuario = this.pForm.controls.estadousuario.value;
+      this.claveusuariosService.listaUsuario(
+       serviciosalud,
+       estadousuario
       ).subscribe(data => {
         this.usuarios = data;
         this.setRowPagination();
         this.progressBar.complete();
         this.load = false;
       }, err => {
-        this.mensaje('danger', err.error.mensaje, 3000);
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
         this.progressBar.complete();
         this.load = false;
-      }
-      );
-    }
-  }
-
-  borrarusuario() {
-    // const numservicio = this.licenciasseleccionadas[0].xNumServicio;
-    // const numformulario = this.licenciasseleccionadas[0].xNumFormulario;
-    // const codtipolm = this.licenciasseleccionadas[0].xCodTipoLM;
-    const rutusuario = this.usuariosseleccionados[0].rut;
-    this.claveusuariosService.deleteUsuario(
-      rutusuario
-    ).subscribe(data => {
-      return data;
-    }
-    );
+      });
   }
 
   // setBusquedaNro(nrolicencia: string) {
@@ -181,17 +184,12 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     const admusuarios = JSON.parse(localStorage.getItem('admusuarios'));
     if (admusuarios !== null) {
       this.pForm.controls.serviciosalud.setValue(admusuarios.serviciosalud);
-      this.pForm.controls.estadousuarios.setValue(admusuarios.estadousuarios);
+      this.pForm.controls.estadousuario.setValue(admusuarios.estadousuario);
       localStorage.setItem('admusuarios', JSON.stringify(admusuarios));
     }
   }
 
-  onLimpiar() {
-    this.pForm.controls.serviciosalud.setValue('');
-    this.pForm.controls.estadousuarios.setValue('');
-  }
-
-  // setParametros(vlicencia: Selectivapendiente) {
+ // setParametros(vlicencia: Selectivapendiente) {
   //   this.licencia = new ParamLicencia(
   //     vlicencia.NumServicioSalud,
   //     vlicencia.AnoRecepcion,
@@ -209,9 +207,14 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   //   localStorage.setItem('licencia', JSON.stringify(this.licencia));
   // }
 
+  onLimpiar() {
+    this.pForm.controls.serviciosalud.setValue('');
+    this.pForm.controls.estadousuario.setValue('');
+  }
+
   setRowPagination() {
     this.currentPage = 1;
-    this.usuariosseleccionados = this.usuarios.slice(0, 8);
+    this.usuariospag = this.usuarios.slice(0, 8);
   }
 
   /*ENVIA DATOS A MODAL */
@@ -235,6 +238,8 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   onModificarusuario() {
+    if (this.validarseleccionuno()) {
+    } else {}
     // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(13, 60));
     // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(60));
     // this.bsModalRef.content.onClose.subscribe(estado => {
@@ -244,33 +249,58 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  onEliminarusuario() {
+  onAccion(codaccion: number) {
     if (this.validarseleccionuno()) {
       // this.setParametros();
-      this.alertSwalConfirmar.title = '¿Desea eliminar Usuario ..'; // <- poner rut usuario
+      let textstart = null;
+      let textend = null;
+
+      switch (codaccion) {
+        case 1:
+          textstart = 'Bloquear';
+          textend = 'Bloqueado';
+          break;
+        case 2:
+          textstart = 'Eliminar';
+          textend = 'Eliminado';
+          break;
+      }
+      const rutusuario =  Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario);
+      this.alertSwalConfirmar.title = `¿Desea ${ textstart } Usuario ${ rutusuario } ?`; // <- poner rut usuario
       this.alertSwalConfirmar.show().then(ok => {
         if (ok.value) {
-          this.borrarusuario();
-          this.alertSwal.title = 'Usuario eliminado';
+          if(codaccion === 1) {
+            this.bloquearusuario(rutusuario);
+          } else if (codaccion === 2) {
+            this.borrarusuario(rutusuario);
+          }
+          this.alertSwal.title = `Usuario ${ rutusuario } ${ textend }`;
           this.alertSwal.show();
-          this.getBusqueda();
-          this.usuariosseleccionados = [];
         }
+        this.buscarUsuarios();
+        this.usuariosseleccionados = [];
       });
     }
   }
 
-  onBloquearusuario() {
-    // const recursorep: Recursoreposicion = this.licenciasseleccionadas[0];
-    // if (this.validarseleccionuno()) {
-    //   this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicenciamodificar(2, recursorep));
-    //   this.bsModalRef.content.onClose.subscribe(estado => {
-    //     if (estado === true) {
-    //       this.licenciasseleccionadas = [];
-    //       this.getBusqueda();
-    //     }
-    //   });
-    // }
+  bloquearusuario(rutusuario: string) {
+    // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
+    this.claveusuariosService.bloquearUsuario(
+      rutusuario
+    ).subscribe(data => {
+      return true;
+    }
+    );
+  }
+
+  borrarusuario(rutusuario: string) {
+    // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
+    this.claveusuariosService.deleteUsuario(
+      rutusuario
+    ).subscribe(data => {
+      return true;
+    }
+    );
   }
 
   onReiniciarcontrasena() {
@@ -387,11 +417,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   compare_serviciosalud(c1: any, c2: any): boolean {
-    return c1 && c2 ? c1.CodServiciosalud === c2.CodServiciosalud : c1 === c2;
+    return c1 && c2 ? c1.NumServicioSalud === c2.NumServicioSalud : c1 === c2;
   }
 
   compare_estadousuarios(c1: any, c2: any): boolean {
-    return c1 && c2 ? c1.CodEstadousuario === c2.CodEstadousuario : c1 === c2;
+    return c1 && c2 ? c1.CodEstadoUsr === c2.CodEstadoUsr : c1 === c2;
   }
 
 

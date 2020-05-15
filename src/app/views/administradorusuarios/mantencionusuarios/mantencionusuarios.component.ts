@@ -8,13 +8,12 @@ import { Subject } from 'rxjs';
 import { NgProgressComponent } from '@ngx-progressbar/core';
 /* SERVICES */
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
+import { MantencionusuariosService } from 'src/app/services/administradorusuarios/mantencionusuarios.service';
 /* MODELS */
 import { MensajeSweetAlert } from 'src/app/models/utils/mensaje';
-import { Userprofile } from 'src/app/config/userprofile';
-import { Perfilasignado } from 'src/app/models/entity/adminusuarios/mantencionusuarios/perfilasignado';
 import { Perfildisponible } from 'src/app/models/entity/adminusuarios/mantencionusuarios/perfildisponible';
-import { Compinasignado } from 'src/app/models/entity/adminusuarios/mantencionusuarios/compingasignado';
 import { Compindisponible } from 'src/app/models/entity/adminusuarios/mantencionusuarios/compindiponible';
+import { Utils } from 'src/app/models/utils/utils';
 
 @Component({
   selector: 'app-mantencionusuarios',
@@ -36,31 +35,31 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   public estado = false;
   public loading = false;
 
-  // public datasolicitud: Obtienesolicitud = new Obtienesolicitud();
-  // public obtienesolicitud: Obtienesolicitud = new Obtienesolicitud();
-  // public solicitud: Solicitud = new Solicitud();
-  // public grabarsolicitud: Grabarsolicitud = null;
+  public perfilasiggrilla: Array<Perfildisponible> = [];
+  public arrperfilasig: Array<Perfildisponible> = [];
 
-  public perfilasignados: Array<Perfilasignado> = [];
-  public perfilasiggrilla: Array<Perfilasignado> = [];
-  public arrperfilasig: Array<Perfilasignado> = [];
+  public perfilasignados: Array<Perfildisponible> = [];
+
   public perfildisponibles: Array<Perfildisponible> = [];
-  public compinasignados: Array<Compinasignado> = [];
+  public arrperfildisp: Array<Perfildisponible> = [];
+
+  public compinasignados: Array<Compindisponible> = [];
   public compindisponibles: Array<Compindisponible> = [];
 
   public cabecera = 'Mantención de Usuarios';
   public btnGrabar = false;
-  public profile: Userprofile = new Userprofile();
+
   public mensajeSweetAlert: MensajeSweetAlert = new MensajeSweetAlert();
   constructor(
     public router: Router,
     public formBuilder: FormBuilder,
+    public mantencionService: MantencionusuariosService,
     private activatedRoute: ActivatedRoute
   ) {
 
     this.uForm = this.formBuilder.group(
       {
-        rutusuario: [{ value: null, disabled: true }, Validators.required],
+        rutusuario: [{ value: null, disabled: false }, Validators.required],
         nomusuario: [{ value: null, disabled: true }, Validators.required]
       });
 
@@ -74,36 +73,11 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log(this.profile.rutusuario);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.setData();
     });
-  }
-
-  async setData() {
-    try {
-      this.progressBar.start();
-      // this.xFolioCompin = this.paramLicencia.NumServicioSalud + '-' +
-      //                      this.paramLicencia.AnoRecepcion + '-' +
-      //                      this.paramLicencia.FolioCompin + '-' +
-      //                      this.paramLicencia.CorrelHijo;
-      // this.uForm.controls.nrolicencia.setValue(this.paramLicencia.NumServicio + '-' +
-      //   this.paramLicencia.NumFormulario);
-      // this.uForm.controls.foliocompin.setValue(this.xFolioCompin);
-      // this.uForm.controls.ruttrabajador.setValue(this.paramLicencia.RutTrabajador);
-      // this.uForm.controls.nomtrabajador.setValue(this.paramLicencia.NombresTra);
-
-      // this.datasolicitud =
-      // await this.pendienteService.postObtienesolicitud(this.obtienesolicitud).toPromise();
-      // this.perfilasiggrilla = this.datasolicitud.perfilasignadas;
-      this.checkDocumentos();
-      this.progressBar.complete();
-    } catch (err){
-      this.progressBar.complete();
-    }
   }
 
   checkDocumentos() {
@@ -118,10 +92,10 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  inDocumento(perfil: Perfilasignado) {
+  inPerfil(perfil: Perfildisponible) {
     let index = 0;
-    for (const lista of this.arrperfilasig) {
-      if (perfil.CodPerfilasig === lista.AccionPen_1) {
+    for (const lista of this.arrperfildisp) {
+      if (perfil.id_rollm === lista.AccionPen_1) {
         return index;
       } else {
         return index++;
@@ -130,8 +104,64 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
     return -1;
   }
 
-  setGrabar() {
+  async onBuscarusuario(value: any) {
+    // Rut testing:
+    // 11230223-9
+    // 18058988-0
+    if (value == null || value === '') {
+      return;
+    } else {
+      this.progressBar.start();
+      this.load = true;
+      const rutusuario = Utils.formatRut(this.uForm.controls.rutusuario.value);
+      console.log(rutusuario);
+      this.mantencionService.getNombreUsuario(rutusuario).subscribe( res => {
+        this.uForm.controls.nomusuario.setValue(res);
+        console.log(JSON.stringify(res));
+      }, err => {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+        this.progressBar.complete();
+        this.load = false;
+      });
+      await this.mantencionService.getPerfilesDisponibles(rutusuario).subscribe( res => {
+        this.perfildisponibles = res;
+      }, err => {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+        this.progressBar.complete();
+        this.load = false;
+      });
+      await this.mantencionService.getPerfilesUsuario(rutusuario).subscribe( res => {
+        this.perfilasignados = res;
+      }, err => {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+        this.progressBar.complete();
+        this.load = false;
+      });
+      await this.mantencionService.getCompinesDisponibles(rutusuario).subscribe( res => {
+        this.compindisponibles = res;
+      }, err => {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+        this.progressBar.complete();
+        this.load = false;
+      });
+      await this.mantencionService.getCompinesUsuario(rutusuario).subscribe( res => {
+        this.compinasignados = res;
+      }, err => {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+        this.progressBar.complete();
+        this.load = false;
+      });
+      this.progressBar.complete();
+      this.load = false;
+    }
+  }
 
+  setGrabar() {
   }
 
   async onGuardar() {
@@ -178,7 +208,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       this.router.navigate(['/home']);
   }
 
-  onChangePerfilasig(event: any, value: Perfilasignado) {
+  onChangePerfilasig(event: any, value: Perfildisponible) {
     // tslint:disable-next-line: radix
     // documentoid.id = parseInt(value.CodPendiente_1);
     if (event.target.checked) {
@@ -190,15 +220,17 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
 
   onChangePerfildisp(event: any, value: Perfildisponible) {
     // tslint:disable-next-line: radix
-    // documentoid.id = parseInt(value.CodPendiente_1);
+    // const codperfildisp = parseInt(value.id_rollm);
     if (event.target.checked) {
-      console.log(value);
+      this.arrperfildisp.push(value);
     } else {
-      // this.arrdocumento.splice(this.inDocumento(documentoid), 1);
+      // this.arrperfildisp.splice(this.inPerfil(value), 1);
+      this.arrperfildisp.splice(this.arrperfildisp.findIndex( x => x.id_rollm === value.id_rollm), 1);
     }
+    console.log(this.arrperfildisp);
   }
 
-  onChangeCompinasig(event: any, value: Compinasignado) {
+  onChangeCompinasig(event: any, value: Compindisponible) {
     // tslint:disable-next-line: radix
     // documentoid.id = parseInt(value.CodPendiente_1);
     if (event.target.checked) {
