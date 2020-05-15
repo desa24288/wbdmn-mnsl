@@ -1,0 +1,88 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="informecaducados">Informe Caducados</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container">
+  <div class="card" style="margin-top: -16px;">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-10">
+          <button type="button" class="btn btn-primary btn-sm ml-1" [disabled]="load || !fForm.valid"
+            tooltip=" BUSCAR BONO" (click)="onBuscarFecha()"><i class="fas fa-search"></i>
+            BUSCAR</button>
+          <button type="button" class="btn btn-primary btn-sm ml-2" [disabled]="load" tooltip="LIMPIAR"
+            (click)="onLimpiar()"><i class="fas fa-broom"></i>
+            LIMPIAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body div-top">
+    <tabset #tabBusqueda>
+      <tab customClass="tabClass" heading="Fecha Proceso" id="tabFolioBono">
+        <form novalidate [formGroup]="fForm" autocomplete="off" spellcheck="false">
+          <div class="row ml-1 mt-2">
+            <div class="form-group col-md-2">
+              <label for="fechadesde" class="col-form-label-sm">Fecha Desde</label>
+              <input type="text" class="form-control form-control-sm" placeholder="DD/MM/YYYY" [bsConfig]="bsConfig"
+                bsDatepicker placement="right" formControlName="fechadesde">
+              <p class="text-danger text-form-valid"
+                *ngIf="fForm.controls['fechadesde'].invalid && fForm.controls['fechadesde'].touched">
+                Requerido, Fecha Desde Menor a Termino
+              </p>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="fechahasta" class="col-form-label-sm">Fecha Desde</label>
+              <input type="text" class="form-control form-control-sm" placeholder="DD/MM/YYYY" [bsConfig]="bsConfig"
+                bsDatepicker placement="right" formControlName="fechahasta">
+              <p class="text-danger text-form-valid"
+                *ngIf="fForm.controls['fechahasta'].invalid && fForm.controls['fechahasta'].touched">
+                Requerido, Fecha Hasta Mayor a Inicio
+              </p>
+            </div>
+          </div>
+        </form>
+      </tab>
+    </tabset>
+  </div>
+
+  <div style="float:left;" *ngFor="let alert of alerts">
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+    </alert>
+  </div>
+
+  <div class="card-body div-top">
+    <div class="table-responsive" style="height: 280px;">
+      <table class="table table-striped">
+        <thead class="table-header-text">
+          <tr>
+            <th>Fecha Proceso</th>
+            <th>Nro Lote</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody class="table-body-text text-nowrap">
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"></swal>
+
+<swal #alertSwalOK title="" text="" type="success" [showCancelButton]="false"> </swal>
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
