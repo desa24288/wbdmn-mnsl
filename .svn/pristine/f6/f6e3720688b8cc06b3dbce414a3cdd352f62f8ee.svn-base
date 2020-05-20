@@ -1,0 +1,62 @@
+<div class="loading-container">
+  <div class="card">
+      <div class="card-header">{{ cabecera }}</div>
+      <div class="card-body">
+          <form [formGroup]="lForm" novalidate autocomplete="off" spellcheck="false">
+              <div *ngFor="let alert of alerts" class="text-center">
+                  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                      {{ alert.msg }}
+                  </alert>
+              </div>
+
+              <div class="form-row mb-3">
+                <div class="col-sm-4 ml-2">Código Perfil </div>
+                <div class="col-sm-2"><input type="text" class="form-control form-control-sm"
+                   formControlName='codperfil'/> </div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-4 ml-2">Descripción Perfil</div>
+                <div class="col-sm-7"><input type="text" class="form-control form-control-sm" (focusout)="onFocusDescperfil()"
+                formControlName='descperfil' /></div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-4 ml-2">Tipo Perfil </div>
+                <select class="col-sm-7" (change)="onChangeTipoperfil($event.target.value)" formControlName="tipoperfil">
+                  <option *ngFor="let tipoperfil of tipoperfiles" value="tipoperfil">
+                  </option>
+                </select>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-4 ml-2">Estado Perfil </div>
+                <select class="col-sm-7" (change)="onChangeEstadoperfil($event.target.value)" formControlName="estadoperfil">
+                  <option *ngFor="let estadoperfil of estadosperfiles" value="estadoperfil">
+                  </option>
+                </select>
+              </div>
+
+          </form>
+      </div>
+      <div class="card-header">
+          <div class="row">
+              <div class="col-md-6">
+                  <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="ACTUALIZAR PROPIEDADES"
+                      (click)="onGuardar()"><i class="fas fa-save"></i>
+                      GUARDAR</button>
+              </div>
+              <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="CERRAR" (click)="onCerrar()">
+                      <i class="fas fa-window-close"></i>
+                      CERRAR</button>
+              </div>
+          </div>
+      </div>
+
+      <swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+
+      <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+  </div>
+</div>
