@@ -1,0 +1,196 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="informecaducados">Consulta Bonos</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container">
+  <div class="card" style="margin-top: -16px;">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-10">
+          <button type="button" class="btn btn-primary btn-sm ml-1" [disabled]="load" tooltip=" BUSCAR BONO"
+            (click)="onBuscar()"><i class="fas fa-search"></i>
+            BUSCAR</button>
+          <button type="button" class="btn btn-primary btn-sm ml-2" [disabled]="load" tooltip="LIMPIAR"
+            (click)="onLimpiar()"><i class="fas fa-broom"></i>
+            LIMPIAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body div-top">
+    <tabset #tabBusqueda>
+      <tab customClass="tabClass" heading="Rut Beneficiario" id="tabFechaDesdeHastaRutB" (selectTab)="onSelect($event)">
+        <form novalidate [formGroup]="fForm" autocomplete="off" spellcheck="false">
+          <div class="row ml-1 mt-2">
+            <div class="form-group col-md-2">
+              <label for="fechadesde" class="col-form-label-sm">Fecha Desde</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY"
+                [bsConfig]="bsConfig" bsDatepicker placement="right" formControlName="fechadesde">
+              <p class="text-danger text-form-valid"
+                *ngIf="fForm.controls['fechadesde'].invalid && fForm.controls['fechadesde'].touched">
+                Requerido, Fecha Desde Menor a Termino
+              </p>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="fechahasta" class="col-form-label-sm">Fecha Hasta</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY"
+                [bsConfig]="bsConfig" bsDatepicker placement="right" formControlName="fechahasta">
+              <p class="text-danger text-form-valid"
+                *ngIf="fForm.controls['fechahasta'].invalid && fForm.controls['fechahasta'].touched">
+                Requerido, Fecha Hasta Mayor a Inicio
+              </p>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="rutbeneficiario" class="col-form-label-sm">Rut Beneficiario</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="0000000000-0"
+                formControlName="rutbeneficiario" formatRut>
+              <p class="text-danger text-form-valid"
+                *ngIf="fForm.controls['rutbeneficiario'].invalid && fForm.controls['rutbeneficiario'].touched">
+                Requerido
+              </p>
+            </div>
+            <div class="form-group col-md-2 align-self-end">
+              <button type="button" class="btn btn-primary btn-sm ml-2" [disabled]="load || !estadobusquedaf"
+                tooltip="EXPORTAR A EXCEL" (click)="onExportarRutBeneficiario()"><i class="fas fa-file-excel"></i>
+                EXPORTAR</button>
+            </div>
+          </div>
+        </form>
+      </tab>
+
+      <tab customClass="tabClass" heading="Rut Prestador" id="tabFechaDesdeHastaRutP" (selectTab)="onSelect($event)">
+        <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
+          <div class="row ml-1 mt-2">
+            <div class="form-group col-md-2">
+              <label for="fechadesde" class="col-form-label-sm">Fecha Desde</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY"
+                [bsConfig]="bsConfig" bsDatepicker placement="right" formControlName="fechadesde">
+              <p class="text-danger text-form-valid"
+                *ngIf="pForm.controls['fechadesde'].invalid && pForm.controls['fechadesde'].touched">
+                Requerido, Fecha Desde Menor a Termino
+              </p>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="fechahasta" class="col-form-label-sm">Fecha Hasta</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY"
+                [bsConfig]="bsConfig" bsDatepicker placement="right" formControlName="fechahasta">
+              <p class="text-danger text-form-valid"
+                *ngIf="pForm.controls['fechahasta'].invalid && pForm.controls['fechahasta'].touched">
+                Requerido, Fecha Hasta Mayor a Inicio
+              </p>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="rutprestador" class="col-form-label-sm">Rut Prestador</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="0000000000-0"
+                formControlName="rutprestador" formatRut>
+              <p class="text-danger text-form-valid"
+                *ngIf="pForm.controls['rutprestador'].invalid && pForm.controls['rutprestador'].touched">
+                Requerido
+              </p>
+            </div>
+            <div class="form-group col-md-2 align-self-end">
+              <button type="button" class="btn btn-primary btn-sm ml-2" [disabled]="load || !estadobusquedap"
+                tooltip="EXPORTAR A EXCEL" (click)="onExportarRutPrestador()"><i class="fas fa-file-excel"></i>
+                EXPORTAR</button>
+            </div>
+          </div>
+        </form>
+      </tab>
+
+      <tab customClass="tabClass" heading="Folio Bono" id="tabFolioBono" (selectTab)="onSelect($event)">
+        <form novalidate [formGroup]="bForm" autocomplete="off" spellcheck="false">
+          <div class="row ml-1 mt-2">
+            <div class="form-group col-md-2">
+              <label for="foliobono" class="col-form-label-sm">Folio Bono</label>
+              <input type="text" appSelecttext class="form-control form-control-sm" placeholder="000000000"
+                formControlName="foliobono">
+              <p class="text-danger text-form-valid"
+                *ngIf="bForm.controls['foliobono'].invalid && bForm.controls['foliobono'].touched">
+                Requerido
+              </p>
+            </div>
+            <div class="form-group col-md-2 align-self-end">
+              <button type="button" class="btn btn-primary btn-sm ml-2" [disabled]="load || !estadobusquedab"
+                tooltip="EXPORTAR A EXCEL" (click)="onExportarFolioBono()"><i class="fas fa-file-excel"></i>
+                EXPORTAR</button>
+            </div>
+          </div>
+        </form>
+      </tab>
+    </tabset>
+  </div>
+
+  <div style="float:left;" *ngFor="let alert of alerts">
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+    </alert>
+  </div>
+
+  <div class="card-body div-top">
+    <div class="table-responsive" style="height: 490px;">
+      <table class="table table-striped">
+        <thead class="table-header-text">
+          <tr>
+            <th>Folio Bono</th>
+            <th>Estado</th>
+            <th>Sub Estado</th>
+            <th>Origen Venta</th>
+            <th>Fecha Emisión</th>
+            <th>Rut Beneficiario</th>
+            <th>Prestador</th>
+            <th class="text-rigth">Moto Total</th>
+            <th class="text-rigth">Moto Copago</th>
+          </tr>
+        </thead>
+        <tbody class="table-body-text-dos text-nowrap">
+          <!-- <tr *ngFor="let consultabono of consultabonospag">
+            <td> {{ consultabono.FolioBono }} </td>
+            <td> {{ consultabono.GloEstadoBono }} </td>
+            <td> {{ consultabono.SubEstado }} </td>
+            <td> {{ consultabono.GloOrigenVenta }} </td>
+            <td> {{ consultabono.FechaMovBono }} </td>
+            <td> {{ consultabono.RutPaciente }} </td>
+
+            <td> {{ consultabono.RutPrestador }} {{ consultabono.NombrePrestador }} </td>
+            <td class="text-rigth">$ {{ consultabono.TotMontoTotal | number }} </td>
+            <td class="text-rigth">$ {{ consultabono.TotMontoCopago | number }} </td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-header">
+    <div class="row" style="margin-bottom: -16px;">
+      <!--
+      <div class="col-md-3">
+        <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="CERRAR" (click)="onCerrar()"><i
+            class="fas fa-window-close"></i>
+          CERRAR</button>
+      </div>
+              -->
+      <div class="col-md-9">
+        <pagination *ngIf="consultabonos.length > 10" class="pagination-sm" [totalItems]="consultabonos.length" 
+          [itemsPerPage]="10" [previousText]="'Anterior'" [nextText]="'Siguiente'" [firstText]="'&laquo;'" 
+          [lastText]="'&raquo;'" (pageChanged)="pageChanged($event)" [(ngModel)]="currentPage">
+        </pagination>
+      </div>
+      <div class="col-md-3 text-left">
+        RESULTADO (TOTAL DE REGISTROS: {{ consultabonos.length }})
+      </div>
+    </div>
+  </div>
+</div>
+
+<swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"></swal>
+
+<swal #alertSwalOK title="" text="" type="success" [showCancelButton]="false"> </swal>
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
