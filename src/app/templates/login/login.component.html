@@ -19,12 +19,12 @@
         <div class="col">
           <form novalidate [formGroup]="lForm" autocomplete="off" spellcheck="false">
             <div class="form-group">
-              <label for="rutusuario">Usuario</label>
-              <input type="text" class="form-control" placeholder="Ingrese rut" formControlName="rutusuario"
+              <label for="rutbeneficiario">Usuario</label>
+              <input type="text" class="form-control" placeholder="Ingrese rut" formControlName="rutbeneficiario"
                 formatRut>
 
               <p class="text-danger text-form-valid"
-                *ngIf="lForm.controls['rutusuario'].invalid && (lForm.controls['rutusuario'].dirty || lForm.controls['rutusuario'].touched)">
+                *ngIf="lForm.controls['rutbeneficiario'].invalid && (lForm.controls['rutbeneficiario'].dirty || lForm.controls['rutbeneficiario'].touched)">
                 Requerido, Rut Invalido</p>
 
             </div>

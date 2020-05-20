@@ -57,8 +57,6 @@ export class MantencionusuariosService {
 
   public postActualizarPerfiles(actualizarperfil: Actualizarperfiles): Observable<any> {
     return this.httpClient.post<Actualizarperfiles>(
-      this.TARGET_URL_PERFILES.concat('/bloquear_clave/'), actualizarperfil);
+      this.TARGET_URL_PERFILES.concat('/perfiles/'), actualizarperfil);
   }
-
-
 }
