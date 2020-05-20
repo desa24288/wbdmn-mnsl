@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     public usuarioService: UsuarioService
   ) {
     this.lForm = this.formBuilder.group({
-      rutusuario: [null, [Validators.required, rutValidator]],
+      rutbeneficiario: [null, [Validators.required, rutValidator]],
       password: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
     });
   }
@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(value: any) {
-    //this.autenticacion(value);
-    this.router.navigate(['home']);
+    // this.autenticacion(value);
+     this.router.navigate(['home']);
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
   autenticacion(value: any) {
     this.load = true;
     // se autentica con el servidor
-    const rutusuario = Utils.formatRut(this.lForm.controls.rutusuario.value);
+    const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
     this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
       data => {
         const uiwebadmin = {
@@ -59,9 +59,9 @@ export class LoginComponent implements OnInit {
       }, err => {
         this.load = false;
         if (err.error === null) {
-          this.uimensaje('danger', err.statusText, 3000);
+          this.uimensaje('danger', err, 3000);
         } else {
-          this.uimensaje('danger', err.error.mensaje, 3000);
+          this.uimensaje('danger', err, 3000);
         }
       }
     );

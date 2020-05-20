@@ -5,6 +5,7 @@ import { TokenService } from '../utils/token.service';
 import { Observable } from 'rxjs';
 /* Models */
 import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/paramusuario';
+import { Crearusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/crearusuario';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class ClaveusuariosService {
     private tokenService: TokenService
   ) { }
 
-  public listaUsuario(serviciosalud: number, estadousuarios: number): Observable<Paramusuario[]> {
+  public getUsuario(serviciosalud: number, estadousuarios: number): Observable<Paramusuario[]> {
     return this.httpClient.get<Paramusuario[]>(
       this.TARGET_URL.concat('/usuarios/')
       .concat(serviciosalud.toString()).concat('/')
@@ -36,5 +37,10 @@ export class ClaveusuariosService {
     return this.httpClient.post<string>(
       this.TARGET_URL.concat('/eliminar_usuario/'),
       { rutusuario: rut });
+  }
+
+  public crearUsuario(usuario: Crearusuario): Observable<Crearusuario> {
+    return this.httpClient.post<Crearusuario>(
+      this.TARGET_URL.concat('/usuario/'), usuario);
   }
 }

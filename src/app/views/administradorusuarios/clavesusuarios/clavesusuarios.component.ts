@@ -18,6 +18,7 @@ import { ClaveusuariosService } from 'src/app/services/administradorusuarios/cla
 import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/paramusuario';
 import { Serviciosalud } from 'src/app/models/entity/adminusuarios/claveusuarios/serviciosalud';
 import { Estadousuario } from 'src/app/models/entity/adminusuarios/claveusuarios/estadousuario';
+import { NuevousuarioComponent } from '../nuevousuario/nuevousuario.component';
 
 @Component({
   selector: 'app-clavesusuarios',
@@ -83,7 +84,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     try {
       this.estadosusuarios = await this.parametroService.estadoUsuario().toPromise();
       this.serviciosalud = await this.parametroService.servicioSalud().toPromise();
-      this.getBusqueda();
+      this.getBusquedausuario();
       this.progressBar.complete();
       this.load = false;
     } catch (err) {
@@ -144,12 +145,13 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       this.progressBar.start();
       const serviciosalud = this.pForm.controls.serviciosalud.value;
       const estadousuario = this.pForm.controls.estadousuario.value;
-      this.claveusuariosService.listaUsuario(
+      this.claveusuariosService.getUsuario(
        serviciosalud,
        estadousuario
       ).subscribe(data => {
         this.usuarios = data;
         this.setRowPagination();
+        this.setParametros(serviciosalud, estadousuario);
         this.progressBar.complete();
         this.load = false;
       }, err => {
@@ -180,32 +182,24 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   //   localStorage.setItem('admreposicion', JSON.stringify(admreposicion));
   // }
 
-  getBusqueda() {
-    const admusuarios = JSON.parse(localStorage.getItem('admusuarios'));
+  async getBusquedausuario() {
+    const admusuarios = JSON.parse(localStorage.getItem('busquedausuario'));
+    console.log(admusuarios);
     if (admusuarios !== null) {
       this.pForm.controls.serviciosalud.setValue(admusuarios.serviciosalud);
       this.pForm.controls.estadousuario.setValue(admusuarios.estadousuario);
-      localStorage.setItem('admusuarios', JSON.stringify(admusuarios));
+      // localStorage.setItem('busquedausuario', JSON.stringify(admusuarios));
+      this.buscarUsuarios();
     }
   }
 
- // setParametros(vlicencia: Selectivapendiente) {
-  //   this.licencia = new ParamLicencia(
-  //     vlicencia.NumServicioSalud,
-  //     vlicencia.AnoRecepcion,
-  //     vlicencia.FolioCompin,
-  //     vlicencia.CorrelHijo,
-  //     vlicencia.NumServicio,
-  //     vlicencia.NumFormulario,
-  //     vlicencia.NombresTra,
-  //     vlicencia.RutTrabajador,
-  //     vlicencia.xLm,
-  //     vlicencia.SwAlertaFueraPLazo,
-  //     '1'
-  //   );
-  //   localStorage.removeItem('licencia');
-  //   localStorage.setItem('licencia', JSON.stringify(this.licencia));
-  // }
+ setParametros(paramserviciosalud: number, paramestado: number) {
+    const paramusuario = {
+      serviciosalud: paramserviciosalud,
+      estadousuario: paramestado};
+    localStorage.removeItem('busquedausuario');
+    localStorage.setItem('busquedausuario', JSON.stringify(paramusuario));
+  }
 
   onLimpiar() {
     this.pForm.controls.serviciosalud.setValue('');
@@ -228,18 +222,15 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   // }
 
   onNuevousuario() {
-    // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(12, 10));
-    // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(10));
-    // this.bsModalRef.content.onClose.subscribe(estado => {
-    //   if (estado === true) {
-    //     this.licenciasseleccionadas = [];
-    //   }
-    // });
+    this.bsModalRef = this.bsModalService.show(NuevousuarioComponent, this.setModal());
+    this.bsModalRef.content.onClose.subscribe(estado => {
+      if (estado === true) {
+      }
+    });
   }
 
   onModificarusuario() {
     if (this.validarseleccionuno()) {
-    } else {}
     // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(13, 60));
     // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(60));
     // this.bsModalRef.content.onClose.subscribe(estado => {
@@ -247,11 +238,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     //     this.licenciasseleccionadas = [];
     //   }
     // });
+    } else {}
   }
 
   onAccion(codaccion: number) {
     if (this.validarseleccionuno()) {
-      // this.setParametros();
       let textstart = null;
       let textend = null;
 
@@ -351,15 +342,14 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  setModalLicencia(accionl: number) {
+  setModal() {
     let dtModal: any = {};
     dtModal = {
       keyboard: false,
       backdrop: 'static',
       class: 'modal-dialog-centered modal-lg',
       initialState: {
-        // codtipolm: codtipolml,
-        accion: accionl
+        // nomreceptor: nomemisor,
       }
     };
     return dtModal;

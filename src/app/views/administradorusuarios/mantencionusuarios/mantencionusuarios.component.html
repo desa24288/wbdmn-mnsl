@@ -32,7 +32,7 @@
               placeholder="Ingrese Rut" (focusout)="onBuscarusuario($event.target.value)" formatRut>
             <p class="text-danger text-form-valid"
             *ngIf="uForm.controls['rutusuario'].invalid && (uForm.controls['rutusuario'].dirty || uForm.controls['rutusuario'].touched)">
-            Requerido</p>
+            Requerido, mínimo caracteres 9 y máximo 10, Rut inválido</p>
           </div>
           <div class="form-group col-sm-6">
             <label for="nomtrabajador" class="col-form-label-sm">NOMBRE USUARIO</label>
@@ -41,11 +41,10 @@
         </div>
       </form>
       <!-- END uForm -->
-      <!-- mForm  -->
-      <form novalidate [formGroup]="mForm" autocomplete="off" spellcheck="false">
         <div class="form-row">
           <div class="card-header col-md-12 text-center">Seleccione Perfiles para el Usuario</div>
         </div>
+      <form novalidate [formGroup]="mForm" autocomplete="off" spellcheck="false">
         <div class="form-row">
           <div class="form-group col-sm-5">
             <div class="card mr-3">
@@ -53,13 +52,13 @@
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let perfil of perfildisponibles">
+                      <tr *ngFor="let perfildisponible of perfildisponibles">
                         <td>
-                          <input formControlName='perfildisplist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangePerfildisp($event, perfil)" id='lm-{{ perfil.id_rollm }}'
-                            [checked]="perfil.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ perfil.id_rollm }}'>
-                            <p class="medium">{{ perfil.computed }}</p>
+                          <input  class="ml-1 mr-2" type="checkbox" formControlName="perfildisponible"
+                            (change)="onChangePerfildisp($event, perfildisponible)" 
+                            id='lm-{{ perfildisponible.computed }} {{ perfildisponible.id_rollm }}'>
+                          <label class="pointer" for='lm-{{ perfildisponible.computed }} {{ perfildisponible.id_rollm }}'>
+                            <p class="small">{{ perfildisponible.computed }}</p>
                           </label>
                         </td>
                       </tr>
@@ -80,13 +79,13 @@
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let perfil of perfilasignados">
+                      <tr *ngFor="let perfilasignado of perfilasignados">
                         <td>
-                          <input formControlName='perfilasiglist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangePerfilasig($event, perfil)" id='lm-{{ perfil.id_rollm }}'
-                            [checked]="perfil.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ perfil.id_rollm }}'>
-                            <p class="medium">{{ perfil.computed }}</p>
+                          <input class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangePerfilasig($event, perfilasignado)"
+                            id='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.computed }}'>
+                          <label class="pointer" for='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.computed }}'>
+                            <p class="small">{{ perfilasignado.computed }}</p>
                           </label>
                         </td>
                       </tr>
@@ -96,9 +95,11 @@
             </div>
           </div>
         </div>
+      </form>
         <div class="form-row">
           <div class="card-header col-md-12 text-center">Seleccione Compines para el Usuario</div>
         </div>
+      <form novalidate [formGroup]="bForm" autocomplete="off" spellcheck="false">
         <div class="form-row">
           <div class="form-group col-sm-5">
             <div class="card mr-3">
@@ -107,16 +108,17 @@
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let compin of compindisponibles">
+                      <tr *ngFor="let compindisp of compindisponibles">
                         <td>
-                          <input formControlName='compindisplist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangeCompindisp($event, compin)" id='lm-{{ compin.CodEstablecimiento }}'
-                            [checked]="compin.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ compin.CodEstablecimiento }}'>
-                            <p class="medium">{{ compin.GloEstablecimiento }}</p>
+                          <input class="ml-1 mr-2" type="checkbox" formControlName="compindisponible"
+                            (change)="onChangeCompindisp($event, compindisp)" 
+                            id='lm-{{ compindisp.CodEstablecimiento }} {{ compindisp.GloEstablecimiento }}'>
+                          <label class="pointer" for='lm-{{ compindisp.CodEstablecimiento }} {{ compindisp.GloEstablecimiento }}'>
+                            <p class="small">{{ compindisp.GloEstablecimiento }}</p>
                           </label>
                         </td>
                       </tr>
+                      
                     </tbody>
                   </table>
                 </div>
@@ -135,13 +137,13 @@
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let compin of compinasignados">
+                      <tr *ngFor="let compinasig of compinasignados">
                         <td>
-                          <input formControlName='compinasiglist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangeCompinasig($event, compin)" id='lm-{{ compin.CodEstablecimiento }}'
-                            [checked]="compin.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ compin.CodEstablecimiento }}'>
-                            <p class="medium">{{ compin.GloEstablecimiento }}</p>
+                          <input class="ml-1 mr-2" type="checkbox"  formControlName="compinasignado"
+                            (change)="onChangeCompinasig($event, compinasig)" 
+                            id='lm-{{ compinasig.CodEstablecimiento }} {{ compinasig.GloEstablecimiento }}'>
+                          <label class="pointer" for='lm-{{ compinasig.CodEstablecimiento }} {{ compinasig.GloEstablecimiento }}'>
+                            <p class="small">{{ compinasig.GloEstablecimiento }}</p>
                           </label>
                         </td>
                       </tr>
@@ -152,15 +154,11 @@
           </div>
         </div>
       </form>
-      <!-- END mForm -->
-     
-
       <div *ngFor="let alert of alerts">
         <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
         </alert>
       </div>
     </div>
-
     
   </div>
 </div>

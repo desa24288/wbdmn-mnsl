@@ -17,19 +17,29 @@ import { MantencionusuariosComponent } from './views/administradorusuarios/mante
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  // { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
 
+  // { path: 'creadoemitido', component: CreadoemitidoComponent, canActivate: [AuthGuard] },
+  // { path: 'emitidoanulado', component: EmitidoanuladoComponent, canActivate: [AuthGuard] },
   { path: 'creadoemitido', component: CreadoemitidoComponent },
   { path: 'emitidoanulado', component: EmitidoanuladoComponent },
 
+  // { path: 'consultabono', component: ConsultabonoComponent, canActivate: [AuthGuard] },
+  // { path: 'consultacambioestado', component: ConsultacambioestadoComponent, canActivate: [AuthGuard] },
+  // { path: 'consultaadjunto', component: ConsultaadjuntoComponent, canActivate: [AuthGuard] },
   { path: 'consultabono', component: ConsultabonoComponent },
   { path: 'consultacambioestado', component: ConsultacambioestadoComponent },
   { path: 'consultaadjunto', component: ConsultaadjuntoComponent },
 
+  // { path: 'bloqueoprestacion', component: BloqueoComponent, canActivate: [AuthGuard] },
   { path: 'bloqueoprestacion', component: BloqueoComponent },
 
+  // { path: 'claveusuarios', component: ClavesusuariosComponent, canActivate: [AuthGuard] },
+  // { path: 'mantencionusuarios', component: MantencionusuariosComponent, canActivate: [AuthGuard] },
+  // { path: 'perfilamiento', component: PerfilamientomodulosComponent, canActivate: [AuthGuard] },
   { path: 'claveusuarios', component: ClavesusuariosComponent },
   { path: 'mantencionusuarios', component: MantencionusuariosComponent },
   { path: 'perfilamiento', component: PerfilamientomodulosComponent },

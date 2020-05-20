@@ -47,6 +47,7 @@ import { MantencionusuariosComponent } from './views/administradorusuarios/mante
 import { PropiedadescuentaComponent } from './views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 import { MantenedorperfilesComponent } from './views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
+import { NuevousuarioComponent } from './views/administradorusuarios/nuevousuario/nuevousuario.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { MantenedorperfilesComponent } from './views/administradorperfiles/mante
     MantencionusuariosComponent,
     PropiedadescuentaComponent,
     PerfilamientomodulosComponent,
-    MantenedorperfilesComponent
+    MantenedorperfilesComponent,
+    NuevousuarioComponent
   ],
   imports: [
     BrowserModule,
@@ -116,7 +118,8 @@ import { MantenedorperfilesComponent } from './views/administradorperfiles/mante
     RegulaformapagoComponent,
     EditarbloqueoComponent,
     PropiedadescuentaComponent,
-    MantenedorperfilesComponent
+    MantenedorperfilesComponent,
+    NuevousuarioComponent
   ]
 })
 export class AppModule { }
