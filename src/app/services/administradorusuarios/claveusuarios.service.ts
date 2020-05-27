@@ -29,7 +29,7 @@ export class ClaveusuariosService {
 
   public bloquearUsuario(rut: string): Observable<any> {
     return this.httpClient.post<string>(
-      this.TARGET_URL.concat('/bloquear_clave/'),
+      this.TARGET_URL.concat('/bloquear_usuario/'),
       { rutusuario: rut });
   }
 

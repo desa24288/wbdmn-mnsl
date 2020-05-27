@@ -31,39 +31,58 @@
     </div>
 
     <div class="card">
-      <div class="card-body">
-        <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
-          <div class="row mt-1 mb-2">
-            <div class="form-goup col-sm-4">
-              <label for="serviciosalud">Servicio de Salud</label>
-              <select class='form-control form-control-sm' name='serviciosalud'
-              formControlName='serviciosalud' [compareWith]='compare_serviciosalud'
-              (change)="onSelectServiciosalud($event.target.value)">
-                <option *ngFor='let servicios of serviciosalud'
-                  value="{{ servicios.NumServicioSalud }}">
-                 {{ servicios.NumServicioSalud }} - {{ servicios.GloServicioSalud }}
-                </option>
-              </select>
-              <p class="text-danger text-form-valid"
-                *ngIf="pForm.controls['serviciosalud'].invalid && (pForm.controls['serviciosalud'].dirty || pForm.controls['serviciosalud'].touched)">
-                Requerido</p>
-            </div>
-            <div class="form-goup col-sm-4">
-              <label for="estadousuario">Estado Usuarios</label>
-              <select class='form-control form-control-sm' name='estadousuario'
-              formControlName='estadousuario' [compareWith]='compare_estadousuarios'
-              (change)="onSelectEstadousuarios($event.target.value)">
-                <option *ngFor='let estado of estadosusuarios'
-                  value="{{ estado.CodEstadoUsr }}">
-                  {{ estado.CodEstadoUsr }} - {{ estado.GloEstadoUsr }}
-                </option>
-              </select>
-              <p class="text-danger text-form-valid"
-                *ngIf="pForm.controls['estadousuario'].invalid && (pForm.controls['estadousuario'].dirty || pForm.controls['estadousuario'].touched)">
-                Requerido</p>
-            </div>
-          </div>
-        </form>
+      <div class="card-body div-top">
+        <tabset #tabBusqueda>
+          <tab customClass="tabClass" heading="Servicio / Estado Usuario" id="tabServiciosaludestado" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-4">
+                  <label for="serviciosalud">Servicio de Salud</label>
+                  <select class='form-control form-control-sm' name='serviciosalud'
+                  formControlName='serviciosalud' [compareWith]='compare_serviciosalud'
+                  (change)="onSelectServiciosalud($event.target.value)">
+                    <option *ngFor='let servicios of serviciosalud'
+                      value="{{ servicios.NumServicioSalud }}">
+                    {{ servicios.NumServicioSalud }} - {{ servicios.GloServicioSalud }}
+                    </option>
+                  </select>
+                  <p class="text-danger text-form-valid"
+                    *ngIf="pForm.controls['serviciosalud'].invalid && (pForm.controls['serviciosalud'].dirty || pForm.controls['serviciosalud'].touched)">
+                    Requerido</p>
+                </div>
+                <div class="form-goup col-sm-4">
+                  <label for="estadousuario">Estado Usuarios</label>
+                  <select class='form-control form-control-sm' name='estadousuario'
+                  formControlName='estadousuario' [compareWith]='compare_estadousuarios'
+                  (change)="onSelectEstadousuarios($event.target.value)">
+                    <option *ngFor='let estado of estadosusuarios'
+                      value="{{ estado.CodEstadoUsr }}">
+                      {{ estado.CodEstadoUsr }} - {{ estado.GloEstadoUsr }}
+                    </option>
+                  </select>
+                  <p class="text-danger text-form-valid"
+                    *ngIf="pForm.controls['estadousuario'].invalid && (pForm.controls['estadousuario'].dirty || pForm.controls['estadousuario'].touched)">
+                    Requerido</p>
+                </div>
+              </div>
+            </form>
+          </tab>
+
+          <tab customClass="tabClass" heading="Rut Usuario" id="tabBusquedaRut" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-3 ml-1">
+                  <label for="rutusuario">Rut</label>
+                  <input type="text" appSelecttext class='form-control form-control-sm' placeholder="0000000000-0"
+                  formControlName='rutusuario' formatRut>
+                  <p class="text-danger text-form-valid"
+                    *ngIf="qForm.controls['rutusuario'].invalid && (qForm.controls['rutusuario'].dirty || qForm.controls['rutusuario'].touched)">
+                    Requerido, mínimo caracteres 9 y máximo 10, Rut inválido</p>
+                </div>
+              </div>
+            </form>
+          </tab>
+        </tabset>
       </div>
 
       <div class="card-body" [hidden]="this.alerts.length <= 0">

@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { TokenService } from '../utils/token.service';
 import { Observable } from 'rxjs';
 /* Models */
-import { Actualizarperfiles } from 'src/app/models/entity/adminusuarios/mantencionusuarios/actualizarperfiles';
+import { Actualizarperfil } from 'src/app/models/entity/adminusuarios/mantencionusuarios/actualizarperfil';
+import { Actualizarcompin } from 'src/app/models/entity/adminusuarios/mantencionusuarios/actualizarcompin';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class MantencionusuariosService {
     .concat(environment.api.app).concat('/mantenedor/mantenedor');
   private TARGET_URL_PERFILES = environment.api.url.concat(environment.api.port.toString())
     .concat(environment.api.app).concat('/perfil/perfil');
+  private TARGET_URL_COMPINES = environment.api.url.concat(environment.api.port.toString())
+    .concat(environment.api.app).concat('/compin/compin');
 
   constructor(
     private httpClient: HttpClient,
@@ -43,20 +46,25 @@ export class MantencionusuariosService {
 
   public getCompinesDisponibles(rutusuario: string): Observable<any[]> {
     return this.httpClient.get<any[]>(
-      this.TARGET_URL.concat('/compines/')
+      this.TARGET_URL_COMPINES.concat('/compines/')
       .concat(rutusuario)
       , this.tokenService.get());
   }
 
   public getCompinesUsuario(rutusuario: string): Observable<any[]> {
     return this.httpClient.get<any[]>(
-      this.TARGET_URL.concat('/usuariocompines/')
+      this.TARGET_URL_COMPINES.concat('/usuariocompines/')
       .concat(rutusuario)
       , this.tokenService.get());
   }
 
-  public postActualizarPerfiles(actualizarperfil: Actualizarperfiles): Observable<any> {
-    return this.httpClient.post<Actualizarperfiles>(
-      this.TARGET_URL_PERFILES.concat('/perfiles/'), actualizarperfil);
+  public putActualizarPerfiles(perfil: Actualizarperfil): Observable<any> {
+    return this.httpClient.put<Actualizarperfil>(
+      this.TARGET_URL_PERFILES.concat('/perfiles/'), perfil);
+  }
+
+  public putActualizarCompin(compin: Actualizarcompin): Observable<any> {
+    return this.httpClient.put<Actualizarcompin>(
+      this.TARGET_URL_COMPINES.concat('/compines/'), compin);
   }
 }
