@@ -80,7 +80,7 @@ export class NuevousuarioComponent implements OnInit, AfterViewInit {
     this.nuevousuario.rutusuario = rut;
     this.nuevousuario.nombre = nombre;
     console.log(this.nuevousuario);
-    this.claveusuarioService.crearUsuario(this.nuevousuario).subscribe(res => {
+    this.claveusuarioService.postCrearUsuario(this.nuevousuario).subscribe(res => {
       this.loading = false;
     }, err => {
       this.loading = false;

@@ -71,7 +71,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       estadousuario: [{ value: null, disabled: false }, Validators.required]
     });
     this.qForm = this.formBuilder.group({
-      rutusuario: [{ value: null, disable: false }]
+      rutusuario: [{ value: null, disable: false }, Validators.required]
     });
   }
 
@@ -121,26 +121,13 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     if (event.target.checked) {
       if (this.usuariosseleccionados.indexOf(usuario) < 0) {
         this.usuariosseleccionados.push(usuario);
+        // this.setParamBusquedarut(Utils.formatRut(usuario.Col_RutUsuario));
       }
     } else {
         this.usuariosseleccionados.splice(this.usuariosseleccionados.indexOf(usuario), 1);
       }
-    // this.logicaEstado();
+    this.setParamBusquedarut(Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario));
   }
-
-  // logicaEstado() {
-  //   /* Método que desactiva MODIFICAR y ELIMINAR en caso que el RR sea estado 2 (PROCESADO) */
-  //   if (this.licenciasseleccionadas.length === 0) {
-  //     this.isIngresado = true;
-  //   } else {
-  //     for (const lm of this.licenciasseleccionadas) {
-  //       if (lm.CodEstIngresoLM === '2') {
-  //           this.isIngresado = false;
-  //           return;
-  //         } else { this.isIngresado = true; }
-  //     }
-  //   }
-  // }
 
   onBuscar() {
     switch (this.tabSelect) {
@@ -153,7 +140,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
         break;
 
       case 'tabBusquedaRut':
-        console.log('Busqueda por Rut');
+        if (this.qForm.valid) {
+          this.buscarUsuariosrut();
+        } else {
+          this.validateAllFormFields(this.qForm);
+        }
         break;
     }
   }
@@ -180,34 +171,36 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       });
   }
 
-  // setBusquedaNro(nrolicencia: string) {
-  //   const admreposicion = {
-  //     tabNroLicencia: {
-  //       nrolicencia
-  //     }
-  //   };
-  //   localStorage.setItem('admreposicion', JSON.stringify(admreposicion));
-  // }
-
-  // setBusquedaRut(rutbeneficiario: string, fechainicio: string, fechatermino: string) {
-  //   const admreposicion = {
-  //     tabRut: {
-  //       rutbeneficiario,
-  //       fechainicio,
-  //       fechatermino
-  //     }
-  //   };
-  //   localStorage.setItem('admreposicion', JSON.stringify(admreposicion));
-  // }
+  async buscarUsuariosrut() {
+    this.load = true;
+    this.progressBar.start();
+    const rutusuario = Utils.formatRut(this.qForm.controls.rutusuario.value);
+    this.claveusuariosService.getUsuariorut(rutusuario).subscribe(data => {
+      this.usuarios = data;
+      this.setRowPagination();
+      this.setParametrosrut(rutusuario);
+      this.progressBar.complete();
+      this.load = false;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.progressBar.complete();
+      this.load = false;
+    });
+  }
 
   async getBusquedausuario() {
     const admusuarios = JSON.parse(localStorage.getItem('busquedausuario'));
+    const admusuariosrut = JSON.parse(localStorage.getItem('busquedausuariorut'));
     console.log(admusuarios);
     if (admusuarios !== null) {
       this.pForm.controls.serviciosalud.setValue(admusuarios.serviciosalud);
       this.pForm.controls.estadousuario.setValue(admusuarios.estadousuario);
       // localStorage.setItem('busquedausuario', JSON.stringify(admusuarios));
       this.buscarUsuarios();
+    } else {
+      this.qForm.controls.serviciosalud.setValue(admusuariosrut.rutusuario);
+      this.buscarUsuariosrut();
     }
   }
 
@@ -217,6 +210,20 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       estadousuario: paramestado};
     localStorage.removeItem('busquedausuario');
     localStorage.setItem('busquedausuario', JSON.stringify(paramusuario));
+  }
+
+  setParametrosrut(rut: string) {
+    const paramusuario = {
+      rutusuario: rut };
+    localStorage.removeItem('busquedausuariorut');
+    localStorage.setItem('busquedausuariorut', JSON.stringify(paramusuario));
+  }
+
+ setParamBusquedarut(rut: string) {
+    const paramusuario = {
+      rutusuario: rut };
+    localStorage.removeItem('busquedarut');
+    localStorage.setItem('busquedarut', JSON.stringify(paramusuario));
   }
 
   onLimpiar() {
@@ -249,13 +256,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   onModificarusuario() {
     if (this.validarseleccionuno()) {
-    // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(13, 60));
-    // this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(60));
-    // this.bsModalRef.content.onClose.subscribe(estado => {
-    //   if (estado === true) {
-    //     this.licenciasseleccionadas = [];
-    //   }
-    // });
+      this.router.navigate(['/mantencionusuarios']);
     } else {}
   }
 
@@ -273,15 +274,21 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
           textstart = 'Eliminar';
           textend = 'Eliminado';
           break;
+        case 3:
+          textstart = 'Reiniciar Contraseña';
+          textend = 'Contraseña Reiniciada';
+          break;
       }
       const rutusuario =  Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario);
       this.alertSwalConfirmar.title = `¿Desea ${ textstart } Usuario ${ rutusuario } ?`; // <- poner rut usuario
       this.alertSwalConfirmar.show().then(ok => {
         if (ok.value) {
-          if(codaccion === 1) {
+          if (codaccion === 1) {
             this.bloquearusuario(rutusuario);
           } else if (codaccion === 2) {
             this.borrarusuario(rutusuario);
+          } else if (codaccion === 3) {
+            this.reiniciarclave(rutusuario);
           }
           this.alertSwal.title = `Usuario ${ rutusuario } ${ textend }`;
           this.alertSwal.show();
@@ -294,48 +301,22 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   bloquearusuario(rutusuario: string) {
     // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
-    this.claveusuariosService.bloquearUsuario(
+    this.claveusuariosService.postBloquearUsuario(
       rutusuario
-    ).subscribe(data => {
-      return true;
-    }
-    );
+    ).subscribe(data => true );
   }
 
   borrarusuario(rutusuario: string) {
-    // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
-    this.claveusuariosService.deleteUsuario(
+    this.claveusuariosService.postDeleteUsuario(
       rutusuario
-    ).subscribe(data => {
-      return true;
-    }
-    );
+    ).subscribe(data => true);
   }
 
-  onReiniciarcontrasena() {
-    // const recursorep: Recursoreposicion = this.licenciasseleccionadas[0];
-    // if (this.validarseleccionuno()) {
-    //   this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicenciamodificar(2, recursorep));
-    //   this.bsModalRef.content.onClose.subscribe(estado => {
-    //     if (estado === true) {
-    //       this.licenciasseleccionadas = [];
-    //       this.getBusqueda();
-    //     }
-    //   });
-    // }
-  }
-
-  onAsignarserviciosalud() {
-    // const recursorep: Recursoreposicion = this.licenciasseleccionadas[0];
-    // if (this.validarseleccionuno()) {
-    //   this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicenciamodificar(2, recursorep));
-    //   this.bsModalRef.content.onClose.subscribe(estado => {
-    //     if (estado === true) {
-    //       this.licenciasseleccionadas = [];
-    //       this.getBusqueda();
-    //     }
-    //   });
-    // }
+  reiniciarclave(rutusuario: string) {
+    // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
+    this.claveusuariosService.postReiniciarClave(
+      rutusuario
+    ).subscribe(data => true );
   }
 
   validarseleccionuno() {

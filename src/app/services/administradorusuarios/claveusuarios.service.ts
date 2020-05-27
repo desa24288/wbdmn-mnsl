@@ -27,20 +27,33 @@ export class ClaveusuariosService {
       , this.tokenService.get());
   }
 
-  public bloquearUsuario(rut: string): Observable<any> {
+  public getUsuariorut(rutfuncionario: string): Observable<Paramusuario[]> {
+    return this.httpClient.get<Paramusuario[]>(
+      this.TARGET_URL.concat('/usuariosrut/')
+      .concat(rutfuncionario)
+      , this.tokenService.get());
+  }
+
+  public postBloquearUsuario(rut: string): Observable<any> {
     return this.httpClient.post<string>(
       this.TARGET_URL.concat('/bloquear_usuario/'),
       { rutusuario: rut });
   }
 
-  public deleteUsuario(rut: string): Observable<any> {
+  public postDeleteUsuario(rut: string): Observable<any> {
     return this.httpClient.post<string>(
       this.TARGET_URL.concat('/eliminar_usuario/'),
       { rutusuario: rut });
   }
 
-  public crearUsuario(usuario: Crearusuario): Observable<Crearusuario> {
+  public postCrearUsuario(usuario: Crearusuario): Observable<Crearusuario> {
     return this.httpClient.post<Crearusuario>(
       this.TARGET_URL.concat('/usuario/'), usuario);
+  }
+
+  public postReiniciarClave(rut: string): Observable<any> {
+    return this.httpClient.post<string>(
+      this.TARGET_URL.concat('/reiniciar_clave/'),
+      { rutusuario: rut });
   }
 }

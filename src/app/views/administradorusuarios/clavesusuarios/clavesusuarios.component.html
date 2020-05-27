@@ -68,7 +68,7 @@
             </form>
           </tab>
 
-          <tab customClass="tabClass" heading="Rut Usuario" id="tabBusquedaRut" (selectTab)="onSelect($event)">
+          <!-- <tab customClass="tabClass" heading="Rut Usuario" id="tabBusquedaRut" (selectTab)="onSelect($event)">
             <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
               <div class="row mt-1 mb-2">
                 <div class="form-goup col-sm-3 ml-1">
@@ -81,7 +81,7 @@
                 </div>
               </div>
             </form>
-          </tab>
+          </tab> -->
         </tabset>
       </div>
 
@@ -116,7 +116,7 @@
               BLOQUEAR USUARIO</span></button>
 
               <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="REINICIAR CONTRASEÑA"
-              [disabled]="load" (click)="onReiniciarcontrasena()"><i class="far fa-window-maximize"></i><span
+              [disabled]="load" (click)="onAccion(3)"><i class="far fa-window-maximize"></i><span
                 class="btn-span-tool">
                 REINICIAR CONTRASEÑA</span></button>
             
