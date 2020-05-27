@@ -1,16 +1,16 @@
-export class Actualizarperfiles {
+export class Actualizarcompin {
     rutusuario: string;
     idupd: number;
-    perfiles: Array<any>;
+    compines: Array<any>;
 
     constructor(
         rutusuario?: string,
         idupd?: number,
-        perfiles?: Array<any>
+        compines?: Array<any>
     ) {
         this.rutusuario = rutusuario;
         this.idupd = idupd;
-        this.perfiles = perfiles;
+        this.compines = compines;
     }
 
 }

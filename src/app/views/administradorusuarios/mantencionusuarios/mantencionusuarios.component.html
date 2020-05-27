@@ -13,8 +13,7 @@
   <div class="card">
     <div class="card-header"> 
       <div class="row">
-        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="GRABAR" (click)="onGuardar()"
-            [disabled]="!btnGrabar">
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="GRABAR" (click)="onGuardar()">
             <i class="fas fa-save"></i>
             GRABAR</button>
         <button type="button" class="btn btn-primary btn-sm ml-1 mx-1 btn-cerrar" tooltip="CERRAR" (click)="onCerrar()"><i
@@ -108,13 +107,13 @@
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let compindisp of compindisponibles">
+                      <tr *ngFor="let compindisponible of compindisponibles">
                         <td>
                           <input class="ml-1 mr-2" type="checkbox" formControlName="compindisponible"
-                            (change)="onChangeCompindisp($event, compindisp)" 
-                            id='lm-{{ compindisp.CodEstablecimiento }} {{ compindisp.GloEstablecimiento }}'>
-                          <label class="pointer" for='lm-{{ compindisp.CodEstablecimiento }} {{ compindisp.GloEstablecimiento }}'>
-                            <p class="small">{{ compindisp.GloEstablecimiento }}</p>
+                            (change)="onChangeCompindisp($event, compindisponible)" 
+                            id='lm-{{ compindisponible.GloEstablecimiento }} {{ compindisponible.CodEstablecimiento }}'>
+                          <label class="pointer" for='lm-{{ compindisponible.GloEstablecimiento }} {{ compindisponible.CodEstablecimiento }}'>
+                            <p class="small">{{ compindisponible.GloEstablecimiento }}</p>
                           </label>
                         </td>
                       </tr>
@@ -137,16 +136,17 @@
                 <div class="card table-responsive mt-1" style="height: 100px">
                   <table class="table table-hover">
                     <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let compinasig of compinasignados">
+                      <tr *ngFor="let compinasignado of compinasignados">
                         <td>
-                          <input class="ml-1 mr-2" type="checkbox"  formControlName="compinasignado"
-                            (change)="onChangeCompinasig($event, compinasig)" 
-                            id='lm-{{ compinasig.CodEstablecimiento }} {{ compinasig.GloEstablecimiento }}'>
-                          <label class="pointer" for='lm-{{ compinasig.CodEstablecimiento }} {{ compinasig.GloEstablecimiento }}'>
-                            <p class="small">{{ compinasig.GloEstablecimiento }}</p>
+                          <input class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangeCompinasig($event, compinasignado)" 
+                            id='lm-{{ compinasignado.CodEstablecimiento }} {{ compinasignado.GloEstablecimiento }}'>
+                          <label class="pointer" for='lm-{{ compinasignado.CodEstablecimiento }} {{ compinasignado.GloEstablecimiento }}'>
+                            <p class="small">{{ compinasignado.GloEstablecimiento }}</p>
                           </label>
                         </td>
                       </tr>
+
                     </tbody>
                   </table>
                 </div>

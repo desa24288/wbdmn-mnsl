@@ -19,6 +19,7 @@ import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/
 import { Serviciosalud } from 'src/app/models/entity/adminusuarios/claveusuarios/serviciosalud';
 import { Estadousuario } from 'src/app/models/entity/adminusuarios/claveusuarios/estadousuario';
 import { NuevousuarioComponent } from '../nuevousuario/nuevousuario.component';
+import { BrowserStack } from 'protractor/built/driverProviders';
 
 @Component({
   selector: 'app-clavesusuarios',
@@ -45,6 +46,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   public loading = false;
 
   public pForm: FormGroup;
+  public qForm: FormGroup;
   public serviciosalud: Array<Serviciosalud> = [];
   public estadosusuarios: Array<Estadousuario> = [];
   public usuariosseleccionados: Array<Paramusuario> = [];
@@ -54,6 +56,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   public usuario: Paramusuario = new Paramusuario();
   // private global: Configuracion = new Configuracion();
   public isIngresado = true;
+  public tabSelect = 'tabServiciosaludestado';
 
   constructor(
     public router: Router,
@@ -66,6 +69,9 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     this.pForm = this.formBuilder.group({
       serviciosalud: [{ value: null, disabled: false }, Validators.required],
       estadousuario: [{ value: null, disabled: false }, Validators.required]
+    });
+    this.qForm = this.formBuilder.group({
+      rutusuario: [{ value: null, disable: false }]
     });
   }
 
@@ -107,6 +113,10 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   onSelectEstadousuarios(value: any) {
   }
 
+  onSelect(data: TabDirective): void {
+    this.tabSelect = data.id;
+  }
+
   async onCheck(event: any, usuario: Paramusuario) {
     if (event.target.checked) {
       if (this.usuariosseleccionados.indexOf(usuario) < 0) {
@@ -133,10 +143,18 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   // }
 
   onBuscar() {
-    if (this.pForm.valid) {
-      this.buscarUsuarios();
-    } else {
-      this.validateAllFormFields(this.pForm);
+    switch (this.tabSelect) {
+      case 'tabServiciosaludestado':
+        if (this.pForm.valid) {
+          this.buscarUsuarios();
+        } else {
+          this.validateAllFormFields(this.pForm);
+        }
+        break;
+
+      case 'tabBusquedaRut':
+        console.log('Busqueda por Rut');
+        break;
     }
   }
 
