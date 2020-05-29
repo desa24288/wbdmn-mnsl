@@ -1,12 +1,16 @@
 export class Perfil {
-    CodPerfil: number;
-    GloPerfil: string;
+        // tslint:disable-next-line: variable-name
+        id_RolLM: number;
+        // tslint:disable-next-line: variable-name
+        ds_rolLM: string;
 
-    constructor(
-        CodPerfil?: number,
-        GloPerfil?: string,
-    ) {
-        this.CodPerfil = CodPerfil;
-        this.GloPerfil = GloPerfil;
-    }
+        constructor(
+            // tslint:disable-next-line: variable-name
+            id_RolLM?: number,
+            // tslint:disable-next-line: variable-name
+            ds_rolLM?: string
+        ) {
+            this.id_RolLM = id_RolLM;
+            this.ds_rolLM = ds_rolLM;
+        }
 }

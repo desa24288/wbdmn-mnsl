@@ -30,11 +30,11 @@
         <div class="form-row">
           <div class="form-group col-sm-6">
             <label for="perfil">PERFIL</label>
-            <select class='form-control form-control-sm' name='perfil'
-            formControlName='perfil' [compareWith]='compare_perfil'
-            (change)="onSelectPerfil($event.target.value)" value="1 - ADMINISTRATIVO DE LM">
-              <option *ngFor='let perfil of perfiles'>
-                1 - ADMINISTRATIVO DE LM
+            <select class='form-control form-control-sm' formControlName='perfil' 
+            [compareWith]='compare_perfil' (change)="onSelectPerfil($event.target.value)">
+              <option *ngFor='let perfil of perfiles'
+                value="{{ perfil.id_RolLM }}">
+                {{ perfil.id_RolLM }} {{ perfil.ds_rolLM }}
               </option>
             </select>
             <p class="text-danger text-form-valid"
@@ -51,10 +51,8 @@
         </div>
         <div class="form-row">
           <div class="form-group col-sm-6">
-            <div class="card mr-3">
-              <div class="card-body">
-                <div class="card table-responsive mt-1" style="height: 100px">
-                  <table class="table table-hover">
+                <div class="card-body table-responsive mt-1" style="height: 390px;">
+                  <table class="table table-hover" style="font-size: 12px">
                     <thead>
                       <tr>
                         <th>Seleccione <br>Ejecutable</th>
@@ -62,52 +60,43 @@
                         <th>Descripción <br>Ejecutable</th>
                       </tr>
                     </thead>
-                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let ejecutable of ejecutables">
+                    <tbody class="text-nowrap">
+                      <tr *ngFor="let ejecutable of ejecutables" class="ml-2">
                         <td>
                           <input formControlName='ejecutablelist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangeEjecutable($event, ejecutable)" id='lm-{{ ejecutable.CodEjecutable }}'
+                            (click)="onCheckEjecutable($event, ejecutable.CCtlExeName)" id='lm-{{ ejecutable.CCtlExeName }}'
                             [checked]="ejecutable.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ ejecutable.CodEjecutable }}'>
-                            <p class="medium">{{ ejecutable.CodEjecutable }}. {{ ejecutable.NomEjecutable }}</p>
-                          </label>
                         </td>
+                        <td>{{ ejecutable.CCtlExeName }}</td>
+                        <td>{{ ejecutable.CCtlExeDescription }}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </div>
           </div>
-        
+
           <div class="form-group col-sm-5">
-            <div class="card mr-3">
-              <div class="card-body">
-                <div class="card table-responsive mt-1" style="height: 100px">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Activar <br>Menu</th>
-                        <th>Menu</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
-                      <tr *ngFor="let menu of menus">
-                        <td>
-                          <input formControlName='menulist' class="ml-1 mr-2" type="checkbox"
-                            (change)="onChangeMenu($event, menu)" id='lm-{{ menu.CodMenu }}'
-                            [checked]="menu.Seleccionado_1">
-                          <label class="pointer" for='lm-{{ menu.CodMenu }}'>
-                            <p class="medium">{{ menu.CodMenu }}. {{ menu.GloMenu }}</p>
-                          </label>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="card-body table-responsive mt-1" style="height: 390px;">
+              <table class="table table-hover" style="font-size: 12px">
+                  <thead>
+                    <tr>
+                      <th>Activar <br>Menu</th>
+                      <th>Menu</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-nowrap">
+                    <tr *ngFor="let menu of menus"  class="ml-2">
+                      <td>
+                        <input formControlName='menulist' class="ml-1 mr-2" type="checkbox"
+                          (click)="onCheckMenu($event, menu)" id='lm-{{ menu.ID_Menu }}'
+                          [checked]="menu.Seleccionado_1">
+                      </td>
+                      <td>{{ menu.DS_Menu }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-          </div>
         </div>
       </form>
       <!-- END mForm -->

@@ -107,11 +107,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     this.usuariospag  = this.usuarios.slice(startItem, endItem);
   }
 
-  onSelectServiciosalud(value: any) {
-  }
-
-  onSelectEstadousuarios(value: any) {
-  }
+  onAsignarserviciosalud() {}
 
   onSelect(data: TabDirective): void {
     this.tabSelect = data.id;

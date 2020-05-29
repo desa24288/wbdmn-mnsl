@@ -12,7 +12,7 @@
               <div class="form-row mb-3">
                 <div class="col-sm-9 ml-2">Cambio Contraseña primera conexión </div>
                 <div class="col-sm-2 ml-2"><input type="checkbox" class="form-control form-control-sm" 
-                (change)="onCheckPrimeracon($event)" formControlName='primeracon' /> </div>
+                (change)="onCheckPrimeracon($event)" /> </div>
               </div>
               <div class="form-row mb-3">
                 <div class="col-sm-9 ml-2">Cantidad dia(s) para forzar cambio Contraseña</div>
@@ -27,7 +27,7 @@
               <div class="form-row mb-3">
                 <div class="col-sm-9 ml-2">Contraseña debe contener letras y números </div>
                 <div class="col-sm-2 ml-2"><input type="checkbox" class="form-control form-control-sm" 
-                (change)="onCheckLetrasynumeros($event)" formControlName='letrasynumeros' /> </div>
+                (change)="onCheckLetrasynumeros($event)" /> </div>
               </div>
               <div class="form-row mb-3">
                 <div class="col-sm-9 ml-2">Bloquear cuenta por cantidad de intentos fallidos </div>
@@ -42,10 +42,7 @@
 
           </form>
       </div>
-      <p class="text-danger text-form-valid h6 text-center" *ngIf="noexcede">
-          Excede Totales</p>
       <div class="card-header">
-
           <div class="row">
               <div class="col-md-6">
                   <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="ACTUALIZAR PROPIEDADES"

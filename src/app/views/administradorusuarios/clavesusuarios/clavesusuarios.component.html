@@ -39,8 +39,7 @@
                 <div class="form-goup col-sm-4">
                   <label for="serviciosalud">Servicio de Salud</label>
                   <select class='form-control form-control-sm' name='serviciosalud'
-                  formControlName='serviciosalud' [compareWith]='compare_serviciosalud'
-                  (change)="onSelectServiciosalud($event.target.value)">
+                  formControlName='serviciosalud' [compareWith]='compare_serviciosalud'>
                     <option *ngFor='let servicios of serviciosalud'
                       value="{{ servicios.NumServicioSalud }}">
                     {{ servicios.NumServicioSalud }} - {{ servicios.GloServicioSalud }}
@@ -53,8 +52,7 @@
                 <div class="form-goup col-sm-4">
                   <label for="estadousuario">Estado Usuarios</label>
                   <select class='form-control form-control-sm' name='estadousuario'
-                  formControlName='estadousuario' [compareWith]='compare_estadousuarios'
-                  (change)="onSelectEstadousuarios($event.target.value)">
+                  formControlName='estadousuario' [compareWith]='compare_estadousuarios'>
                     <option *ngFor='let estado of estadosusuarios'
                       value="{{ estado.CodEstadoUsr }}">
                       {{ estado.CodEstadoUsr }} - {{ estado.GloEstadoUsr }}

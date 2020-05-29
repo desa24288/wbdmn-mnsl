@@ -42,13 +42,11 @@ export class PropiedadescuentaComponent implements OnInit, AfterViewInit {
   ) {
     this.lForm = this.formBuilder.group(
       {
-        cantidad: [{ value: null }, Validators.required],
-        primeracon: [{ value: null }, Validators.required],
-        cantidaddia: [{ value: null }, Validators.required],
-        caracterminimo: [{ value: null }, Validators.required],
-        letrasynumeros: [{ value: null }, Validators.required],
-        bloquearcuenta: [{ value: null }, Validators.required],
-        ultimasusadas: [{ value: null }, Validators.required]
+        cantidad: [{ value: null }],
+        cantidaddia: [{ value: null }],
+        caracterminimo: [{ value: null }],
+        bloquearcuenta: [{ value: null }],
+        ultimasusadas: [{ value: null }]
       });
   }
 

@@ -8,12 +8,14 @@ import { Subject } from 'rxjs';
 import { NgProgressComponent } from '@ngx-progressbar/core';
 /* SERVICES */
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
+import { PerfilamientomodulosService } from 'src/app/services/administradorusuarios/perfilamientomodulos.service';
 /* MODELS */
 import { MensajeSweetAlert } from 'src/app/models/utils/mensaje';
 import { Userprofile } from 'src/app/config/userprofile';
 import { Perfil } from 'src/app/models/entity/adminperfiles/perfil';
 import { Menuperfilamiento } from 'src/app/models/entity/adminperfiles/menuperfilamiento';
 import { Ejecutable } from 'src/app/models/entity/adminperfiles/ejecutable';
+import { Perfildisponible } from 'src/app/models/entity/adminusuarios/mantencionusuarios/perfildisponible';
 
 @Component({
   selector: 'app-perfilamientomodulos',
@@ -35,11 +37,6 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   public estado = false;
   public loading = false;
 
-  // public datasolicitud: Obtienesolicitud = new Obtienesolicitud();
-  // public obtienesolicitud: Obtienesolicitud = new Obtienesolicitud();
-  // public solicitud: Solicitud = new Solicitud();
-  // public grabarsolicitud: Grabarsolicitud = null;
-
   public perfiles: Array<Perfil> = [];
   public ejecutables: Array<Ejecutable> = [];
   public menus: Array<Menuperfilamiento> = [];
@@ -48,9 +45,13 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   public btnGrabar = false;
   public profile: Userprofile = new Userprofile();
   public mensajeSweetAlert: MensajeSweetAlert = new MensajeSweetAlert();
+  public idrol = 1;
+  public execname = null;
+
   constructor(
     public router: Router,
     public formBuilder: FormBuilder,
+    public perfilamientoService: PerfilamientomodulosService,
     private activatedRoute: ActivatedRoute
   ) {
 
@@ -77,38 +78,21 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   }
 
   async setData() {
-    try {
-      this.progressBar.start();
-      // this.xFolioCompin = this.paramLicencia.NumServicioSalud + '-' +
-      //                      this.paramLicencia.AnoRecepcion + '-' +
-      //                      this.paramLicencia.FolioCompin + '-' +
-      //                      this.paramLicencia.CorrelHijo;
-      // this.uForm.controls.nrolicencia.setValue(this.paramLicencia.NumServicio + '-' +
-      //   this.paramLicencia.NumFormulario);
-      // this.uForm.controls.foliocompin.setValue(this.xFolioCompin);
-      // this.uForm.controls.ruttrabajador.setValue(this.paramLicencia.RutTrabajador);
-      // this.uForm.controls.nomtrabajador.setValue(this.paramLicencia.NombresTra);
-
-      // this.datasolicitud =
-      // await this.pendienteService.postObtienesolicitud(this.obtienesolicitud).toPromise();
-      // this.perfilasiggrilla = this.datasolicitud.perfilasignadas;
-      this.checkDocumentos();
+    this.load = true;
+    this.progressBar.start();
+    this.perfilamientoService.getPerfiles().subscribe( res => {
+      this.perfiles = res;
+      this.load = false;
       this.progressBar.complete();
-    } catch (err){
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
       this.progressBar.complete();
-    }
+      this.load = false;
+    });
   }
 
-  checkDocumentos() {
-    /* Muestra y agrega los documentos ya cargados en listado*/
-    // this.documentosgrilla.forEach(e => {
-    //   const arrDoc: Arrdocumento = new Arrdocumento();
-    //   if (e.Seleccionado_1 === true) {
-    //     // tslint:disable-next-line: radix
-    //     arrDoc.id = parseInt(e.CodPendiente_1);
-    //     this.arrdocumento.push(arrDoc);
-    //   }
-    // });
+  getPerfil() {
   }
 
   inDocumento(perfil: Perfil) {
@@ -135,21 +119,42 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     console.log('click Modificar Perfil');
   }
 
-  onSelectPerfil(value: any) {
-    console.log(value);
+  async onSelectPerfil(rolid: any) {
+    this.idrol = rolid;
+    this.load = true;
+    this.progressBar.start();
+    this.perfilamientoService.getEjecutables(this.idrol).subscribe( res => {
+      this.ejecutables = res;
+      this.progressBar.complete();
+      this.load = false;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.progressBar.complete();
+      this.load = false;
+    });
   }
 
-  onChangeEjecutable(event: any, value: Ejecutable) {
-    // tslint:disable-next-line: radix
-    // documentoid.id = parseInt(value.CodPendiente_1);
+  onCheckEjecutable(event: any, value: any) {
+    this.execname = value;
     if (event.target.checked) {
-      console.log(value);
+      this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {
+        this.menus = res;
+        console.log(this.menus);
+        this.progressBar.complete();
+        this.load = false;
+      }, err => {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+        this.progressBar.complete();
+        this.load = false;
+      });
     } else {
       // this.arrdocumento.splice(this.inDocumento(documentoid), 1);
     }
   }
 
-  onChangeMenu(event: any, value: Menuperfilamiento) {
+  onCheckMenu(event: any, value: Menuperfilamiento) {
     // tslint:disable-next-line: radix
     // documentoid.id = parseInt(value.CodPendiente_1);
     if (event.target.checked) {
