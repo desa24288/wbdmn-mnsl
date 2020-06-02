@@ -1,0 +1,78 @@
+<div class="loading-container">
+  <div class="card">
+      <div class="card-header">{{ cabecera }}</div>
+      <div class="card-body">
+          <form [formGroup]="lForm" novalidate autocomplete="off" spellcheck="false">
+              <div *ngFor="let alert of alerts" class="text-center">
+                  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                      {{ alert.msg }}
+                  </alert>
+              </div>
+
+              <div class="form-row mb-3">
+                <div class="col-sm-4 mr-1">Código Perfil </div>
+                <div class="col-sm-2"><input type="number" min="1" class="form-control form-control-sm"
+                   formControlName='codperfil'/> </div>
+                   <p class="text-danger text-form-valid"
+                   *ngIf="lForm.controls['codperfil'].invalid && (lForm.controls['codperfil'].dirty || lForm.controls['codperfil'].touched)">
+                   Requerido</p>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-4 mr-1">Descripción Perfil</div>
+                <div class="col-sm-7"><input type="text" class="form-control form-control-sm"
+                formControlName='descperfil' /></div>
+                <p class="text-danger text-form-valid"
+                   *ngIf="lForm.controls['descperfil'].invalid && (lForm.controls['descperfil'].dirty || lForm.controls['descperfil'].touched)">
+                   Requerido</p>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-4 mr-2">Tipo Perfil </div>
+                <select class="col-sm-7" (change)="onChangeTipoperfil($event.target.value)" formControlName="tipoperfil"
+                [compareWith]='compare_tipo' style="font-size: 14px">
+                  <option *ngFor="let tipoperfil of tipoperfiles" value="{{ tipoperfil.id_tipoperfil }}">
+                    {{ tipoperfil.id_tipoperfil }} - {{ tipoperfil.ds_tipoperfil }}
+                  </option>
+                </select>
+                <p class="text-danger text-form-valid"
+                   *ngIf="lForm.controls['tipoperfil'].invalid && (lForm.controls['tipoperfil'].dirty || lForm.controls['tipoperfil'].touched)">
+                   Requerido</p>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-4 mr-2">Estado Perfil </div>
+                <select class="col-sm-7" (change)="onChangeEstadoperfil($event.target.value)" formControlName="estadoperfil"
+                [compareWith]='compare_estado' style="font-size: 14px">
+                  <option *ngFor="let estadoperfil of estadosperfiles" value="{{ estadoperfil.id_estrol }}">
+                    {{ estadoperfil.id_estrol }} - {{ estadoperfil.ds_estrol }}
+                  </option>
+                </select>
+                <p class="text-danger text-form-valid"
+                   *ngIf="lForm.controls['estadoperfil'].invalid && (lForm.controls['estadoperfil'].dirty || lForm.controls['estadoperfil'].touched)">
+                   Requerido</p>
+              </div>
+
+          </form>
+      </div>
+      <div class="card-header">
+          <div class="row">
+              <div class="col-md-6">
+                  <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="ACTUALIZAR PROPIEDADES"
+                      (click)="onGuardar()" [disabled]="!lForm.valid"><i class="fas fa-save"></i>
+                      GUARDAR</button>
+              </div>
+              <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="CERRAR" (click)="onCerrar()">
+                      <i class="fas fa-window-close"></i>
+                      CERRAR</button>
+              </div>
+          </div>
+      </div>
+
+      <swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+
+      <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+  </div>
+</div>
