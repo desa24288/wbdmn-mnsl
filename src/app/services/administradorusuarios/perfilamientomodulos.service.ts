@@ -5,7 +5,8 @@ import { TokenService } from '../utils/token.service';
 import { Observable } from 'rxjs';
 /* Models */
 import { Ejecutable } from 'src/app/models/entity/adminperfiles/ejecutable';
-import { Perfil } from 'src/app/models/entity/adminperfiles/perfil';
+import { Perfiles } from 'src/app/models/entity/adminperfiles/perfiles';
+import { Actualizar } from 'src/app/models/entity/adminperfiles/actualizar';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +39,10 @@ export class PerfilamientomodulosService {
       .concat(execname).concat('/')
       .concat(idrol.toString())
       , this.tokenService.get());
+  }
+
+  public putActualizarPerfil(ejecutable: Actualizar): Observable<any> {
+    return this.httpClient.put<Actualizar>(
+      this.TARGET_URL.concat('/ejecutable/'), ejecutable);
   }
 }

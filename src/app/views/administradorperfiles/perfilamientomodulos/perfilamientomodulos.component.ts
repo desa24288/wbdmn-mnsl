@@ -1,21 +1,24 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-/* LIBRERIAS */
+/* LIBRERIAS Y SERVICIOS*/
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AlertComponent } from 'ngx-bootstrap/alert/alert.component';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { Subject } from 'rxjs';
 import { NgProgressComponent } from '@ngx-progressbar/core';
-/* SERVICES */
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
 import { PerfilamientomodulosService } from 'src/app/services/administradorusuarios/perfilamientomodulos.service';
 /* MODELS */
 import { MensajeSweetAlert } from 'src/app/models/utils/mensaje';
 import { Userprofile } from 'src/app/config/userprofile';
-import { Perfil } from 'src/app/models/entity/adminperfiles/perfil';
+import { Perfiles } from 'src/app/models/entity/adminperfiles/perfiles';
 import { Menuperfilamiento } from 'src/app/models/entity/adminperfiles/menuperfilamiento';
 import { Ejecutable } from 'src/app/models/entity/adminperfiles/ejecutable';
 import { Perfildisponible } from 'src/app/models/entity/adminusuarios/mantencionusuarios/perfildisponible';
+import { Actualizar } from 'src/app/models/entity/adminperfiles/actualizar';
+import { Ejecutables } from 'src/app/models/entity/adminperfiles/ejecutables';
+import { MantenedorperfilesComponent } from '../mantenedorperfiles/mantenedorperfiles.component';
 
 @Component({
   selector: 'app-perfilamientomodulos',
@@ -36,22 +39,28 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   public load = false;
   public estado = false;
   public loading = false;
+  public bsModalRef: BsModalRef;
 
-  public perfiles: Array<Perfil> = [];
+  public perfiles: Array<Perfiles> = [];
   public ejecutables: Array<Ejecutable> = [];
   public menus: Array<Menuperfilamiento> = [];
+  public arrejecutable: Array<Ejecutables> = [];
 
   public cabecera = 'Perfilamiento de Módulo';
   public btnGrabar = false;
   public profile: Userprofile = new Userprofile();
   public mensajeSweetAlert: MensajeSweetAlert = new MensajeSweetAlert();
-  public idrol = 1;
+  public idrol = null;
+  public nomrol = null;
   public execname = null;
+  public accionmodal = 0;
+  public existeperfil = false;
 
   constructor(
     public router: Router,
     public formBuilder: FormBuilder,
     public perfilamientoService: PerfilamientomodulosService,
+    private bsModalService: BsModalService,
     private activatedRoute: ActivatedRoute
   ) {
 
@@ -69,11 +78,13 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log(this.profile.rutusuario);
+    console.log(this.uForm.controls.perfil.value);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.setData();
+      console.log(this.uForm.controls.perfil.value);
     });
   }
 
@@ -92,39 +103,75 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getPerfil() {
-  }
-
-  inDocumento(perfil: Perfil) {
-    // let index = 0;
-    // for (const lista of this.arrperfilasig) {
-    //   if (perfil.CodPerfilasig === lista.AccionPen_1) {
-    //     return index;
-    //   } else {
-    //     return index++;
-    //   }
-    // }
-    // return -1;
-  }
-
   onCerrar() {
       this.router.navigate(['/home']);
   }
 
-  onNuevoperfil() {
-    console.log('click Nuevo Perfil');
+  /* 1 si corresponde a un nuevo perfil, 2 si es modificar perfil*/
+  async onMantenedorEdit(accion: number) {
+    this.accionmodal  = accion;
+    this.bsModalRef = this.bsModalService.show(MantenedorperfilesComponent, this.setModal());
+    this.bsModalRef.content.onClose.subscribe(estado => {
+      if (estado === true) {
+      }
+    });
   }
 
-  onModificarperfil() {
-    console.log('click Modificar Perfil');
+  setModal() {
+    let dtModal: any = {};
+    dtModal = {
+      keyboard: false,
+      backdrop: 'static',
+      class: 'modal-dialog-centered',
+      initialState: {
+        rolid: this.idrol,
+        tipomodal: this.accionmodal
+      }
+    };
+    return dtModal;
+  }
+
+  async onModificarperfil(tipo: number) {
+    // Graba a @Perfil los Exec con @CctlExecname indicando @AccionDcto = '1'
+    // Borra a @Perfil los Exec con @CctlExecname indicando @AccionDcto = '2'
+    // LiGraRolExes 1, 'licman', '2'
+    this.alertSwalConfirmar.title = `¿Desea Modificar Perfil ${ this.nomrol } ?`; // <- poner rut usuario
+    this.alertSwalConfirmar.show().then(ok => {
+      if (ok.value) {
+        this.modificarPerfil();
+        this.alertSwal.title = `Perfil ${ this.nomrol } Modificado`;
+        this.alertSwal.show();
+      }
+      // this.buscarUsuarios();
+      // this.usuariosseleccionados = [];
+
+      // this.onCerrar();
+    });
+  }
+
+  modificarPerfil() {
+    // this.loading = true;
+    // this.load = true;
+    const ejecutable: Actualizar = new Actualizar();
+    ejecutable.id_RolLM = this.idrol;
+    ejecutable.ejecutable = this.arrejecutable;
+    console.log(ejecutable);
+    this.perfilamientoService.putActualizarPerfil(ejecutable).subscribe( res => {
+      return true;
+    });
   }
 
   async onSelectPerfil(rolid: any) {
-    this.idrol = rolid;
+    const perfil: any = this.uForm.controls.perfil.value;
+    const desperfil = perfil.split('-');
+    this.idrol = desperfil[0];
+    this.nomrol = desperfil[1];
+    this.existeperfil = true;
     this.load = true;
     this.progressBar.start();
     this.perfilamientoService.getEjecutables(this.idrol).subscribe( res => {
       this.ejecutables = res;
+      this.logicaExec();
       this.progressBar.complete();
       this.load = false;
     }, err => {
@@ -135,12 +182,41 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onCheckEjecutable(event: any, value: any) {
+  async logicaExec() {
+    this.arrejecutable = [];
+    const selecexec: Ejecutables = new Ejecutables();
+    this.ejecutables.forEach( z => {
+      if (z.AccionDcto === '1') {
+        selecexec.CctlExecname = z.CCtlExeName;
+        selecexec.AccionDcto = '1';
+        this.arrejecutable.push(selecexec);
+        z.Seleccionado_1 = true;
+
+      } else {
+        z.Seleccionado_1 = false;
+      }
+    });
+  }
+
+  async onCheckEjecutable(event: any, value: any) {
     this.execname = value;
+    const selecexec: Ejecutables = new Ejecutables();
     if (event.target.checked) {
       this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {
         this.menus = res;
-        console.log(this.menus);
+        selecexec.CctlExecname = value;
+        selecexec.AccionDcto = '1';
+        if (this.arrejecutable.length === 0) {
+          this.arrejecutable.push(selecexec);
+        } else {
+          this.arrejecutable.forEach( e => {
+            if (e.CctlExecname !== value) {
+              // this.arrejecutable.splice(this.arrejecutable.findIndex(x => x.CctlExecname === value), 1);
+              this.arrejecutable.push(selecexec);
+            } else { return; }
+          });
+        }
+        this.logicaMenu();
         this.progressBar.complete();
         this.load = false;
       }, err => {
@@ -150,8 +226,25 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
         this.load = false;
       });
     } else {
-      // this.arrdocumento.splice(this.inDocumento(documentoid), 1);
+      this.arrejecutable.forEach(e => {
+        if (e.CctlExecname === value) {
+          this.arrejecutable.splice(this.arrejecutable.findIndex(x => x.CctlExecname === value), 1);
+          selecexec.CctlExecname = value;
+          selecexec.AccionDcto = '2';
+          this.arrejecutable.push(selecexec);
+        }
+      });
     }
+  }
+
+  logicaMenu() {
+    this.menus.forEach( z => {
+      if (z.Estado === '1') {
+        z.Seleccionado_1 = true;
+      } else {
+        z.Seleccionado_1 = false;
+      }
+    });
   }
 
   onCheckMenu(event: any, value: Menuperfilamiento) {

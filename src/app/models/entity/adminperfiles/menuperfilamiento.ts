@@ -1,5 +1,5 @@
 export class Menuperfilamiento {
-    Estado: number;
+    Estado: string;
     jerarquia: string;
     // tslint:disable-next-line: variable-name
     ID_Menu: string;
@@ -13,7 +13,7 @@ export class Menuperfilamiento {
     Seleccionado_1: boolean;
 
     constructor(
-        Estado?: number,
+        Estado?: string,
         jerarquia?: string,
         // tslint:disable-next-line: variable-name
         ID_Menu?: string,

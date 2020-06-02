@@ -1,21 +1,16 @@
-export class Perfil {
-    // tslint:disable-next-line: variable-name
-    ds_rolLM: string;
+export class Tipo {
     // tslint:disable-next-line: variable-name
     id_tipoperfil: number;
     // tslint:disable-next-line: variable-name
-    id_estrol: number;
+    ds_tipoperfil: string;
 
     constructor(
         // tslint:disable-next-line: variable-name
-        ds_rolLM?: string,
-        // tslint:disable-next-line: variable-name
         id_tipoperfil?: number,
         // tslint:disable-next-line: variable-name
-        id_estrol?: number
+        ds_tipoperfil?: string
     ) {
-        this.ds_rolLM = ds_rolLM;
         this.id_tipoperfil = id_tipoperfil;
-        this.id_estrol = id_estrol;
+        this.ds_tipoperfil = ds_tipoperfil;
     }
 }
