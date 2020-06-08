@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(value: any) {
-    // this.autenticacion(value);
+     this.autenticacion(value);
      this.router.navigate(['home']);
   }
 

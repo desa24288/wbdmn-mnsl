@@ -2,7 +2,7 @@ export class Formularios {
     IdFormulario: number;
     Descripcion: string;
     Name: string;
-  
+
     constructor(
       IdFormulario?: number,
       Descripcion?: string,
@@ -13,4 +13,3 @@ export class Formularios {
       this.Name = Name;
     }
   }
-  
