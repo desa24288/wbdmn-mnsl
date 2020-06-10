@@ -48,6 +48,7 @@ import { PropiedadescuentaComponent } from './views/administradorusuarios/propie
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 import { MantenedorperfilesComponent } from './views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
 import { NuevousuarioComponent } from './views/administradorusuarios/nuevousuario/nuevousuario.component';
+import { CambiopasswordComponent } from './templates/cambiopassword/cambiopassword.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { NuevousuarioComponent } from './views/administradorusuarios/nuevousuari
     PropiedadescuentaComponent,
     PerfilamientomodulosComponent,
     MantenedorperfilesComponent,
-    NuevousuarioComponent
+    NuevousuarioComponent,
+    CambiopasswordComponent
   ],
   imports: [
     BrowserModule,

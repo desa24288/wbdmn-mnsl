@@ -9,11 +9,11 @@ import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-cambiopassword',
+  templateUrl: './cambiopassword.component.html',
+  styleUrls: ['./cambiopassword.component.css']
 })
-export class LoginComponent implements OnInit {
+export class CambiopasswordComponent implements OnInit {
   public bsModalRefRecovery: BsModalRef;
   public bsModalRefCambiar: BsModalRef;
   public alerts: any[] = [];
@@ -27,44 +27,46 @@ export class LoginComponent implements OnInit {
     public usuarioService: UsuarioService
   ) {
     this.lForm = this.formBuilder.group({
-      rutbeneficiario: [null, [Validators.required, rutValidator]],
-      password: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      password1: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      password2: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])]
     });
   }
 
   ngOnInit() {
   }
 
-  onLogin(value: any) {
-     this.autenticacion(value);
+  onValidarpassword(value: any) {
+     console.log('SE VALIDA PASSWORD');
+     this.cambiarpassword(value);
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
     this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
   }
 
-  autenticacion(value: any) {
-    this.load = true;
+  cambiarpassword(value: any) {
+    console.log(value);
+    this.router.navigate(['home']);
+    // this.load = true;
     // se autentica con el servidor
-    const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
-    this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
-      data => {
-        const uiwebadminminsal = {
-          token: data.token
-        };
-        localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
-        this.load = false;
-        // this.router.navigate(['cambiopass']);
-        this.router.navigate(['home']);
-      }, err => {
-        this.load = false;
-        if (err.error === null) {
-          this.uimensaje('danger', 'Usuario inválido', 3000);
-        } else {
-          this.uimensaje('danger', err.error.mensaje, 3000);
-        }
-      }
-    );
+    // const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
+    // this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
+    //   data => {
+    //     const uiwebadminminsal = {
+    //       token: data.token
+    //     };
+    //     localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
+    //     this.load = false;
+    //     this.router.navigate(['home']);
+    //   }, err => {
+    //     this.load = false;
+    //     if (err.error === null) {
+    //       this.uimensaje('danger', err, 3000);
+    //     } else {
+    //       this.uimensaje('danger', err, 3000);
+    //     }
+    //   }
+    // );
   }
 
   uimensaje(status: string, texto: string, time: number = 0) {
@@ -83,3 +85,4 @@ export class LoginComponent implements OnInit {
     }
   }
 }
+

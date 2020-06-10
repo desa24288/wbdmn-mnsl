@@ -287,10 +287,10 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
             this.reiniciarclave(rutusuario);
           }
           this.alertSwal.title = `Usuario ${ rutusuario } ${ textend }`;
+          this.buscarUsuarios();
+          this.usuariosseleccionados = [];
           this.alertSwal.show();
         }
-        this.buscarUsuarios();
-        this.usuariosseleccionados = [];
       });
     }
   }
