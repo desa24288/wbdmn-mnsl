@@ -56,6 +56,9 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   public cabecera = 'Mantención de Usuarios';
   public btnGrabar = false;
   public codupdate = 0;
+  public breadroute = null;
+  public breadname = null;
+  public fromindex = 0;
 
   public mensajeSweetAlert: MensajeSweetAlert = new MensajeSweetAlert();
   constructor(
@@ -83,12 +86,26 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const indx = localStorage.getItem('from_indx');
+    if (indx === '1') {
+    this.logicaBread(indx);
+    }
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.getBusquedausuario();
     });
+  }
+
+  logicaBread(valor: any) {
+    // tslint:disable-next-line: radix
+    this.fromindex = parseInt(valor);
+    console.log(this.fromindex);
+    if (this.fromindex === 1) {
+    this.breadname = 'Administrador de Claves de Usuario';
+    this.breadroute = '/claveusuarios';
+    }
   }
 
   logicaGrabar() {
@@ -337,7 +354,14 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   }
 
   onCerrar() {
-      this.router.navigate(['/home']);
+    switch (this.fromindex) {
+      case 0:
+        this.router.navigate(['/home']);
+        break;
+      case 1:
+        this.router.navigate([this.breadroute]);
+        break;
+    }
   }
 
   onChangePerfildisp(event: any, value: Perfildisponible) {

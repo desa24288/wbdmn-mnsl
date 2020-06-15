@@ -252,6 +252,8 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   onModificarusuario() {
     if (this.validarseleccionuno()) {
+      const indx = '1';
+      localStorage.setItem('from_indx', indx);
       this.router.navigate(['/mantencionusuarios']);
     } else {}
   }

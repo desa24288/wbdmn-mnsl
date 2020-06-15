@@ -3,6 +3,8 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb breadcrumbtext" style="margin-bottom: -2px;">
     <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item" *ngIf="fromindex===1"><a 
+      [routerLink]="[breadroute]">{{ breadname }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ cabecera }}</li>
   </ol>
 </nav>

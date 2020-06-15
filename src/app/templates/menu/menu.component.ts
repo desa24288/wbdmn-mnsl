@@ -65,6 +65,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
     return dtModal;
   }
 
+  onPerfilamiento() {
+    localStorage.removeItem('from_indx');
+  }
 
   onCerrar() {
     this.cerrarsesion();
