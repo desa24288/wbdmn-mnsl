@@ -93,6 +93,8 @@ export class CreadoemitidoComponent implements OnInit, AfterViewInit {
     this.load = false;
   }
 
+  onRegula() {}
+
   async emitircambioestado(foliobono: string, fechaemision: string, codformapago: number) {
     try {
       if (!this.fForm.valid) {
