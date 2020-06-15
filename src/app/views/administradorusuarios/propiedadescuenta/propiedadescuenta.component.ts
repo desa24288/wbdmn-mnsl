@@ -124,14 +124,6 @@ export class PropiedadescuentaComponent implements OnInit, AfterViewInit {
     this.SW_UPD_PWD1_ = checkupdpass;
   }
 
-  onFocusCantidaddias() {
-    console.log(this.lForm.controls.cantidaddia.value);
-  }
-
-  onFocusCaracterminimo() {
-    console.log(this.lForm.controls.caracterminimo.value);
-  }
-
   onCheckLetrasynumeros(event: any) {
     let checkletrasynum = null;
     if (event.target.checked) {
@@ -140,14 +132,6 @@ export class PropiedadescuentaComponent implements OnInit, AfterViewInit {
       checkletrasynum = '1';
     }
     this.SW_TYP_PWD_ = checkletrasynum;
-  }
-
-  onFocusBloquearcuenta() {
-    console.log(this.lForm.controls.bloquearcuenta.value);
-  }
-
-  onFocusUltimasusadas() {
-    console.log(this.lForm.controls.ultimasusadas.value);
   }
 
   uimensaje(status: string, texto: string, time: number = 0) {
