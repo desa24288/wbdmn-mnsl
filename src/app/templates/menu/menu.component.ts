@@ -4,7 +4,6 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import * as jwt_decode from 'jwt-decode';
 import { Profile } from 'src/app/models/entity/usuario/profile';
 import { Rol } from 'src/app/models/entity/usuario/rol';
-import { Formularios } from 'src/app/models/entity/usuario/formularios';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PropiedadescuentaComponent } from 'src/app/views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
 import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
