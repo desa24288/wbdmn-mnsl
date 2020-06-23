@@ -16,16 +16,16 @@
                    formControlName='rutusuario' formatRut />
                    <p class="text-danger text-form-valid"
                    *ngIf="lForm.controls['rutusuario'].invalid && (lForm.controls['rutusuario'].dirty || lForm.controls['rutusuario'].touched)">
-                   Requerido, mínimo caracteres 9 y máximo 10, Rut inválido</p>
+                   Requerido, mínimo 9 y máximo 10 caracteres, Rut inválido</p>
                   </div>
               </div>
-              
+
               <div class="form-row mb-3 mt-3">
                 <div class="col-sm-2 ml-2">Ingrese Nombre</div>
-                <div class="col-sm-9"><input type="text"  placeholder="Ingrese Nombre" class="form-control form-control-sm" formControlName='nomusuario' />
+                <div class="col-sm-9"><input type="text" placeholder="Ingrese Nombre" class="form-control form-control-sm" formControlName='nomusuario' />
                   <p class="text-danger text-form-valid"
                   *ngIf="lForm.controls['nomusuario'].invalid && (lForm.controls['nomusuario'].dirty || lForm.controls['nomusuario'].touched)">
-                  Requerido</p></div>
+                  Requerido, mínimo 10 y máximo 255 caracteres</p></div>
               </div>
           </form>
       </div>

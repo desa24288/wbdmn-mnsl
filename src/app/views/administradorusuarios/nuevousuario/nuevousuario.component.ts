@@ -13,6 +13,8 @@ import { ParametroService } from 'src/app/services/parametros/parametro.service'
 import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
 /*MODELS */
 import { Crearusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/crearusuario';
+import { RutValidator } from 'ng2-rut';
+import { Utils } from 'src/app/models/utils/utils';
 
 @Component({
   selector: 'app-nuevousuario',
@@ -41,6 +43,7 @@ export class NuevousuarioComponent implements OnInit, AfterViewInit {
 
   constructor(
     public router: Router,
+    public rutValidator: RutValidator,
     public formBuilder: FormBuilder,
     public bsModalRef: BsModalRef,
     public parametroService: ParametroService,
@@ -48,8 +51,8 @@ export class NuevousuarioComponent implements OnInit, AfterViewInit {
   ) {
     this.lForm = this.formBuilder.group(
       {
-        rutusuario: [{ value: null, disabled: false }, Validators.required],
-        nomusuario: [{ value: null, disabled: false }, Validators.required]
+        rutusuario: [null, [Validators.required, rutValidator]],
+        nomusuario: [null, Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(255)])]
       });
   }
 
@@ -75,23 +78,22 @@ export class NuevousuarioComponent implements OnInit, AfterViewInit {
 
   async onGuardar() {
     this.loading = true;
-    const rut = this.lForm.controls.rutusuario.value;
+    const rut = Utils.formatRut(this.lForm.controls.rutusuario.value);
     const nombre = this.lForm.controls.nomusuario.value;
     this.nuevousuario.rutusuario = rut;
     this.nuevousuario.nombre = nombre;
-    console.log(this.nuevousuario);
-    this.claveusuarioService.postCrearUsuario(this.nuevousuario).subscribe(res => {
-      this.loading = false;
-    }, err => {
-      this.loading = false;
-      this.alertSwalError.title = err.error.mensaje;
-      this.alertSwalError.show();
-      return;
-    });
-  }
-
-  onFocusNombre() {
-    console.log(this.lForm.controls.descperfil.value);
+    if (this.lForm.valid) {
+      this.claveusuarioService.postCrearUsuario(this.nuevousuario).subscribe(res => {
+        this.loading = false;
+        this.alertSwal.title = 'Usuario creado';
+        this.alertSwal.show();
+      }, err => {
+        this.loading = false;
+        this.alertSwalError.title = err.error.mensaje;
+        this.alertSwalError.show();
+        return;
+      });
+    }
   }
 
   uimensaje(status: string, texto: string, time: number = 0) {
@@ -110,5 +112,3 @@ export class NuevousuarioComponent implements OnInit, AfterViewInit {
     }
   }
 }
-
-

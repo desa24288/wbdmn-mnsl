@@ -6,10 +6,8 @@ import { NgProgressComponent } from '@ngx-progressbar/core';
 import { AlertComponent } from 'ngx-bootstrap/alert/alert.component';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { RutValidator } from 'ng2-rut';
 import { Utils } from 'src/app/models/utils/utils';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination/public_api';
-// import { Configuracion } from 'src/app/config/configuracion';
 /*Services */
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
@@ -54,14 +52,12 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   public usuariospag: Array<Paramusuario> = [];
 
   public usuario: Paramusuario = new Paramusuario();
-  // private global: Configuracion = new Configuracion();
   public isIngresado = true;
   public tabSelect = 'tabServiciosaludestado';
 
   constructor(
     public router: Router,
     public formBuilder: FormBuilder,
-    public rutValidator: RutValidator,
     public bsModalService: BsModalService,
     public parametroService: ParametroService,
     public claveusuariosService: ClaveusuariosService,
@@ -69,9 +65,6 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     this.pForm = this.formBuilder.group({
       serviciosalud: [{ value: null, disabled: false }, Validators.required],
       estadousuario: [{ value: null, disabled: false }, Validators.required]
-    });
-    this.qForm = this.formBuilder.group({
-      rutusuario: [{ value: null, disable: false }, Validators.required]
     });
   }
 
@@ -117,12 +110,10 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     if (event.target.checked) {
       if (this.usuariosseleccionados.indexOf(usuario) < 0) {
         this.usuariosseleccionados.push(usuario);
-        // this.setParamBusquedarut(Utils.formatRut(usuario.Col_RutUsuario));
       }
     } else {
         this.usuariosseleccionados.splice(this.usuariosseleccionados.indexOf(usuario), 1);
       }
-    this.setParamBusquedarut(Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario));
   }
 
   onBuscar() {
@@ -188,11 +179,9 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   async getBusquedausuario() {
     const admusuarios = JSON.parse(localStorage.getItem('busquedausuario'));
     const admusuariosrut = JSON.parse(localStorage.getItem('busquedausuariorut'));
-    console.log(admusuarios);
     if (admusuarios !== null) {
       this.pForm.controls.serviciosalud.setValue(admusuarios.serviciosalud);
       this.pForm.controls.estadousuario.setValue(admusuarios.estadousuario);
-      // localStorage.setItem('busquedausuario', JSON.stringify(admusuarios));
       this.buscarUsuarios();
     } else {
       this.qForm.controls.serviciosalud.setValue(admusuariosrut.rutusuario);
@@ -229,18 +218,8 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   setRowPagination() {
     this.currentPage = 1;
-    this.usuariospag = this.usuarios.slice(0, 8);
+    this.usuariospag = this.usuarios.slice(0, 6);
   }
-
-  /*ENVIA DATOS A MODAL */
-  // onIngresorr() {
-  //   this.bsModalRef = this.bsModalService.show(CambiorecursoComponent, this.setModalLicencia(1));
-  //   this.bsModalRef.content.onClose.subscribe(estado => {
-  //     if (estado === true) {
-  //       this.licenciasseleccionadas = [];
-  //     }
-  //   });
-  // }
 
   onNuevousuario() {
     this.bsModalRef = this.bsModalService.show(NuevousuarioComponent, this.setModal());
@@ -250,19 +229,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onModificarusuario() {
-    if (this.validarseleccionuno()) {
-      const indx = '1';
-      localStorage.setItem('from_indx', indx);
-      this.router.navigate(['/mantencionusuarios']);
-    } else {}
-  }
-
   onAccion(codaccion: number) {
     if (this.validarseleccionuno()) {
+      this.setParamBusquedarut(Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario));
       let textstart = null;
       let textend = null;
-
       switch (codaccion) {
         case 1:
           textstart = 'Bloquear';
@@ -276,6 +247,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
           textstart = 'Reiniciar Contraseña';
           textend = 'Contraseña Reiniciada';
           break;
+        case 4:
+          const indx = '1';
+          localStorage.setItem('from_indx', indx);
+          this.router.navigate(['/mantencionusuarios']);
+          return;
       }
       const rutusuario =  Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario);
       this.alertSwalConfirmar.title = `¿Desea ${ textstart } Usuario ${ rutusuario } ?`; // <- poner rut usuario
@@ -298,7 +274,6 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   bloquearusuario(rutusuario: string) {
-    // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
     this.claveusuariosService.postBloquearUsuario(
       rutusuario
     ).subscribe(data => true );
@@ -311,7 +286,6 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   reiniciarclave(rutusuario: string) {
-    // const rutusuario = this.usuariosseleccionados[0].Col_RutUsuario;
     this.claveusuariosService.postReiniciarClave(
       rutusuario
     ).subscribe(data => true );
@@ -344,28 +318,10 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     dtModal = {
       keyboard: false,
       backdrop: 'static',
-      class: 'modal-dialog-centered modal-lg',
-      initialState: {
-        // nomreceptor: nomemisor,
-      }
+      class: 'modal-dialog-centered modal-lg'
     };
     return dtModal;
   }
-
-  // setModalLicenciamodificar(accionl: number, rr: Recursoreposicion) {
-  //   let dtModal: any = {};
-  //   dtModal = {
-  //     keyboard: false,
-  //     backdrop: 'static',
-  //     class: 'modal-dialog-centered modal-lg',
-  //     initialState: {
-  //       // codtipolm: codtipolml,
-  //       accion: accionl,
-  //       recursoreposicion: rr
-  //     }
-  //   };
-  //   return dtModal;
-  // }
 
   setConfirmarBorrar() {
     let dtModal: any = {};
