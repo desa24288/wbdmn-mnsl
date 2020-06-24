@@ -1,0 +1,55 @@
+<div class="loading-container">
+  <div class="card">
+      <div class="card-header">{{ cabecera }}</div>
+      <div class="card-body">
+          <form [formGroup]="lForm" novalidate autocomplete="off" spellcheck="false">
+              <div *ngFor="let alert of alerts" class="text-center">
+                  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                      {{ alert.msg }}
+                  </alert>
+              </div>
+
+              <div class="form-row mb-3">
+                <div class="col-sm-2 ml-2">Ingrese Rut </div>
+                <div class="col-sm-4">
+                  <input appSelecttext placeholder="Ingrese Rut" type="text" class="form-control form-control-sm"
+                   formControlName='rutusuario' formatRut />
+                   <p class="text-danger text-form-valid"
+                   *ngIf="lForm.controls['rutusuario'].invalid && (lForm.controls['rutusuario'].dirty || lForm.controls['rutusuario'].touched)">
+                   Requerido, mínimo 9 y máximo 10 caracteres, Rut inválido</p>
+                  </div>
+              </div>
+
+              <div class="form-row mb-3 mt-3">
+                <div class="col-sm-2 ml-2">Ingrese Nombre</div>
+                <div class="col-sm-9"><input type="text" placeholder="Ingrese Nombre" class="form-control form-control-sm" formControlName='nomusuario' />
+                  <p class="text-danger text-form-valid"
+                  *ngIf="lForm.controls['nomusuario'].invalid && (lForm.controls['nomusuario'].dirty || lForm.controls['nomusuario'].touched)">
+                  Requerido, mínimo 10 y máximo 255 caracteres</p></div>
+              </div>
+          </form>
+      </div>
+      <div class="card-header">
+          <div class="row">
+              <div class="col-md-6">
+                  <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="GRABAR NUEVO USUARIO"
+                      (click)="onGuardar()" [disabled]="!lForm.valid"><i class="fas fa-save"></i>
+                      GRABAR</button>
+              </div>
+              <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="CERRAR" (click)="onCerrar()">
+                      <i class="fas fa-window-close"></i>
+                      CERRAR</button>
+              </div>
+          </div>
+      </div>
+
+      <swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+
+      <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+  </div>
+</div>
