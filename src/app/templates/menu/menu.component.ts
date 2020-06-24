@@ -2,8 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import * as jwt_decode from 'jwt-decode';
-import { Profile } from 'src/app/models/entity/usuario/profile';
-import { Rol } from 'src/app/models/entity/usuario/rol';
+import { Userprofile } from 'src/app/config/userprofile';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PropiedadescuentaComponent } from 'src/app/views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
 import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
@@ -14,8 +13,7 @@ import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit, AfterViewInit {
-  public profile: Profile;
-  public rol: Rol;
+  public profile: Userprofile =  new Userprofile();
   public bsModalRef: BsModalRef;
 
   constructor(
@@ -25,7 +23,6 @@ export class MenuComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this.loadprofile();
   }
 
   ngAfterViewInit() {
@@ -82,20 +79,6 @@ export class MenuComponent implements OnInit, AfterViewInit {
         console.log(err.statusText);
       }
     );
-  }
-
-  loadprofile() {
-    const uiwebadmin = JSON.parse(localStorage.getItem('uiwebadminminsal'));
-    if (uiwebadmin !== null) {
-      const decodedoken = this.getDecodedAccessToken(uiwebadmin.token);
-      this.profile = new Profile();
-      this.profile = decodedoken;
-
-      for (const lrol of this.profile.Roles) {
-        this.rol = lrol;
-        break;
-      }
-    }
   }
 
   getDecodedAccessToken(token: string): any {

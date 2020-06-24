@@ -30,17 +30,11 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { Ng2Rut } from 'ng2-rut';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
-import { CreadoemitidoComponent } from './views/bono/creadoemitido/creadoemitido.component';
-import { EmitidoanuladoComponent } from './views/bono/emitidoanulado/emitidoanulado.component';
 import { TokenService } from './services/utils/token.service';
-import { RegulafechaComponent } from './views/bono/regulafecha/regulafecha.component';
-import { RegulaformapagoComponent } from './views/bono/regulaformapago/regulaformapago.component';
 import { CaducadosComponent } from './views/gestion/informes/caducados/caducados.component';
 import { ConfirmComponent } from './templates/confirm/confirm.component';
 import { ConsultacambioestadoComponent } from './views/gestion/consulta/consultacambioestado/consultacambioestado.component';
 import { ConsultabonoComponent } from './views/gestion/consulta/consultabono/consultabono.component';
-import { BloqueoComponent } from './views/prestacion/bloqueo/bloqueo.component';
-import { EditarbloqueoComponent } from './views/prestacion/editarbloqueo/editarbloqueo.component';
 import { ConsultaadjuntoComponent } from './views/gestion/consulta/consultaadjunto/consultaadjunto.component';
 import { ClavesusuariosComponent } from './views/administradorusuarios/clavesusuarios/clavesusuarios.component';
 import { MantencionusuariosComponent } from './views/administradorusuarios/mantencionusuarios/mantencionusuarios.component';
@@ -60,18 +54,12 @@ import { CambiopasswordComponent } from './templates/cambiopassword/cambiopasswo
     AutofocusDirective,
     MaxlengthDirective,
     SelecttextDirective,
-    CreadoemitidoComponent,
-    EmitidoanuladoComponent,
     RutformatPipe,
     NumberonlyDirective,
-    RegulafechaComponent,
-    RegulaformapagoComponent,
     CaducadosComponent,
     ConfirmComponent,
     ConsultacambioestadoComponent,
     ConsultabonoComponent,
-    BloqueoComponent,
-    EditarbloqueoComponent,
     ConsultaadjuntoComponent,
     ClavesusuariosComponent,
     MantencionusuariosComponent,
@@ -116,9 +104,6 @@ import { CambiopasswordComponent } from './templates/cambiopassword/cambiopasswo
   bootstrap: [AppComponent],
   entryComponents: [
     ConfirmComponent,
-    RegulafechaComponent,
-    RegulaformapagoComponent,
-    EditarbloqueoComponent,
     PropiedadescuentaComponent,
     MantenedorperfilesComponent,
     NuevousuarioComponent

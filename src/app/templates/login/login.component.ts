@@ -58,7 +58,8 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['home']);
       }, err => {
         this.load = false;
-        if (err.error === null) {
+        console.log(err.error.mensaje);
+        if (err.error.mensaje === null || err.error.mensaje === undefined) {
           this.uimensaje('danger', 'Usuario inválido', 3000);
         } else {
           this.uimensaje('danger', err.error.mensaje, 3000);

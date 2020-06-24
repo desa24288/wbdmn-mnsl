@@ -10,58 +10,6 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
 
-      <!-- Administración -->
-      <!-- <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuHerramienta" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Administración
-        </a>
-        <div class="dropdown-menu" routerLinkActive="active" aria-labelledby="navbarDropdownMenuHerramienta">
-
-          <ng-container *ngFor="let formulario of rol['Formularios']">
-            <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">Cambio
-              Estado Bono Creado/Emitido</a>
-          </ng-container>
-
-          <ng-container *ngFor="let formulario of rol['Formularios']">
-            <a *ngIf="formulario.Name=='emitidoanulado'" class="dropdown-item pointer"
-              routerLink="/emitidoanulado">Cambio Estado Bono Emitido/Anulado</a>
-          </ng-container> -->
-
-          <!-- <div class="dropdown-divider"></div> -->
-
-          <!-- <ng-container *ngFor="let formulario of rol['Formularios']">
-            <a *ngIf="formulario.Name=='bloqueoprestacion'" class="dropdown-item pointer"
-              routerLink="/bloqueoprestacion"> Bloqueo de Prestaciones</a>
-          </ng-container>
-
-        </div>
-      </li> -->
-
-      <!-- Gestiom -->
-      <!-- <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuHerramienta" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Gestion
-        </a>
-
-        <div class="dropdown-menu" routerLinkActive="active" aria-labelledby="navbarDropdownMenuHerramienta">
-          <ng-container *ngFor="let formulario of rol['Formularios']">
-            <a *ngIf="formulario.Name=='consultabono'" class="dropdown-item pointer" routerLink="/consultabono">Consulta
-              Bonos/PreBonos WEB</a>
-          </ng-container>
-          <ng-container *ngFor="let formulario of rol['Formularios']">
-            <a *ngIf="formulario.Name=='consultacambioestado'" class="dropdown-item pointer"
-              routerLink="/consultacambioestado">Consulta Cambio Estado Bono</a>
-          </ng-container>
-          <ng-container *ngFor="let formulario of rol['Formularios']">
-            <a *ngIf="formulario.Name=='consultaadjunto'" class="dropdown-item pointer"
-              routerLink="/consultaadjunto">Consultar Adjuntos Orden Médica Portal del Prestador</a>
-          </ng-container>
-        </div>
-      </li> -->
-
-
        <!-- Administración de Usuarios-->
        <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuHerramienta" data-toggle="dropdown"
@@ -110,13 +58,13 @@
       <div class="btn-group" role="group">
         <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false" style="min-width: 290px;">
-          {{ profile.NombreUsuario }}
+          {{ profile.nomusuario }}
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-          <a class="dropdown-item"><i class="fas fa-user"></i> {{ profile.RutUsuario }} </a>
+          <a class="dropdown-item"><i class="fas fa-user"></i> {{ profile.rutusuario }} </a>
 
-          <a *ngFor='let rol of profile.Roles' class="dropdown-item"><i class="fas fa-user-tag"></i>
-            {{ rol.GloRol }} </a>
+          <a *ngFor='let rol of profile.rol' class="dropdown-item"><i class="fas fa-user-tag"></i>
+            {{ rol.ds_rolLM }} </a>
 
           <li class="divider dropdown-divider"></li>
           <a class="dropdown-item pointer" (click)="onCerrar()"><i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN</a>

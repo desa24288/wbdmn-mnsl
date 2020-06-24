@@ -1,14 +1,18 @@
 import { Profile } from '../models/entity/usuario/profile';
 import * as jwt_decode from 'jwt-decode';
+import { Rol } from '../models/entity/usuario/rol';
 export class Userprofile {
   private profile: Profile;
   public nomusuario = '';
   public rutusuario = '';
+  public rol: Array<Rol> = [];
+  public rolobj: Rol;
 
   constructor() {
     this.loadprofile();
-    this.rutusuario = this.profile.RutUsuario;
-    this.nomusuario = this.profile.NombreUsuario;
+    this.rutusuario = this.profile.usuario;
+    this.nomusuario = this.profile.nombre;
+    this.rol.push(this.rolobj);
   }
 
  private  loadprofile() {
@@ -17,8 +21,14 @@ export class Userprofile {
       const decodedoken = this.getDecodedAccessToken(uiwebadmin.token);
       this.profile = new Profile();
       this.profile = decodedoken;
+
+      for (const lrol of this.profile.perfiles) {
+        this.rolobj = lrol;
+        break;
+      }
     }
   }
+
   private getDecodedAccessToken(token: string): any {
     try {
       return jwt_decode(token);
