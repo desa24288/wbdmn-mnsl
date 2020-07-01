@@ -57,9 +57,9 @@
                         <td>
                           <input  class="ml-1 mr-2" type="checkbox" formControlName="perfildisponible"
                             (change)="onChangePerfildisp($event, perfildisponible)" 
-                            id='lm-{{ perfildisponible.computed }} {{ perfildisponible.id_rollm }}'>
-                          <label class="pointer" for='lm-{{ perfildisponible.computed }} {{ perfildisponible.id_rollm }}'>
-                            <p class="small">{{ perfildisponible.computed }}</p>
+                            id='lm-{{ perfildisponible.ds_rollm }} {{ perfildisponible.id_rollm }}'>
+                          <label class="pointer" for='lm-{{ perfildisponible.ds_rollm }} {{ perfildisponible.id_rollm }}'>
+                            <p class="small">{{ perfildisponible.ds_rollm }}</p>
                           </label>
                         </td>
                       </tr>
@@ -84,9 +84,9 @@
                         <td>
                           <input class="ml-1 mr-2" type="checkbox"
                             (change)="onChangePerfilasig($event, perfilasignado)"
-                            id='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.computed }}'>
-                          <label class="pointer" for='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.computed }}'>
-                            <p class="small">{{ perfilasignado.computed }}</p>
+                            id='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.ds_rollm }}'>
+                          <label class="pointer" for='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.ds_rollm }}'>
+                            <p class="small">{{ perfilasignado.ds_rollm }}</p>
                           </label>
                         </td>
                       </tr>

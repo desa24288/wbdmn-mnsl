@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertComponent } from 'ngx-bootstrap/alert/public_api';
 import { RutValidator } from 'ng2-rut';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import * as jwt_decode from 'jwt-decode';
+import { PropiedadescuentaService } from 'src/app/services/administradorusuarios/propiedadescuenta.service';
+/** COMPONENTS */
+import { RestablecerpasswordComponent } from '../cambiopassword/restablecerpassword/restablecerpassword.component';
+/** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
+import { Profile } from 'src/app/models/entity/usuario/profile';
+import { Actualizarpropiedades } from 'src/app/models/entity/adminusuarios/propiedadescuenta/actualizarpropiedades';
 
 @Component({
   selector: 'app-login',
@@ -14,17 +21,20 @@ import { Utils } from 'src/app/models/utils/utils';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  public bsModalRefRecovery: BsModalRef;
-  public bsModalRefCambiar: BsModalRef;
+  public bsModalRef: BsModalRef;
   public alerts: any[] = [];
-  public lForm: FormGroup;
   public load = false;
+  public lForm: FormGroup;
+  public idregla = 1;
+  public propiedades: Actualizarpropiedades = new Actualizarpropiedades();
 
   constructor(
     public router: Router,
     public rutValidator: RutValidator,
     public formBuilder: FormBuilder,
-    public usuarioService: UsuarioService
+    public bsModalService: BsModalService,
+    public usuarioService: UsuarioService,
+    public propiedadesService: PropiedadescuentaService
   ) {
     this.lForm = this.formBuilder.group({
       rutbeneficiario: [null, [Validators.required, rutValidator]],
@@ -33,6 +43,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.validaPropiedades();
   }
 
   onLogin(value: any) {
@@ -43,7 +54,25 @@ export class LoginComponent implements OnInit {
     this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
   }
 
-  autenticacion(value: any) {
+  validaPropiedades() {
+    this.propiedadesService.getPropiedades(this.idregla).subscribe(res => {
+      this.propiedades = res;
+      console.log(this.propiedades);
+    }, err => {
+      this.uimensaje('danger', 'Error al buscar propiedades de usuario', 3000);
+    });
+  }
+
+  onRecovery() {
+    // this.router.navigate(['cambiopass']);
+    this.bsModalRef = this.bsModalService.show(RestablecerpasswordComponent, this.setModal());
+    this.bsModalRef.content.onClose.subscribe(estado => {
+      if (estado === true) {
+      }
+    });
+  }
+
+  async autenticacion(value: any) {
     this.load = true;
     // se autentica con el servidor
     const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
@@ -54,18 +83,40 @@ export class LoginComponent implements OnInit {
         };
         localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
         this.load = false;
-        // this.router.navigate(['cambiopass']);
-        this.router.navigate(['home']);
+        const profile: Profile =  this.getDecodedAccessToken(data.token);
+        // if (profile.estado === '5' || this.propiedades.SW_UPD_PWD1 === 'S') {
+        if (profile.estado === '5') {
+          this.router.navigate(['cambiopass']);
+        } else {
+          this.router.navigate(['home']);
+        }
       }, err => {
         this.load = false;
-        console.log(err.error.mensaje);
-        if (err.error.mensaje === null || err.error.mensaje === undefined) {
-          this.uimensaje('danger', 'Usuario inválido', 3000);
+        console.log(err);
+        if (err.statusText === null || err.statusText === undefined || err.statusText === 'Unauthorized') {
+          this.uimensaje('danger', 'Usuario no autorizado', 3000);
         } else {
-          this.uimensaje('danger', err.error.mensaje, 3000);
+          this.uimensaje('danger', err.message, 3000);
         }
       }
     );
+  }
+
+  private getDecodedAccessToken(token: string): any {
+    try {
+      return jwt_decode(token);
+    } catch (err) {
+    }
+  }
+
+  setModal() {
+    let dtModal: any = {};
+    dtModal = {
+      keyboard: false,
+      backdrop: 'static',
+      class: 'modal-dialog-centered modal-lg'
+    };
+    return dtModal;
   }
 
   uimensaje(status: string, texto: string, time: number = 0) {

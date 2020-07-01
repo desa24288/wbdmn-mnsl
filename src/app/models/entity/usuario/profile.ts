@@ -4,6 +4,7 @@ import { Serviciosalud } from '../parametros/serviciosalud';
 export class Profile {
   usuario: string;
   nombre: string;
+  estado: string;
   sucursales: Array<Serviciosalud>;
   perfiles: Array<Rol>;
   // RutUsuario: string;
@@ -19,6 +20,7 @@ export class Profile {
   constructor(
     usuario?: string,
     nombre?: string,
+    estado?: string,
     sucursales?: Array<Serviciosalud>,
     perfiles?: Array<Rol>
     // RutUsuario?: string,
@@ -33,6 +35,7 @@ export class Profile {
   ) {
     this.usuario = usuario;
     this.nombre = nombre;
+    this.estado = estado;
     this.sucursales = sucursales;
     this.perfiles = perfiles;
     // this.RutUsuario = RutUsuario;

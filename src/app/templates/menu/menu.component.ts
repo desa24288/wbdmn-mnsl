@@ -27,7 +27,6 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-
     });
   }
 

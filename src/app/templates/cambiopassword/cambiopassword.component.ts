@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AlertComponent } from 'ngx-bootstrap/alert/public_api';
 import { RutValidator } from 'ng2-rut';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { PropiedadescuentaService } from 'src/app/services/administradorusuarios/propiedadescuenta.service';
+/** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
 
@@ -24,15 +26,18 @@ export class CambiopasswordComponent implements OnInit {
     public router: Router,
     public rutValidator: RutValidator,
     public formBuilder: FormBuilder,
-    public usuarioService: UsuarioService
+    public usuarioService: UsuarioService,
+    public propiedadesService: PropiedadescuentaService,
   ) {
     this.lForm = this.formBuilder.group({
-      password1: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      password2: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])]
+      temporalpass: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      newpass1: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      newpass2: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])]
     });
   }
 
   ngOnInit() {
+    localStorage.removeItem('uiwebadminminsal');
   }
 
   onValidarpassword(value: any) {
@@ -69,6 +74,9 @@ export class CambiopasswordComponent implements OnInit {
     // );
   }
 
+  onCerrar() {
+    this.router.navigate(['login']);
+  }
   uimensaje(status: string, texto: string, time: number = 0) {
     this.alerts = [];
     if (time !== 0) {
