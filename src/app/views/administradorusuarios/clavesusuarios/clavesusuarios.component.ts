@@ -16,8 +16,9 @@ import { ClaveusuariosService } from 'src/app/services/administradorusuarios/cla
 import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/paramusuario';
 import { Serviciosalud } from 'src/app/models/entity/adminusuarios/claveusuarios/serviciosalud';
 import { Estadousuario } from 'src/app/models/entity/adminusuarios/claveusuarios/estadousuario';
-import { NuevousuarioComponent } from '../nuevousuario/nuevousuario.component';
-import { BrowserStack } from 'protractor/built/driverProviders';
+// import { NuevousuarioComponent } from '../nuevousuario/nuevousuario.component';
+// import { BrowserStack } from 'protractor/built/driverProviders';
+import { RutValidator } from 'ng2-rut';
 
 @Component({
   selector: 'app-clavesusuarios',
@@ -61,10 +62,14 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     public bsModalService: BsModalService,
     public parametroService: ParametroService,
     public claveusuariosService: ClaveusuariosService,
+    public rutValidator: RutValidator
   ) {
     this.pForm = this.formBuilder.group({
       serviciosalud: [{ value: null, disabled: false }, Validators.required],
       estadousuario: [{ value: null, disabled: false }, Validators.required]
+    });
+    this.qForm = this.formBuilder.group({
+      rutusuario: [null, [Validators.required, rutValidator]]
     });
   }
 
@@ -222,11 +227,10 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   onNuevousuario() {
-    this.bsModalRef = this.bsModalService.show(NuevousuarioComponent, this.setModal());
-    this.bsModalRef.content.onClose.subscribe(estado => {
-      if (estado === true) {
-      }
-    });
+    localStorage.removeItem('busquedarut');
+    const indx = '1';
+    localStorage.setItem('from_indx', indx);
+    this.router.navigate(['/mantencionusuarios']);
   }
 
   onAccion(codaccion: number) {
@@ -311,16 +315,6 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       return false;
     }
     return true;
-  }
-
-  setModal() {
-    let dtModal: any = {};
-    dtModal = {
-      keyboard: false,
-      backdrop: 'static',
-      class: 'modal-dialog-centered modal-lg'
-    };
-    return dtModal;
   }
 
   setConfirmarBorrar() {

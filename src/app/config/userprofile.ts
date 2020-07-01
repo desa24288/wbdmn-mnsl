@@ -5,6 +5,7 @@ export class Userprofile {
   private profile: Profile;
   public nomusuario = '';
   public rutusuario = '';
+  public estadousuario = '';
   public rol: Array<Rol> = [];
   public rolobj: Rol;
 
@@ -12,6 +13,7 @@ export class Userprofile {
     this.loadprofile();
     this.rutusuario = this.profile.usuario;
     this.nomusuario = this.profile.nombre;
+    this.estadousuario = this.profile.estado;
     this.rol.push(this.rolobj);
   }
 

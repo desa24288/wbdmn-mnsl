@@ -43,6 +43,7 @@ import { PerfilamientomodulosComponent } from './views/administradorperfiles/per
 import { MantenedorperfilesComponent } from './views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
 import { NuevousuarioComponent } from './views/administradorusuarios/nuevousuario/nuevousuario.component';
 import { CambiopasswordComponent } from './templates/cambiopassword/cambiopassword.component';
+import { RestablecerpasswordComponent } from './templates/cambiopassword/restablecerpassword/restablecerpassword.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { CambiopasswordComponent } from './templates/cambiopassword/cambiopasswo
     PerfilamientomodulosComponent,
     MantenedorperfilesComponent,
     NuevousuarioComponent,
-    CambiopasswordComponent
+    CambiopasswordComponent,
+    RestablecerpasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -106,7 +108,8 @@ import { CambiopasswordComponent } from './templates/cambiopassword/cambiopasswo
     ConfirmComponent,
     PropiedadescuentaComponent,
     MantenedorperfilesComponent,
-    NuevousuarioComponent
+    NuevousuarioComponent,
+    RestablecerpasswordComponent
   ]
 })
 export class AppModule { }

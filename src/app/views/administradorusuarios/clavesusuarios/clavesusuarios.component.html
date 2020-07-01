@@ -36,7 +36,7 @@
           <tab customClass="tabClass" heading="Servicio / Estado Usuario" id="tabServiciosaludestado" (selectTab)="onSelect($event)">
             <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
               <div class="row mt-1 mb-2">
-                <div class="form-goup col-sm-4">
+                <div class="form-goup col-sm-3 ml-3">
                   <label for="serviciosalud">Servicio de Salud</label>
                   <select class='form-control form-control-sm' name='serviciosalud'
                   formControlName='serviciosalud' [compareWith]='compare_serviciosalud'>
@@ -49,7 +49,7 @@
                     *ngIf="pForm.controls['serviciosalud'].invalid && (pForm.controls['serviciosalud'].dirty || pForm.controls['serviciosalud'].touched)">
                     Requerido</p>
                 </div>
-                <div class="form-goup col-sm-4">
+                <div class="form-goup col-sm-2">
                   <label for="estadousuario">Estado Usuarios</label>
                   <select class='form-control form-control-sm' name='estadousuario'
                   formControlName='estadousuario' [compareWith]='compare_estadousuarios'>
@@ -63,6 +63,19 @@
                     Requerido</p>
                 </div>
               </div>
+            </form>
+          </tab>
+          <tab customClass="tabClass" heading="Rut Usuario" id="tabBusquedaRut" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-2 ml-3">
+                  <label for="estadousuario">Rut Usuario</label>
+                    <input appSelecttext placeholder="Ingrese Rut" type="text" class="form-control form-control-sm"
+                      formControlName='rutusuario' formatRut />
+                </div>
+              </div><p class="text-danger text-form-valid ml-3 mb-1"
+                *ngIf="qForm.controls['rutusuario'].invalid && (qForm.controls['rutusuario'].dirty || qForm.controls['rutusuario'].touched)">
+                Requerido, mínimo 9 y máximo 10 caracteres, Rut inválido</p>
             </form>
           </tab>
         </tabset>
