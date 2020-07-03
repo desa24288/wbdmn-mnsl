@@ -9,6 +9,7 @@ import { PropiedadescuentaService } from 'src/app/services/administradorusuarios
 /** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
+import { Propiedadesclave } from 'src/app/models/entity/adminusuarios/propiedadescuenta/propiedadesclave';
 
 @Component({
   selector: 'app-cambiopassword',
@@ -21,6 +22,11 @@ export class CambiopasswordComponent implements OnInit {
   public alerts: any[] = [];
   public lForm: FormGroup;
   public load = false;
+  public propiedadesclave: Propiedadesclave = new Propiedadesclave();
+  public mincaracteres = 30;
+  public letrasnum = '1';
+  public passwordusadas = 0;
+  public passpattern = null;
 
   constructor(
     public router: Router,
@@ -29,10 +35,13 @@ export class CambiopasswordComponent implements OnInit {
     public usuarioService: UsuarioService,
     public propiedadesService: PropiedadescuentaService,
   ) {
+    this.cargaPropiedades();
+    console.log(this.passpattern);
     this.lForm = this.formBuilder.group({
-      temporalpass: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      newpass1: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      newpass2: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])]
+      temporalpass: [null, Validators.required],
+      newpass1: [null, Validators.compose([Validators.required, Validators.minLength(this.mincaracteres),
+        Validators.pattern(this.passpattern), Validators.maxLength(30)])],
+      newpass2: [null, Validators.compose([Validators.required])]
     });
   }
 
@@ -40,6 +49,20 @@ export class CambiopasswordComponent implements OnInit {
     localStorage.removeItem('uiwebadminminsal');
   }
 
+  async cargaPropiedades() {
+    this.propiedadesclave = JSON.parse(localStorage.getItem('propiedadesclave'));
+    this.mincaracteres = this.propiedadesclave.mincaracteres;
+    this.letrasnum = this.propiedadesclave.letrasnum;
+    /** Si propiedadesclave.letrasnum==2 newpass1 debe tener solo Letras y Números */
+    if (this.letrasnum === '2') {
+      this.passpattern = `^[a-zA-Z0-9_]{${this.mincaracteres},30}$`;
+    }
+    this.passwordusadas = this.propiedadesclave.passwordusadas;
+    console.log(this.propiedadesclave);
+    console.log(this.mincaracteres);
+    console.log(this.letrasnum);
+    console.log(this.passwordusadas);
+  }
   onValidarpassword(value: any) {
      console.log('SE VALIDA PASSWORD');
      this.cambiarpassword(value);

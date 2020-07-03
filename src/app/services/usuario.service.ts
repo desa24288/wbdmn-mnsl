@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { TokenService } from './utils/token.service';
 import { Login } from '../models/entity/usuario/login';
 import { Observable } from 'rxjs';
+import { Claves } from 'src/app/models/entity/usuario/claves';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,12 @@ export class UsuarioService {
 
   public logout(): Observable<any> {
     return this.httpClient.get<any>(this.TARGET_URL.concat('/logout'), this.tokenService.get());
+  }
+
+  public getHistClaves(rutusuario: string): Observable<Claves[]> {
+    return this.httpClient.get<Claves[]>(
+      this.TARGET_URL.concat('/histclaves/')
+      .concat(rutusuario)
+      , this.tokenService.get());
   }
 }

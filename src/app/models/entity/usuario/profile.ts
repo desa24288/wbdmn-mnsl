@@ -5,6 +5,7 @@ export class Profile {
   usuario: string;
   nombre: string;
   estado: string;
+  fechaupd: string;
   sucursales: Array<Serviciosalud>;
   perfiles: Array<Rol>;
   // RutUsuario: string;
@@ -21,6 +22,7 @@ export class Profile {
     usuario?: string,
     nombre?: string,
     estado?: string,
+    fechaupd?: string,
     sucursales?: Array<Serviciosalud>,
     perfiles?: Array<Rol>
     // RutUsuario?: string,
@@ -36,6 +38,7 @@ export class Profile {
     this.usuario = usuario;
     this.nombre = nombre;
     this.estado = estado;
+    this.fechaupd = fechaupd;
     this.sucursales = sucursales;
     this.perfiles = perfiles;
     // this.RutUsuario = RutUsuario;

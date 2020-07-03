@@ -1,6 +1,7 @@
 import { Profile } from '../models/entity/usuario/profile';
 import * as jwt_decode from 'jwt-decode';
 import { Rol } from '../models/entity/usuario/rol';
+
 export class Userprofile {
   private profile: Profile;
   public nomusuario = '';
