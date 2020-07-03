@@ -12,7 +12,7 @@ import { ConsultaadjuntoComponent } from './views/gestion/consulta/consultaadjun
 import { ClavesusuariosComponent } from './views/administradorusuarios/clavesusuarios/clavesusuarios.component';
 import { MantencionusuariosComponent } from './views/administradorusuarios/mantencionusuarios/mantencionusuarios.component';
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
-import { CambiopasswordComponent } from './templates/cambiopassword/cambiopassword.component';
+import { CambiopasswordComponent } from './templates/cambiarpassword/cambiopassword.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },

@@ -5,7 +5,7 @@ export class Actualizarpropiedades {
     SW_UPD_PWD1: string;
     SW_UPD_PWD2: number;
     SW_LEN_PWD: number;
-    SW_TYP_PWD: string;
+    SW_TYP_PWD: number;
     SW_INT_BLQ: number;
     SW_PWD_UNI: number;
 
@@ -16,7 +16,7 @@ export class Actualizarpropiedades {
         SW_UPD_PWD1?: string,
         SW_UPD_PWD2?: number,
         SW_LEN_PWD?: number,
-        SW_TYP_PWD?: string,
+        SW_TYP_PWD?: number,
         SW_INT_BLQ?: number,
         SW_PWD_UNI?: number
     ) {

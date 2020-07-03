@@ -42,8 +42,8 @@ import { PropiedadescuentaComponent } from './views/administradorusuarios/propie
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 import { MantenedorperfilesComponent } from './views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
 import { NuevousuarioComponent } from './views/administradorusuarios/nuevousuario/nuevousuario.component';
-import { CambiopasswordComponent } from './templates/cambiopassword/cambiopassword.component';
-import { RestablecerpasswordComponent } from './templates/cambiopassword/restablecerpassword/restablecerpassword.component';
+import { CambiopasswordComponent } from './templates/cambiarpassword/cambiopassword.component';
+import { RestablecerpasswordComponent } from './templates/cambiarpassword/restablecerpassword/restablecerpassword.component';
 
 @NgModule({
   declarations: [
