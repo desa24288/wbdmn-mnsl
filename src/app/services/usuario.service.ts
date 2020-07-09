@@ -31,10 +31,11 @@ export class UsuarioService {
     return this.httpClient.get<any>(this.TARGET_URL.concat('/logout'), this.tokenService.get());
   }
 
-  public getHistClaves(rutusuario: string): Observable<Claves[]> {
-    return this.httpClient.get<Claves[]>(
-      this.TARGET_URL.concat('/histclaves/')
-      .concat(rutusuario)
+  public getIntentosbloq(rutusuario: string, aplicativo: string): Observable<any> {
+    return this.httpClient.get<any>(
+      this.TARGET_URL.concat('/intentosbloq/')
+      .concat(rutusuario).concat('/')
+      .concat(aplicativo)
       , this.tokenService.get());
   }
 }
