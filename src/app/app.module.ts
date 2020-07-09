@@ -92,9 +92,10 @@ import { RestablecerpasswordComponent } from './templates/cambiarpassword/restab
     SweetAlert2Module.forRoot({
       buttonsStyling: false,
       customClass: 'modal-content',
-      confirmButtonClass: 'btn btn-primary',
-      cancelButtonClass: 'btn',
-      confirmButtonText: 'Aceptar'
+      confirmButtonClass: 'btn btn-primary mr-4',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar'
     }),
     Ng2Rut,
     NgxMaskModule.forRoot()

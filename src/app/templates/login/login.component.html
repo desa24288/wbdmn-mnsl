@@ -58,6 +58,11 @@
           {{ alert.msg }}
         </alert>
       </div>
+      <div *ngFor="let alert of alertintentos" class="text-center mt-3">
+        <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+          {{ alert.msg }}
+        </alert>
+      </div>
     </div>
   </div>
 
@@ -65,3 +70,6 @@
     <img src="./assets/style/images/logo.png">
   </div>
 </div>
+<swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"></swal>
+<swal #alertSwal title="" text="" type="success" [showCancelButton]="false"></swal>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>

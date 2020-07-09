@@ -150,6 +150,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
        serviciosalud,
        estadousuario
       ).subscribe(data => {
+        this.usuariosseleccionados = [];
         this.usuarios = data;
         this.setRowPagination();
         this.setParametros(serviciosalud, estadousuario);
@@ -168,6 +169,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     this.progressBar.start();
     const rutusuario = Utils.formatRut(this.qForm.controls.rutusuario.value);
     this.claveusuariosService.getUsuariorut(rutusuario).subscribe(data => {
+      this.usuariosseleccionados = [];
       this.usuarios = data;
       this.setRowPagination();
       this.setParametrosrut(rutusuario);
@@ -292,7 +294,10 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   reiniciarclave(rutusuario: string) {
     this.claveusuariosService.postReiniciarClave(
       rutusuario
-    ).subscribe(data => true );
+    ).subscribe(data => {
+      console.log(data);
+      return true;
+    } );
   }
 
   validarseleccionuno() {
