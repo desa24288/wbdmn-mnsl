@@ -18,8 +18,6 @@ import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
 import { Profile } from 'src/app/models/entity/usuario/profile';
 import { Actualizarpropiedades } from 'src/app/models/entity/adminusuarios/propiedadescuenta/actualizarpropiedades';
-import { Claves } from 'src/app/models/entity/usuario/claves';
-import { ContadorBlq } from 'src/app/models/entity/bloqueo/contadorBlq';
 import { exit } from 'process';
 
 @Component({
@@ -38,19 +36,15 @@ export class LoginComponent implements OnInit {
   public lForm: FormGroup;
   public idregla = 1;
   public propiedades: Actualizarpropiedades = new Actualizarpropiedades();
-  public claves: Array<Claves> = [];
   public loading = false;
 
   public diascambiopass = 0;
   public mincaracteres = 0;
   public letrasnum = 0;
   public intentosbloq = 0;
-  public contadorintbloq = 0;
   public passwordusadas = 0;
-  public diffdias = 0;
-  public registros: ContadorBlq = new ContadorBlq();
   public aplicativo = 'webadmin-minsal';
-  public intentoslog = 0;
+  public rutfuncionario = '';
 
   public profile: Profile = new Profile();
 
@@ -87,12 +81,16 @@ export class LoginComponent implements OnInit {
     this.propiedadesService.getPropiedades(this.idregla).subscribe(res => {
       this.propiedades = res;
       console.log(this.propiedades);
+      /** Cantidad de dias permitidos para cambiar contraseña */
       this.diascambiopass = this.propiedades.SW_UPD_PWD2;
+      /** Devuelve la cantidad de caracteres permitidos */
       this.mincaracteres = this.propiedades.SW_LEN_PWD;
-      /** 1 = No ; 2 = Si */
+      /** verifica si solo acepta letras y números */
+      /* 1 = No ; 2 = Si */
       this.letrasnum = this.propiedades.SW_TYP_PWD;
+      /** Devuelve la cantidad de intentos permitidos */
       this.intentosbloq = this.propiedades.SW_INT_BLQ;
-      this.contadorintbloq = this.intentosbloq;
+      /** Devuelve numero de ultimas contraseñas usadas permitidas */
       this.passwordusadas = this.propiedades.SW_PWD_UNI;
     }, err => {
       this.uimensaje('danger', 'Error al buscar propiedades de usuario', 3000);
@@ -109,98 +107,83 @@ export class LoginComponent implements OnInit {
 
   async autenticacion(value: any) {
     this.load = true;
-    // se autentica con el servid
     const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
+    this.rutfuncionario = rutusuario;
     this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
       data => {
-        if (data === '3') {
-          this.alertSwalAlert.title = 'Cuenta Bloqueada favor comunicarse con Adminstrador';
-          this.alertSwalAlert.show();
-          this.load = false;
-          return;
-        } else {
-          const uiwebadminminsal = {
-            token: data.token
-          };
-          localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
-          this.load = false;
-          this.profile =  this.getDecodedAccessToken(data.token);
-          console.log(this.profile);
-          this.validaDias();
-        }
-      }, err => {
+        const uiwebadminminsal = {
+          token: data.token
+        };
+        localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
         this.load = false;
+        this.profile =  this.getDecodedAccessToken(data.token);
+        this.validaUsr();
+      },  err => {
+        /** Verifica primero si el error es por No Autorizado */
         if (err.statusText === null || err.statusText === undefined || err.statusText === 'Unauthorized') {
-          this.uimensaje('danger', 'Error en Usuario u Contraseña', 4000);
-          this.usuarioService.getIntentosbloq(rutusuario, this.aplicativo).subscribe(res => {
-            console.log(res.CantidadReintento);
-            this.loading = true;
-            this.intentoslog = res.CantidadReintento;
-            this.validaIntentos(rutusuario);
-            // tslint:disable-next-line: no-shadowed-variable
-            }, err => {
-            console.log(err);
+          /** Luego si cuenta esta bloqueada */
+          /** @MLobos */
+          if (err.error !== null) {
+            if (err.error.mensaje === 'Bloqueado') {
+              this.alertSwalAlert.title = 'Cuenta Bloqueada favor comunicarse con Administrador';
+              this.alertSwalAlert.show();
+              this.load = false;
+            } else if (err.error.mensaje === 'CambiarClaveProv') {
+              this.alertSwalAlert.title = 'Su Contraseña Provisoria ha expirado, debe Recuperar Password';
+              this.alertSwalAlert.show();
+              this.load = false;
+            }
+          } else {
+            /** Funcion que guarda los registros fallidos y muestra intentos restantes previo a bloquear cuenta */
+            /** @MLobos */
+            this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, 2).subscribe( res => {
+            this.load = false;
+            this.uimensaje('danger', 'Error en Usuario u Contraseña', 4000);
+            if (res.intentos === '0') {
+                this.intentosmsj('danger', 'Cuenta Bloqueada', 4000);
+            } else {
+              this.intentosmsj('danger', `Tiene hasta ${ res.intentos } intentos o se bloqueara su cuenta`, 4000);
+            }
+          // tslint:disable-next-line: no-shadowed-variable
+          }, err => {
+            this.uimensaje('danger', err.message, 3000);
           });
-        } else {
-          this.uimensaje('danger', err.message, 3000);
         }
+      } else {
+        this.uimensaje('danger', err.message, 3000);
       }
-    );
+    });
   }
 
-  validaIntentos(rut: string) {
-    if (this.intentoslog >= this.intentosbloq) {
-      this.claveService.postBloquearUsuario(rut).subscribe(res => {
-        console.log(res);
-        this.alertSwalAlert.title = 'Su cuenta se ha bloqueado, favor comunicarse con el administrador';
-        this.alertSwalAlert.show();
-        this.loading = false;
+  async validaUsr() {
+    if (this.profile.clavecad === '1' || this.profile.estado === '5') {
+      this.alertSwalAlert.title = 'Debe crear una nueva contraseña';
+      this.alertSwalAlert.show().then( val => {
+        if (val.value) {
+          const propiedadesclave = {
+            mincaracteres: this.mincaracteres,
+            letrasnum: this.letrasnum,
+            passwordusadas: this.passwordusadas
+          };
+          localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
+          this.router.navigate(['cambiopass']);
+        }
       });
     } else {
-      this.intentosmsj('danger', `Tiene hasta ${ this.intentosbloq } intentos o se bloqueara su cuenta`, 4000);
-      this.loading = false;
-    }
-  }
-
-  validaDias() {
-    /** Convierte fecha actual y de última contraseña Vigente a milisegundos para obtener la diferencia en días */
-    const fechaclave = new Date(this.profile.fechaupd);
-    const inicio = Date.UTC(fechaclave.getFullYear(), fechaclave.getMonth(), fechaclave.getDate());
-    const fechactual = new Date();
-    const fin = Date.UTC(fechactual.getFullYear(), fechactual.getMonth(), fechactual.getDate());
-    const undia = 1000 * 60 * 60 * 24;
-    this.diffdias = (fin - inicio) / undia;
-    this.validaUsuario();
-  }
-
-  validaUsuario() {
-    if (this.profile.estado === '5' || this.diffdias > this.diascambiopass ) {
-      const propiedadesclave = {
-        mincaracteres: this.mincaracteres,
-        letrasnum: this.letrasnum,
-        passwordusadas: this.passwordusadas
-      };
-      localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
-      this.router.navigate(['cambiopass']);
-    } else {
+      this.successlog(this.rutfuncionario, 1);
       this.router.navigate(['home']);
     }
   }
 
-  async contador(rutregistro: string) {
-    const fechaintento = new Date();
-    console.log(new Date());
-    const registrosarr: Array<any> = [];
-    registrosarr.push(JSON.stringify(localStorage.getItem('bloqcount')));
-    console.log(registrosarr);
-    this.registros.registro = fechaintento;
-    this.registros.rutusuario = rutregistro;
-    console.log(this.registros);
-    registrosarr.push(this.registros);
-    console.log(registrosarr);
-    localStorage.setItem('bloqcount', JSON.stringify(registrosarr));
+  /** Funcion que registra las conexiones exitosas */
+  /* Este registro en conjunto con las conexiones fallidas sirven para el bloqueo de cuenta */
+  /** @MLobos */
+  async successlog(rutusuario: string, connexitosa: number) {
+    this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, connexitosa).subscribe(async res => {
+      }, err => {
+        this.uimensaje('danger', err.message, 3000);
+      });
   }
-
 
   private getDecodedAccessToken(token: string): any {
     try {
@@ -235,6 +218,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /** Funcion que muestra intentos restantes previo a bloquear cuenta */
+  /** @MLobos */
   intentosmsj(status: string, texto: string, time: number = 0) {
     this.alertintentos = [];
     if (time !== 0) {

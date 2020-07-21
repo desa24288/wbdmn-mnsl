@@ -4,7 +4,8 @@ import { Serviciosalud } from '../parametros/serviciosalud';
 export class Profile {
   usuario: string;
   nombre: string;
-  estado: string;
+  estado: string; // Estado usuario
+  clavecad: string; // Si clave expiro respecto a los dias permitidos
   fechaupd: string;
   sucursales: Array<Serviciosalud>;
   perfiles: Array<Rol>;
@@ -22,6 +23,7 @@ export class Profile {
     usuario?: string,
     nombre?: string,
     estado?: string,
+    clavecad?: string,
     fechaupd?: string,
     sucursales?: Array<Serviciosalud>,
     perfiles?: Array<Rol>
@@ -38,6 +40,7 @@ export class Profile {
     this.usuario = usuario;
     this.nombre = nombre;
     this.estado = estado;
+    this.clavecad = clavecad;
     this.fechaupd = fechaupd;
     this.sucursales = sucursales;
     this.perfiles = perfiles;
