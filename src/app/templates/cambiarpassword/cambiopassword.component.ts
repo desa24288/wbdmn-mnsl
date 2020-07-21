@@ -10,7 +10,7 @@ import { CambiarpasswordService } from 'src/app/services/cambiarpassword/cambiar
 import { UsuarioService } from 'src/app/services/usuario.service';
 /** MODELS */
 import { Propiedadesclave } from 'src/app/models/entity/adminusuarios/propiedadescuenta/propiedadesclave';
-import { Userprofile } from 'src/app/config/userprofile';
+// import { Userprofile } from 'src/app/config/userprofile';
 import { Cambiarpass } from 'src/app/models/entity/usuario/cambiarpass';
 
 @Component({
@@ -34,11 +34,12 @@ export class CambiopasswordComponent implements OnInit {
   public cantpassusadas = 0;
   public passpattern = null;
   /** DATOS USUARIO */
-  public profile: Userprofile =  new Userprofile();
+  // public profile: Userprofile =  new Userprofile();
   public newpass = '';
   public aplicativo = 'webadmin-minsal';
   public intentoslog = 0;
   public cambiopass: Cambiarpass = new Cambiarpass();
+  public rutusuario = '';
 
   constructor(
     public router: Router,
@@ -62,7 +63,6 @@ export class CambiopasswordComponent implements OnInit {
   }
 
   async cargaPropiedades() {
-    console.log(this.profile.rutusuario);
     this.propiedadesclave = JSON.parse(localStorage.getItem('propiedadesclave'));
     this.mincaracteres = this.propiedadesclave.mincaracteres;
     this.letrasnum = this.propiedadesclave.letrasnum;
@@ -71,6 +71,7 @@ export class CambiopasswordComponent implements OnInit {
       this.passpattern = `^[a-zA-Z0-9_]{${this.mincaracteres},30}$`;
     }
     this.cantpassusadas = this.propiedadesclave.passwordusadas;
+    this.rutusuario = this.propiedadesclave.rutfuncionario;
   }
 
   /** VALIDA QUE NEW PASSWORD 1 Y 2 SEAN IGUALES */
@@ -96,7 +97,7 @@ export class CambiopasswordComponent implements OnInit {
 
   async onCambiarpassword() {
     this.loading = true;
-    this.cambiopass.user = this.profile.rutusuario;
+    this.cambiopass.user = this.rutusuario;
     this.cambiopass.provisoria = this.lForm.controls.temppass.value;
     this.cambiopass.newpassword = this.lForm.controls.newpass.value;
     this.cambioService.postCambioClave(this.cambiopass).subscribe(res => {
@@ -106,7 +107,7 @@ export class CambiopasswordComponent implements OnInit {
         this.alertSwal.show().then( ok => {
           if (ok.value) {
             /** registrar success log <--- */
-            this.successlog(this.profile.rutusuario, 1);
+            this.successlog(this.rutusuario, 1);
             this.router.navigate(['home']);
           }
         });
@@ -116,7 +117,6 @@ export class CambiopasswordComponent implements OnInit {
         this.loading = false;
         if (err.error !== null) {
           this.uimensaje('danger', `No debe usar sus últimas ${ this.cantpassusadas } contraseñas`, 3000);
-          console.log(this.cantpassusadas)
         } else {
           this.uimensaje('danger', 'Error en el proceso', 3000);
         }

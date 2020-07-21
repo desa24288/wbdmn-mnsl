@@ -117,21 +117,41 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
         this.load = false;
         this.profile =  this.getDecodedAccessToken(data.token);
-        this.validaUsr();
+        // this.validaUsr();
+        this.successlog(this.rutfuncionario, 1);
+        this.router.navigate(['home']);
       },  err => {
         /** Verifica primero si el error es por No Autorizado */
+        /** @MLobos */
         if (err.statusText === null || err.statusText === undefined || err.statusText === 'Unauthorized') {
-          /** Luego si cuenta esta bloqueada */
-          /** @MLobos */
           if (err.error !== null) {
             if (err.error.mensaje === 'Bloqueado') {
+              /** Luego si cuenta esta bloqueada */
               this.alertSwalAlert.title = 'Cuenta Bloqueada favor comunicarse con Administrador';
               this.alertSwalAlert.show();
               this.load = false;
             } else if (err.error.mensaje === 'CambiarClaveProv') {
+               /** Si clave provisoria caducó */
               this.alertSwalAlert.title = 'Su Contraseña Provisoria ha expirado, debe Recuperar Password';
               this.alertSwalAlert.show();
               this.load = false;
+            } else if (err.error.mensaje === 'CambiarClave') {
+              /* Si hay diferencia de dias y si está en estado reiniciado */
+              this.load = false;
+              this.alertSwalAlert.title = 'Debe crear una nueva contraseña';
+              this.alertSwalAlert.show().then( val => {
+                if (val.value) {
+                  const propiedadesclave = {
+                    mincaracteres: this.mincaracteres,
+                    letrasnum: this.letrasnum,
+                    passwordusadas: this.passwordusadas,
+                    rutusuario: this.rutfuncionario
+                  };
+                  localStorage.removeItem('propiedadesclave');
+                  localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
+                  this.router.navigate(['cambiopass']);
+                }
+              });
             }
           } else {
             /** Funcion que guarda los registros fallidos y muestra intentos restantes previo a bloquear cuenta */
@@ -153,26 +173,6 @@ export class LoginComponent implements OnInit {
         this.uimensaje('danger', err.message, 3000);
       }
     });
-  }
-
-  async validaUsr() {
-    if (this.profile.clavecad === '1' || this.profile.estado === '5') {
-      this.alertSwalAlert.title = 'Debe crear una nueva contraseña';
-      this.alertSwalAlert.show().then( val => {
-        if (val.value) {
-          const propiedadesclave = {
-            mincaracteres: this.mincaracteres,
-            letrasnum: this.letrasnum,
-            passwordusadas: this.passwordusadas
-          };
-          localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
-          this.router.navigate(['cambiopass']);
-        }
-      });
-    } else {
-      this.successlog(this.rutfuncionario, 1);
-      this.router.navigate(['home']);
-    }
   }
 
   /** Funcion que registra las conexiones exitosas */
