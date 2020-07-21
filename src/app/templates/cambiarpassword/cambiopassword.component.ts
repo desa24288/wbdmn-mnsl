@@ -7,13 +7,10 @@ import { Router } from '@angular/router';
 import { AlertComponent } from 'ngx-bootstrap/alert/public_api';
 import { RutValidator } from 'ng2-rut';
 import { CambiarpasswordService } from 'src/app/services/cambiarpassword/cambiarpassword.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 /** MODELS */
-import { Login } from 'src/app/models/entity/usuario/login';
-import { Utils } from 'src/app/models/utils/utils';
 import { Propiedadesclave } from 'src/app/models/entity/adminusuarios/propiedadescuenta/propiedadesclave';
-import { Claves } from 'src/app/models/entity/usuario/claves';
 import { Userprofile } from 'src/app/config/userprofile';
-import { exit } from 'process';
 import { Cambiarpass } from 'src/app/models/entity/usuario/cambiarpass';
 
 @Component({
@@ -36,7 +33,6 @@ export class CambiopasswordComponent implements OnInit {
   public letrasnum = '1';
   public cantpassusadas = 0;
   public passpattern = null;
-  public claves: Array<Claves> = [];
   /** DATOS USUARIO */
   public profile: Userprofile =  new Userprofile();
   public newpass = '';
@@ -48,7 +44,8 @@ export class CambiopasswordComponent implements OnInit {
     public router: Router,
     public rutValidator: RutValidator,
     public formBuilder: FormBuilder,
-    public cambioService: CambiarpasswordService
+    public cambioService: CambiarpasswordService,
+    public usuarioService: UsuarioService
   ) {
     this.cargaPropiedades();
     console.log(this.passpattern);
@@ -74,20 +71,6 @@ export class CambiopasswordComponent implements OnInit {
       this.passpattern = `^[a-zA-Z0-9_]{${this.mincaracteres},30}$`;
     }
     this.cantpassusadas = this.propiedadesclave.passwordusadas;
-    this.getClaves();
-    console.log(this.propiedadesclave);
-    console.log(this.mincaracteres);
-    console.log(this.letrasnum);
-    console.log(this.cantpassusadas);
-  }
-
-  getClaves() {
-    this.cambioService.getHistClaves(this.profile.rutusuario, this.cantpassusadas).subscribe(res => {
-      this.claves = res;
-      console.log(this.claves);
-    }, err => {
-      console.log(err);
-    });
   }
 
   /** VALIDA QUE NEW PASSWORD 1 Y 2 SEAN IGUALES */
@@ -107,29 +90,12 @@ export class CambiopasswordComponent implements OnInit {
     }
   }
 
-  async onValidarpassword() {
-    this.loading = true;
-    /** VALIDA QUE LA NUEVA CONTRASEÑA NO SEA IGUAL A X USADAS */
-    const newpass = this.lForm.controls.newpass.value;
-    let passexist = false;
-    this.claves.forEach(res => {if (res.Clave === newpass) { passexist = true; }});
-    if (passexist) {
-      this.alertSwalAlert.title = `No debe usar las últimas ${this.cantpassusadas} contraseñas usadas`;
-      this.alertSwalAlert.show();
-      this.loading = false;
-    } else {
-        this.cambiarpassword();
-    }
-  }
-
   onClosed(dismissedAlert: AlertComponent): void {
     this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
   }
 
-  async cambiarpassword() {
-    // this.router.navigate(['home']);
+  async onCambiarpassword() {
     this.loading = true;
-    // this.cambiopass.user = Utils.formatRut(this.profile.rutusuario);
     this.cambiopass.user = this.profile.rutusuario;
     this.cambiopass.provisoria = this.lForm.controls.temppass.value;
     this.cambiopass.newpassword = this.lForm.controls.newpass.value;
@@ -139,6 +105,8 @@ export class CambiopasswordComponent implements OnInit {
         this.alertSwal.title = 'Contraseña Cambiada';
         this.alertSwal.show().then( ok => {
           if (ok.value) {
+            /** registrar success log <--- */
+            this.successlog(this.profile.rutusuario, 1);
             this.router.navigate(['home']);
           }
         });
@@ -146,19 +114,29 @@ export class CambiopasswordComponent implements OnInit {
       }, err => {
         this.load = false;
         this.loading = false;
-        if (err.error.mensaje === null || err.error.mensaje === undefined) {
-          this.uimensaje('danger', 'Error en el proceso', 3000);
+        if (err.error !== null) {
+          this.uimensaje('danger', `No debe usar sus últimas ${ this.cantpassusadas } contraseñas`, 3000);
+          console.log(this.cantpassusadas)
         } else {
-          this.uimensaje('danger', err.error.mensaje, 3000);
+          this.uimensaje('danger', 'Error en el proceso', 3000);
         }
       }
     );
   }
 
+  /** Funcion que registra las conexiones exitosas */
+  /* Este registro en conjunto con las conexiones fallidas sirven para el bloqueo de cuenta */
+  /** @MLobos */
+  async successlog(rutusuario: string, connexitosa: number) {
+    this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, connexitosa).subscribe(async res => {
+      }, err => {
+        this.uimensaje('danger', err.message, 3000);
+      });
+  }
+
   onCerrar() {
     this.router.navigate(['login']);
   }
-
   uimensaje(status: string, texto: string, time: number = 0) {
     this.alerts = [];
     if (time !== 0) {

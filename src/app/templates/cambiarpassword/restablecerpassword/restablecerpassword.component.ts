@@ -9,11 +9,12 @@ import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { Subject } from 'rxjs';
 /*SERVICES */
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
-import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
+import { CambiarpasswordService } from 'src/app/services/cambiarpassword/cambiarpassword.service';
 /*MODELS */
 import { Crearusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/crearusuario';
 import { RutValidator } from 'ng2-rut';
 import { Utils } from 'src/app/models/utils/utils';
+import { Enviarmail } from 'src/app/models/entity/usuario/enviarmail';
 
 @Component({
   selector: 'app-restablecerpassword',
@@ -39,13 +40,15 @@ export class RestablecerpasswordComponent implements OnInit, AfterViewInit {
   public tipoperfiles: Array<any> = [];
   public estadosperfiles: Array<any> = [];
 
+  public rutusuario = '0009163696-4'; // <- Hacer SP que obtenga NOMUSUARIO con Email
+
   constructor(
     public router: Router,
     public rutValidator: RutValidator,
     public formBuilder: FormBuilder,
     public bsModalRef: BsModalRef,
     public parametroService: ParametroService,
-    public claveusuarioService: ClaveusuariosService
+    public cambioService: CambiarpasswordService
   ) {
     this.lForm = this.formBuilder.group(
       {
@@ -74,25 +77,29 @@ export class RestablecerpasswordComponent implements OnInit, AfterViewInit {
   }
 
   async onEnviar() {
-    this.loading = true;
-    // const rut = Utils.formatRut(this.lForm.controls.rutusuario.value);
     const email = this.lForm.controls.email.value;
-    console.log(email);
+    this.loading = true;
     if (this.lForm.valid) {
-      try {
-      // this.claveusuarioService.postCrearUsuario(this.nuevousuario).subscribe(res => {
-        this.loading = false;
+      this.cambioService.postEnviarmail(email).subscribe(res => {
+        console.log(res);
         this.alertSwal.title = 'Correo Enviado';
         this.alertSwal.text = 'Puede que el correo demore unos minutos o llegue a su bandeja de spam';
         this.alertSwal.show();
-      } catch(err) {
-      // }, err => {
         this.loading = false;
-        this.alertSwalError.title = err.error.mensaje;
-        this.alertSwalError.show();
-        return;
-      // });
-      }
+      }, err => {
+        console.log(err);
+        if (err.error.mensaje === null || err.error.mensaje === undefined) {
+          this.loading = false;
+          this.alertSwalError.title = 'Ocurrio un error';
+          this.alertSwalError.show();
+          return;
+        } else {
+          this.loading = false;
+          this.alertSwalError.title = err.error.mensaje;
+          this.alertSwalError.show();
+          return;
+        }
+      });
     }
   }
 
