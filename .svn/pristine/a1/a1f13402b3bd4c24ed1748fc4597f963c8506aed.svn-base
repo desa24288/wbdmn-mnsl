@@ -1,0 +1,72 @@
+<div class="loading-container">
+  <div class="card">
+      <div class="card-header">{{ cabecera }}</div>
+      <div class="card-body">
+          <form [formGroup]="lForm" novalidate autocomplete="off" spellcheck="false">
+              <div *ngFor="let alert of alerts" class="text-center">
+                  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                      {{ alert.msg }}
+                  </alert>
+              </div>
+
+              <div class="form-row mb-3">
+                <div class="col-sm-9 ml-2">Cambio Contraseña primera conexión </div>
+                <div class="col-sm-2 ml-2"><input type="checkbox" *ngIf="actpropiedades.SW_UPD_PWD1 !== 'S'" class="form-control form-control-sm" 
+                (change)="onCheckPrimeracon($event)" />
+                <input type="checkbox" *ngIf="actpropiedades.SW_UPD_PWD1 === 'S'" class="form-control form-control-sm" 
+                (change)="onCheckPrimeracon($event)" checked/></div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-9 ml-2">Cantidad dia(s) para forzar cambio Contraseña</div>
+                <div class="col-sm-2 ml-2"><input type="number" min="1" class="form-control form-control-sm"
+                formControlName='cantidaddia' /></div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-9 ml-2">Caracteres mínimos Contraseña</div>
+                <div class="col-sm-2 ml-2"> <input type="number" min="1" max="15" class="form-control form-control-sm"
+                formControlName='caracterminimo' /></div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-9 ml-2">Contraseña debe contener letras y números </div>
+                <div class="col-sm-2 ml-2"><input type="checkbox" *ngIf="actpropiedades.SW_TYP_PWD === '1'" class="form-control form-control-sm" 
+                (change)="onCheckLetrasynumeros($event)" />
+                <input type="checkbox" *ngIf="actpropiedades.SW_TYP_PWD === '2'" class="form-control form-control-sm" 
+                (change)="onCheckLetrasynumeros($event)" checked/> </div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-9 ml-2">Bloquear cuenta por cantidad de intentos fallidos </div>
+                <div class="col-sm-2 ml-2"><input type="number" min="1" max="20"class="form-control form-control-sm"
+                formControlName='bloquearcuenta' /></div>
+              </div>
+              <div class="form-row mb-3">
+                <div class="col-sm-9 ml-2">Últimas contraseñas usadas no permitidas </div>
+                <div class="col-sm-2 ml-2"><input type="number" min="1" max="50" class="form-control form-control-sm"
+                formControlName='ultimasusadas' /></div>
+              </div>
+
+          </form>
+      </div>
+      <div class="card-header">
+          <div class="row">
+              <div class="col-md-6">
+                  <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="ACTUALIZAR PROPIEDADES"
+                      (click)="onGuardar()" [disabled]="!lForm.valid"><i class="fas fa-save"></i>
+                      GUARDAR</button>
+              </div>
+              <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="CERRAR" (click)="onCerrar()">
+                      <i class="fas fa-window-close"></i>
+                      CERRAR</button>
+              </div>
+          </div>
+      </div>
+
+      <swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+
+      <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+  </div>
+</div>

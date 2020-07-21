@@ -32,9 +32,6 @@
               <p class="text-danger text-form-valid"
                 *ngIf="lForm.controls['newpass'].invalid && (lForm.controls['newpass'].dirty || lForm.controls['newpass'].touched)">
                 Requerido, mínimo {{ mincaracteres }} y máximo 30 caracteres</p>
-              <p class="text-danger text-form-valid"
-              *ngIf="lForm.controls['newpass'].invalid && (lForm.controls['newpass'].dirty || lForm.controls['newpass'].touched) &&letrasnum === '2'">
-              La nueva clave debe contener solo letras y números</p>
             </div>
             <div class="form-group pb-2">
               <label for="renewpass">Reingrese nueva contraseña</label>
@@ -46,7 +43,7 @@
             </div>
               <div class="row pt-3">
                 <div class="col-md-6">
-                  <button type="button" class="btn btn-primary" [disabled]="!lForm.valid" (click)="onCambiarpassword()"><i
+                  <button type="button" class="btn btn-primary" [disabled]="!lForm.valid" (click)="onValidarpassword()"><i
                     class="fas fa-save"></i>
                   GUARDAR</button>
                 </div>
