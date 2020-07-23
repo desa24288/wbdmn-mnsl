@@ -71,7 +71,7 @@ export class CambiopasswordComponent implements OnInit {
       this.passpattern = `^[a-zA-Z0-9_]{${this.mincaracteres},30}$`;
     }
     this.cantpassusadas = this.propiedadesclave.passwordusadas;
-    this.rutusuario = this.propiedadesclave.rutfuncionario;
+    this.rutusuario = this.propiedadesclave.rutusuario;
   }
 
   /** VALIDA QUE NEW PASSWORD 1 Y 2 SEAN IGUALES */
@@ -113,10 +113,15 @@ export class CambiopasswordComponent implements OnInit {
         });
 
       }, err => {
+        console.log(err);
         this.load = false;
         this.loading = false;
         if (err.error !== null) {
-          this.uimensaje('danger', `No debe usar sus últimas ${ this.cantpassusadas } contraseñas`, 3000);
+          if (err.error.mensaje === 'claveusada') {
+            this.uimensaje('danger', `No debe usar sus últimas ${ this.cantpassusadas } contraseñas`, 3000);
+          } else {
+            this.uimensaje('danger', err.error.mensaje, 3000);
+          }
         } else {
           this.uimensaje('danger', 'Error en el proceso', 3000);
         }
