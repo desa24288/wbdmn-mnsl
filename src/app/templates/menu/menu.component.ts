@@ -6,6 +6,7 @@ import { Userprofile } from 'src/app/config/userprofile';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PropiedadescuentaComponent } from 'src/app/views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
 import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
+import { PropiedadescuentaService } from 'src/app/services/administradorusuarios/propiedadescuenta.service';
 
 @Component({
   selector: 'app-menu',
@@ -15,12 +16,16 @@ import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles
 export class MenuComponent implements OnInit, AfterViewInit {
   public profile: Userprofile =  new Userprofile();
   public bsModalRef: BsModalRef;
+  public idregla = 1;
 
   constructor(
     private router: Router,
     private usuarioService: UsuarioService,
     private bsModalService: BsModalService,
-  ) { }
+    public propiedadesService: PropiedadescuentaService
+  ) { 
+    this.loadPropiedadesclave();
+  }
 
   ngOnInit() {
   }
@@ -32,6 +37,20 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   onHome() {
     this.router.navigate(['/home']);
+  }
+
+  private loadPropiedadesclave() {
+    this.propiedadesService.getPropiedades(this.idregla).subscribe(res => {
+      const propiedadesclave = {
+          mincaracteres: res.SW_LEN_PWD,
+          letrasnum: res.SW_TYP_PWD,
+          passwordusadas: res.SW_PWD_UNI,
+          rutusuario: this.profile.rutusuario,
+          conectado: true
+        };
+      localStorage.removeItem('propiedadesclave');
+      localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
+    }, err => { });
   }
 
   modalPropiedadcuenta() {
@@ -62,6 +81,11 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   onPerfilamiento() {
     localStorage.removeItem('from_indx');
+  }
+
+  async onCambiarpass() {
+    // await this.loadPropiedadesclave();
+    this.router.navigate(['cambiopass']);
   }
 
   onCerrar() {

@@ -40,6 +40,8 @@ export class CambiopasswordComponent implements OnInit {
   public intentoslog = 0;
   public cambiopass: Cambiarpass = new Cambiarpass();
   public rutusuario = '';
+  public usrconectado = false;
+  public cabecera = 'Cambio Password';
 
   constructor(
     public router: Router,
@@ -59,6 +61,7 @@ export class CambiopasswordComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.usrconectado);
     // localStorage.removeItem('uiwebadminminsal');
   }
 
@@ -66,6 +69,7 @@ export class CambiopasswordComponent implements OnInit {
     this.propiedadesclave = JSON.parse(localStorage.getItem('propiedadesclave'));
     this.mincaracteres = this.propiedadesclave.mincaracteres;
     this.letrasnum = this.propiedadesclave.letrasnum;
+    this.usrconectado = this.propiedadesclave.conectado;
     /** Si propiedadesclave.letrasnum==2 newpass1 debe tener solo Letras y Números */
     if (this.letrasnum === '2') {
       this.passpattern = `^[a-zA-Z0-9_]{${this.mincaracteres},30}$`;
@@ -140,7 +144,11 @@ export class CambiopasswordComponent implements OnInit {
   }
 
   onCerrar() {
-    this.router.navigate(['login']);
+    if (this.usrconectado === true) {
+      this.router.navigate(['home']);
+    } else {
+      this.router.navigate(['login']);
+    }
   }
   uimensaje(status: string, texto: string, time: number = 0) {
     this.alerts = [];

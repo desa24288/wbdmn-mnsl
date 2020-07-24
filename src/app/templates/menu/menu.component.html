@@ -62,10 +62,8 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
           <a class="dropdown-item"><i class="fas fa-user"></i> {{ profile.rutusuario }} </a>
-
-          <a *ngFor='let rol of profile.rol' class="dropdown-item"><i class="fas fa-user-tag"></i>
-            {{ rol.ds_rolLM }} </a>
-
+          <li class="divider dropdown-divider"></li>
+          <a class="dropdown-item pointer" (click)="onCambiarpass()"><i class="fas fa-key"></i> CAMBIAR CONTRASEÑA</a>
           <li class="divider dropdown-divider"></li>
           <a class="dropdown-item pointer" (click)="onCerrar()"><i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN</a>
         </div>

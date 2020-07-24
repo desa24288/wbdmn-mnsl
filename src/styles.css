@@ -100,4 +100,15 @@
   .input-border-false {
     border: 1px solid red;
   }
+
+  .estilogrilla {
+    margin-top: 0.3em !important;
+    margin-bottom: 0 !important;
+    margin-block-end: 0 !important;
+    line-height: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0.3em !important;
+  }
   

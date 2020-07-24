@@ -20,6 +20,9 @@
         [disabled]="!existeperfil">
         <i class="fas fa-edit"></i>
           MODIFICAR PERFIL</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="LIMPIAR" (click)="onLimpiar()"
+        [disabled]="load"><i class="fas fa-broom"></i>
+        LIMPIAR</button>
         <button type="button" class="btn btn-primary btn-sm ml-1 mx-1 btn-cerrar" tooltip="CERRAR" (click)="onCerrar()"><i
           class="fas fa-window-close"></i>
           CERRAR</button>
@@ -32,7 +35,7 @@
           <div class="form-group col-sm-6">
             <label for="perfil">PERFIL</label>
             <select class='form-control form-control-sm' formControlName='perfil' 
-            [compareWith]='compare_perfil' (change)="onSelectPerfil($event.target.value)">
+            [compareWith]='compare_perfil' (change)="onSelectPerfil()">
               <option *ngFor='let perfil of perfiles'
                 value="{{ perfil.id_RolLM }}-{{ perfil.ds_rolLM}}">
                 {{ perfil.id_RolLM }} {{ perfil.ds_rolLM }}
@@ -62,7 +65,8 @@
                       </tr>
                     </thead>
                     <tbody class="text-nowrap">
-                      <tr *ngFor="let ejecutable of ejecutables" class="ml-2">
+                      <tr *ngFor="let ejecutable of ejecutables" class="ml-2 pointer"
+                      [ngClass]="{'highlight':ejecutable.CCtlExeName===selectedRow}" (click)="onCheckObjecto(ejecutable)">
                         <td>
                           <input formControlName='ejecutablelist' class="ml-1 mr-2" type="checkbox"
                             (click)="onCheckEjecutable($event, ejecutable.CCtlExeName)" id='lm-{{ ejecutable.CCtlExeName }}'
@@ -92,7 +96,7 @@
                           (click)="onCheckMenu($event, menu)" id='lm-{{ menu.ID_Menu }}'
                           [checked]="menu.Seleccionado_1">
                       </td>
-                      <td>{{ menu.DS_Menu }}</td>
+                      <td class="text-uppercase">{{ menu.DS_Menu }}</td>
                     </tr>
                   </tbody>
                 </table>

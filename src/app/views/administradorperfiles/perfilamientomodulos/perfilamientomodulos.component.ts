@@ -55,6 +55,7 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   public execname = null;
   public accionmodal = 0;
   public existeperfil = false;
+  public selectedRow: any;
 
   constructor(
     public router: Router,
@@ -94,7 +95,9 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     this.perfilamientoService.getPerfiles().subscribe( res => {
       this.perfiles = res;
       this.load = false;
-      this.progressBar.complete();
+      const data = JSON.parse(localStorage.getItem('busquedaperfilamiento'));
+      this.uForm.controls.perfil.setValue(data.rolid);
+      this.onSelectPerfil();
     }, err => {
       this.alertSwalAlert.title = err.error.mensaje;
       this.alertSwalAlert.show();
@@ -105,6 +108,13 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
 
   onCerrar() {
       this.router.navigate(['/home']);
+  }
+
+  onLimpiar() {
+    this.uForm.reset();
+    this.mForm.reset();
+    this.ejecutables = [];
+    this.menus = [];
   }
 
   /* 1 si corresponde a un nuevo perfil, 2 si es modificar perfil*/
@@ -161,10 +171,11 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async onSelectPerfil(rolid: any) {
+  async onSelectPerfil() {
     const perfil: any = this.uForm.controls.perfil.value;
     const desperfil = perfil.split('-');
     this.idrol = desperfil[0];
+    this.setBusqueda(perfil);
     this.nomrol = desperfil[1];
     this.existeperfil = true;
     this.load = true;
@@ -172,6 +183,7 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     this.perfilamientoService.getEjecutables(this.idrol).subscribe( res => {
       this.ejecutables = res;
       this.logicaExec();
+      this.onCheckObjecto(this.ejecutables[0]);
       this.progressBar.complete();
       this.load = false;
     }, err => {
@@ -181,6 +193,14 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
       this.load = false;
     });
   }
+
+  setBusqueda(perfil: any) {
+    const paramperfilamiento = {
+      rolid: perfil};
+    localStorage.removeItem('busquedaperfilamiento');
+    localStorage.setItem('busquedaperfilamiento', JSON.stringify(paramperfilamiento));
+  }
+
 
   async logicaExec() {
     this.arrejecutable = [];
@@ -202,8 +222,8 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     this.execname = value;
     const selecexec: Ejecutables = new Ejecutables();
     if (event.target.checked) {
-      this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {
-        this.menus = res;
+      // this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {
+      //   this.menus = res;
         selecexec.CctlExecname = value;
         selecexec.AccionDcto = '1';
         if (this.arrejecutable.length === 0) {
@@ -216,15 +236,15 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
             } else { return; }
           });
         }
-        this.logicaMenu();
-        this.progressBar.complete();
-        this.load = false;
-      }, err => {
-        this.alertSwalAlert.title = err.error.mensaje;
-        this.alertSwalAlert.show();
-        this.progressBar.complete();
-        this.load = false;
-      });
+        // this.logicaMenu();
+        // this.progressBar.complete();
+        // this.load = false;
+      // }, err => {
+      //   this.alertSwalAlert.title = err.error.mensaje;
+      //   this.alertSwalAlert.show();
+      //   this.progressBar.complete();
+      //   this.load = false;
+      // });
     } else {
       this.arrejecutable.forEach(e => {
         if (e.CctlExecname === value) {
@@ -235,6 +255,38 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  async onCheckObjecto(ejecutable: Ejecutable) {
+    this.selectedRow = ejecutable.CCtlExeName;
+    this.execname = ejecutable.CCtlExeName;
+    console.log('CLICK');
+    console.log(ejecutable);
+    const selecexec: Ejecutables = new Ejecutables();
+    this.selectedRow = ejecutable.CCtlExeName;
+    this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {
+      this.menus = res;
+      // selecexec.CctlExecname = this.selectedRow;
+      // selecexec.AccionDcto = '1';
+      // if (this.arrejecutable.length === 0) {
+      //   this.arrejecutable.push(selecexec);
+      // } else {
+      //   this.arrejecutable.forEach( e => {
+      //     if (e.CctlExecname !== this.selectedRow) {
+      //       // this.arrejecutable.splice(this.arrejecutable.findIndex(x => x.CctlExecname === value), 1);
+      //       this.arrejecutable.push(selecexec);
+      //     } else { return; }
+      //   });
+      // }
+      this.logicaMenu();
+      this.progressBar.complete();
+      this.load = false;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.progressBar.complete();
+      this.load = false;
+    });
   }
 
   logicaMenu() {

@@ -93,7 +93,7 @@ export class LoginComponent implements OnInit {
       /** Devuelve numero de ultimas contraseñas usadas permitidas */
       this.passwordusadas = this.propiedades.SW_PWD_UNI;
     }, err => {
-      this.uimensaje('danger', 'Error al buscar propiedades de usuario', 3000);
+      this.uimensaje('danger', err.error, 3000);
     });
   }
 
@@ -109,6 +109,16 @@ export class LoginComponent implements OnInit {
     this.load = true;
     const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
     this.rutfuncionario = rutusuario;
+    /* Guarda las propiedades para ser usadas en pantalla Cambiopassword */
+    const propiedadesclave = {
+      mincaracteres: this.mincaracteres,
+      letrasnum: this.letrasnum,
+      passwordusadas: this.passwordusadas,
+      rutusuario: this.rutfuncionario,
+      conectado: false
+    };
+    localStorage.removeItem('propiedadesclave');
+    localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
     this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
       data => {
         const uiwebadminminsal = {
@@ -141,14 +151,6 @@ export class LoginComponent implements OnInit {
               this.alertSwalAlert.title = 'Debe crear una nueva contraseña';
               this.alertSwalAlert.show().then( val => {
                 if (val.value) {
-                  const propiedadesclave = {
-                    mincaracteres: this.mincaracteres,
-                    letrasnum: this.letrasnum,
-                    passwordusadas: this.passwordusadas,
-                    rutusuario: this.rutfuncionario
-                  };
-                  localStorage.removeItem('propiedadesclave');
-                  localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
                   this.router.navigate(['cambiopass']);
                 }
               });

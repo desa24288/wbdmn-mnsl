@@ -221,6 +221,8 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   onLimpiar() {
     this.pForm.controls.serviciosalud.setValue('');
     this.pForm.controls.estadousuario.setValue('');
+    this.usuariospag = [];
+    this.usuarios = [];
   }
 
   setRowPagination() {
