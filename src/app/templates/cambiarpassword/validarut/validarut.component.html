@@ -1,0 +1,43 @@
+<div class="loading-container">
+  <div class="card">
+      <div class="card-header">{{ cabecera }}</div>
+      <div class="card-body">
+          <form [formGroup]="lForm" novalidate autocomplete="off" spellcheck="false">
+              <div *ngFor="let alert of alerts" class="text-center">
+                  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">
+                      {{ alert.msg }}
+                  </alert>
+              </div>
+              <div class="form-row mb-3 mt-2 ml-1">
+                <label for="email">Favor Ingrese su Rut</label>
+                <input type="text" appAutofocus class="form-control form-control-sm" placeholder="" formControlName="rutusuario" formatRut>
+                <p class="text-danger text-form-valid"
+                  *ngIf="lForm.controls['rutusuario'].invalid && (lForm.controls['rutusuario'].dirty || lForm.controls['rutusuario'].touched)">
+                  Requerido, Rut inválido</p>
+              </div>
+          </form>
+      </div>
+      <div class="card-header">
+          <div class="row">
+              <div class="col-md-6">
+                  <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="ACEPTAR"
+                      (click)="onValidarut()" [disabled]="!lForm.valid"><i class="fas fa-window-maximize"></i>
+                      ACEPTAR</button>
+              </div>
+              <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="CERRAR" (click)="onCerrar()">
+                      <i class="fas fa-window-close"></i>
+                      CERRAR</button>
+              </div>
+          </div>
+      </div>
+
+      <swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+
+      <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+  </div>
+</div>

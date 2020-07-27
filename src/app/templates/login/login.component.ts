@@ -12,7 +12,7 @@ import { PropiedadescuentaService } from 'src/app/services/administradorusuarios
 import { DatePipe } from '@angular/common';
 import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
 /** COMPONENTS */
-import { RestablecerpasswordComponent } from '../cambiarpassword/restablecerpassword/restablecerpassword.component';
+import { ValidarutComponent } from '../cambiarpassword/validarut/validarut.component';
 /** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
@@ -97,7 +97,7 @@ export class LoginComponent implements OnInit {
   }
 
   onRecovery() {
-    this.bsModalRef = this.bsModalService.show(RestablecerpasswordComponent, this.setModal());
+    this.bsModalRef = this.bsModalService.show(ValidarutComponent, this.setModal());
     this.bsModalRef.content.onClose.subscribe(estado => {
       if (estado === true) {
       }
@@ -107,6 +107,7 @@ export class LoginComponent implements OnInit {
   async autenticacion(value: any) {
     this.load = true;
     const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
+    console.log(rutusuario);
     this.rutfuncionario = rutusuario;
     /* Guarda las propiedades para ser usadas en pantalla Cambiopassword */
     const propiedadesclave = {

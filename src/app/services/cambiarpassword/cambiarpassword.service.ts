@@ -29,11 +29,10 @@ export class CambiarpasswordService {
       , this.tokenService.post());
   }
 
-  public getEnviarmail(rutusuario, mail): Observable<any> {
+  public getValidarut(rutusuario): Observable<any> {
     return this.httpClient.get<any>(
-      this.TARGET_URL_MAIL.concat('/mail/').
-      concat(rutusuario.concat('/')).concat(mail)
-      , this.tokenService.get());
+      this.TARGET_URL_MAIL.concat('/validarut/').
+      concat(rutusuario), this.tokenService.get());
   }
 
   public postEnviarmail(email: any): Observable<any> {
