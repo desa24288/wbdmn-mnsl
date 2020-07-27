@@ -297,6 +297,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     this.claveusuariosService.postReiniciarClave(
       rutusuario
     ).subscribe(data => {
+      console.log(data);
       return true;
     } );
   }

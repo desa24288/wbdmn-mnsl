@@ -78,11 +78,14 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    console.log(this.profile.rutusuario);
+    console.log(this.uForm.controls.perfil.value);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.setData();
+      console.log(this.uForm.controls.perfil.value);
     });
   }
 
@@ -93,13 +96,8 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
       this.perfiles = res;
       this.load = false;
       const data = JSON.parse(localStorage.getItem('busquedaperfilamiento'));
-      if (data !== null) {
-        this.uForm.controls.perfil.setValue(data.rolid);
-        this.onSelectPerfil();
-      } else {
-        this.progressBar.complete();
-        this.load = false;
-      }
+      this.uForm.controls.perfil.setValue(data.rolid);
+      this.onSelectPerfil();
     }, err => {
       this.alertSwalAlert.title = err.error.mensaje;
       this.alertSwalAlert.show();
@@ -163,12 +161,12 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
 
   modificarPerfil() {
     // this.loading = true;
-    this.load = true;
+    // this.load = true;
     const ejecutable: Actualizar = new Actualizar();
     ejecutable.id_RolLM = this.idrol;
     ejecutable.ejecutable = this.arrejecutable;
+    console.log(ejecutable);
     this.perfilamientoService.putActualizarPerfil(ejecutable).subscribe( res => {
-      this.load = false;
       return true;
     });
   }
@@ -262,6 +260,8 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   async onCheckObjecto(ejecutable: Ejecutable) {
     this.selectedRow = ejecutable.CCtlExeName;
     this.execname = ejecutable.CCtlExeName;
+    console.log('CLICK');
+    console.log(ejecutable);
     const selecexec: Ejecutables = new Ejecutables();
     this.selectedRow = ejecutable.CCtlExeName;
     this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {
@@ -303,6 +303,7 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     // tslint:disable-next-line: radix
     // documentoid.id = parseInt(value.CodPendiente_1);
     if (event.target.checked) {
+      console.log(value);
     } else {
       // this.arrdocumento.splice(this.inDocumento(documentoid), 1);
     }

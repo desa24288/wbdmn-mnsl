@@ -15,7 +15,7 @@
   <div class="card">
     <div class="card-header"> 
       <div class="row">
-        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="GRABAR" [disabled]="load" (click)="onGuardar()">
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="GRABAR" (click)="onGuardar()">
             <i class="fas fa-save"></i>
             GRABAR</button>
         <button type="button" class="btn btn-primary btn-sm ml-1 mx-1 btn-cerrar" tooltip="CERRAR" (click)="onCerrar()"><i

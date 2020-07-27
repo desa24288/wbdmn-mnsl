@@ -101,7 +101,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   logicaBread(valor: any) {
     // tslint:disable-next-line: radix
     this.fromindex = parseInt(valor);
-    console.log(this.fromindex);
     if (this.fromindex === 1) {
     this.breadname = 'Administrador de Claves de Usuario';
     this.breadroute = '/claveusuarios';
@@ -175,7 +174,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   }
 
   async onGuardar() {
-    console.log(this.compinasignados);
     if ((await this.mensajeSweetAlert.Msgconfirm('¿Desea guardar los cambios?')).value) {
       this.loading = true;
       let i = 1;
@@ -183,20 +181,17 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       let tipoCompin = [];
       if (this.perfileliminados.length > 0 ||
         this.compineliminados.length > 0) {
-        console.log('Hay Eliminados');
         i = 0;
       }
       for (i; i < 2; i++) {
         if (i === 0) {
           tipoPerfil = this.perfileliminados;
           tipoCompin = this.compineliminados;
-          console.log('Hay Eliminados');
           this.codupdate = 3;
           if (tipoPerfil.length === 0) {
             tipoPerfil = this.perfilasignados;
           }
           if (tipoCompin.length === 0) {
-            console.log('No Hay Eliminados');
             tipoCompin = this.compinasignados;
           }
         } else {
@@ -281,7 +276,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       this.mForm.reset();
       this.logicaGrabar();
     }
-    console.log(this.perfileliminados);
   }
 
   onQuitarperfil() {
@@ -320,7 +314,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       this.bForm.reset();
       this.logicaGrabar();
     }
-    console.log(this.compineliminados);
   }
 
   onQuitarcompin() {
@@ -338,7 +331,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       }
     });
     this.logicaGrabar();
-    console.log(this.compineliminados);
   }
 
   onLimpiar() {

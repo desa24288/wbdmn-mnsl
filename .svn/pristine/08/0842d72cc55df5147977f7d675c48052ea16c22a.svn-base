@@ -80,6 +80,7 @@ export class LoginComponent implements OnInit {
   async validaPropiedades() {
     this.propiedadesService.getPropiedades(this.idregla).subscribe(res => {
       this.propiedades = res;
+      console.log(this.propiedades);
       /** Cantidad de dias permitidos para cambiar contraseña */
       this.diascambiopass = this.propiedades.SW_UPD_PWD2;
       /** Devuelve la cantidad de caracteres permitidos */
