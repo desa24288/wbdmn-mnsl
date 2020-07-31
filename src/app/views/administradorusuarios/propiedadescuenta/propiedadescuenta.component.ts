@@ -71,7 +71,6 @@ export class PropiedadescuentaComponent implements OnInit, AfterViewInit {
   loadInit() {
     this.onClose = new Subject();
     this.propiedadesService.getPropiedades(this.idregla).subscribe( res => {
-      console.log(res);
       this.actpropiedades = res;
       this.lForm.controls.cantidaddia.setValue(this.actpropiedades.SW_UPD_PWD2);
       this.lForm.controls.caracterminimo.setValue(this.actpropiedades.SW_LEN_PWD);
@@ -99,7 +98,6 @@ export class PropiedadescuentaComponent implements OnInit, AfterViewInit {
         propiedades.SW_TYP_PWD = this.SW_TYP_PWD_;
         propiedades.SW_INT_BLQ = this.lForm.controls.bloquearcuenta.value;
         propiedades.SW_PWD_UNI = this.lForm.controls.ultimasusadas.value;
-        console.log(propiedades);
         this.propiedadesService.putActualizarpropiedades(propiedades).subscribe( res => {
           this.alertSwal.title = 'Guardado con éxito';
           this.alertSwal.show();

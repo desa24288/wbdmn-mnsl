@@ -12,8 +12,7 @@ import { PropiedadescuentaService } from 'src/app/services/administradorusuarios
 import { DatePipe } from '@angular/common';
 import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
 /** COMPONENTS */
-// import { ValidarutComponent } from '../cambiarpassword/validarut/validarut.component';
-import { RestablecerpasswordComponent } from 'src/app/templates/cambiarpassword/restablecerpassword/restablecerpassword.component';
+import { RestablecerpasswordComponent } from '../cambiarpassword/restablecerpassword/restablecerpassword.component';
 /** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
@@ -81,6 +80,7 @@ export class LoginComponent implements OnInit {
   async validaPropiedades() {
     this.propiedadesService.getPropiedades(this.idregla).subscribe(res => {
       this.propiedades = res;
+      console.log(this.propiedades);
       /** Cantidad de dias permitidos para cambiar contraseña */
       this.diascambiopass = this.propiedades.SW_UPD_PWD2;
       /** Devuelve la cantidad de caracteres permitidos */
@@ -108,7 +108,6 @@ export class LoginComponent implements OnInit {
   async autenticacion(value: any) {
     this.load = true;
     const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
-    console.log(rutusuario);
     this.rutfuncionario = rutusuario;
     /* Guarda las propiedades para ser usadas en pantalla Cambiopassword */
     const propiedadesclave = {
@@ -155,9 +154,6 @@ export class LoginComponent implements OnInit {
                   this.router.navigate(['cambiopass']);
                 }
               });
-            } else {
-              this.uimensaje('danger', err.error.mensaje, 3000);
-              this.load = false;
             }
           } else {
             /** Funcion que guarda los registros fallidos y muestra intentos restantes previo a bloquear cuenta */
@@ -165,7 +161,6 @@ export class LoginComponent implements OnInit {
             this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, 2).subscribe( res => {
             this.load = false;
             this.uimensaje('danger', 'Error en Usuario u Contraseña', 4000);
-            this.load = false;
             if (res.intentos === '0') {
                 this.intentosmsj('danger', 'Cuenta Bloqueada', 4000);
             } else {
@@ -174,12 +169,10 @@ export class LoginComponent implements OnInit {
           // tslint:disable-next-line: no-shadowed-variable
           }, err => {
             this.uimensaje('danger', err.message, 3000);
-            this.load = false;
           });
         }
       } else {
         this.uimensaje('danger', err.message, 3000);
-        this.load = false;
       }
     });
   }

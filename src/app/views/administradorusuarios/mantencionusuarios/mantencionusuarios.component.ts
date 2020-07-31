@@ -429,7 +429,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       }
     });
     this.logicaGrabar();
-    console.log(this.compineliminados);
   }
 
   onLimpiar() {

@@ -13,8 +13,7 @@
   <div class="card">
     <div class="card-header"> 
       <div class="row">
-        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="NUEVO PERFIL" (click)="onMantenedorEdit(1)" 
-        [disabled]="load">
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="NUEVO PERFIL" (click)="onMantenedorEdit(1)">
             <i class="fas fa-user"></i>
             NUEVO PERFIL</button>
         <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="MODIFICAR PERFIL" (click)="onMantenedorEdit(2)"
@@ -38,7 +37,7 @@
             <select class='form-control form-control-sm' formControlName='perfil' 
             [compareWith]='compare_perfil' (change)="onSelectPerfil()">
               <option *ngFor='let perfil of perfiles'
-                value="{{ perfil.id_RolLM }}">
+                value="{{ perfil.id_RolLM }}-{{ perfil.ds_rolLM}}">
                 {{ perfil.id_RolLM }} {{ perfil.ds_rolLM }}
               </option>
             </select>

@@ -232,7 +232,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   onNuevousuario() {
     localStorage.removeItem('busquedarut');
-    const indx = '2';
+    const indx = '1';
     localStorage.setItem('from_indx', indx);
     this.router.navigate(['/mantencionusuarios']);
   }
@@ -297,6 +297,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
     this.claveusuariosService.postReiniciarClave(
       rutusuario
     ).subscribe(data => {
+      console.log(data);
       return true;
     } );
   }

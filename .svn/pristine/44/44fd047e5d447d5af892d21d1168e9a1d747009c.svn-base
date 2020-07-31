@@ -88,11 +88,6 @@ export class MenuComponent implements OnInit, AfterViewInit {
     this.router.navigate(['cambiopass']);
   }
 
-  async onCambiaremail() {
-    // await this.loadPropiedadesclave();
-    this.router.navigate(['cambioemail']);
-  }
-
   onCerrar() {
     this.cerrarsesion();
   }
@@ -104,6 +99,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
         localStorage.removeItem('uiwebadminminsal');
         this.router.navigate(['login']);
       }, err => {
+        console.log(err.statusText);
       }
     );
   }
@@ -112,6 +108,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     try {
       return jwt_decode(token);
     } catch (err) {
+      return console.log(err);
     }
   }
 }

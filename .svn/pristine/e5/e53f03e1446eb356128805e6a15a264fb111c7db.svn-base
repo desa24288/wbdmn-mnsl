@@ -1,0 +1,114 @@
+/* You can add global styles to this file, and also import other style files */
+
+/*
+.background-fondo {
+  background-color: #e0e0e0;
+  background-attachment: fixed;
+  background-size: cover;
+}
+*/
+.background-fondo {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f5f6f6+0,dbdce2+21,b8bac6+49,dddfe3+80,f5f6f6+100;Grey+Pipe */
+    background: rgb(245,246,246); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(245,246,246,1) 0%, rgba(219,220,226,1) 21%, rgba(184,186,198,1) 49%, rgba(221,223,227,1) 80%, rgba(245,246,246,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(245,246,246,1) 0%,rgba(219,220,226,1) 21%,rgba(184,186,198,1) 49%,rgba(221,223,227,1) 80%,rgba(245,246,246,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6', endColorstr='#f5f6f6',GradientType=0 ); /* IE6-9 */
+  
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 10;
+  }
+  
+  .text-form-valid {
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: -10px;
+  }
+  
+  .container-full {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: -15px;
+  }
+  
+  .pointer {
+    cursor: pointer;
+  }
+  
+  .help {
+    cursor: help;
+  }
+  
+  .btn-fixed-tool {
+    width: 180px;
+  }
+  
+  .btn-fixed-tool-pagos {
+    width: 200px;
+  }
+  
+  .btn-span-tool {
+    font-size: 12px;
+  }
+  
+  .tabClass {
+    font-size: 0.875rem;
+  }
+  
+  .classTrue{
+    color: green;
+  }
+  .classFalse{
+    color: red;
+  }
+  
+  .breadcrumbtext {
+    font-size: 13px;
+  }
+  
+  .div-top {
+    margin-top: -16px;
+  }
+  
+  .table-header-text {
+    font-size: 11px;
+  }
+  
+  .table-body-text {
+    font-size: 14px;
+  }
+  
+  .table-header-text-dos {
+    font-size: 10px;
+  }
+  
+  .table-body-text-dos {
+    font-size: 12px;
+  }
+  
+  .footer-text {
+    font-size: 14px;
+  }
+  
+  .input-border-true {
+    border: 1px solid green;
+  }
+  
+  .input-border-false {
+    border: 1px solid red;
+  }
+
+  .estilogrilla {
+    margin-top: 0.3em !important;
+    margin-bottom: 0 !important;
+    margin-block-end: 0 !important;
+    line-height: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0.3em !important;
+  }
+  
