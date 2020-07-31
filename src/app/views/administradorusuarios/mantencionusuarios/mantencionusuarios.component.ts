@@ -99,7 +99,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if (this.fromindex === 2) {
+      if (this.fromindex === 2 || this.fromindex === 0) {
         this.uForm.controls.rutusuario.enable();
       }
       this.getBusquedausuario();
@@ -109,7 +109,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   async logicaBread(valor: any) {
     // tslint:disable-next-line: radix
     this.fromindex = parseInt(valor);
-    console.log(this.fromindex);
     if (this.fromindex >= 1 ) {
       this.breadname = 'Administrador de Claves de Usuario';
       this.breadroute = '/claveusuarios';
@@ -127,7 +126,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
 
   async onBuscarusuario() {
     const rutusuario = this.uForm.controls.rutusuario.value;
-    console.log(rutusuario);
     this.progressBar.start();
     if (rutusuario === null || rutusuario === '') {
       this.onLimpiar();
@@ -293,7 +291,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   }
 
   async onGuardar() {
-    console.log(this.compineliminados);
     if ((await this.mensajeSweetAlert.Msgconfirm('¿Desea guardar los cambios?')).value) {
       /** Verifica si existen casillas vacias */
       if (this.verificaArreglos()) {
@@ -307,12 +304,10 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
             /** Verifica si existen registros eliminados desde grilla Perfil Asignados a Usuarios */
             if (this.perfileliminados.length > 0) {
               await this.eliminaPerfil();
-              console.log(this.perfileliminados);
             }
             /** Verifica si existen registros eliminados desde grilla Compin Asignados a Usuarios */
             if (this.compineliminados.length > 0) {
                 await this.eliminaCompin();
-                console.log(this.compineliminados);
             }
             /** Actualiza perfil / compin*/
             await this.actualizaPerfil();
@@ -387,7 +382,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
           }
       }
     });
-    console.log(this.perfileliminados);
     this.logicaGrabar();
   }
 
@@ -410,7 +404,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       this.bForm.reset();
       this.logicaGrabar();
     }
-    console.log(this.compineliminados);
     this.logicaGrabar();
   }
 
@@ -441,6 +434,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
     this.arrcompinasig = [];
     this.compindisponibles = [];
     this.arrcompindisp = [];
+    this.uForm.controls.rutusuario.enable();
   }
 
   onCerrar() {
@@ -488,7 +482,6 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
     } else {
       // this.arrperfildisp.splice(this.inPerfil(value), 1);
       this.arrcompinasig.splice(this.arrcompinasig.findIndex( x => x.CodEstablecimiento === value.CodEstablecimiento), 1);
-      console.log(this.arrcompinasig);
     }
   }
 

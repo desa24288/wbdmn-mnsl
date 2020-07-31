@@ -33,7 +33,7 @@
           <div class="form-group col-sm-2 pr-3">
             <label for="rutusuario" class="col-form-label-sm">RUT USUARIO</label>
             <input appSelecttext type="text" class="form-control form-control-sm text-uppercase" formControlName="rutusuario"
-              placeholder="Ingrese Rut" (focusout)="onBuscarusuario($event.target.value)" formatRut>
+              placeholder="Ingrese Rut" (focusout)="onBuscarusuario()">
             <p class="text-danger text-form-valid"
             *ngIf="uForm.controls['rutusuario'].invalid && (uForm.controls['rutusuario'].dirty || uForm.controls['rutusuario'].touched)">
             Requerido, mínimo caracteres 9 y máximo 10, Rut inválido</p>

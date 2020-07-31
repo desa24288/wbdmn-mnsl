@@ -80,7 +80,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   onPerfilamiento() {
+    localStorage.removeItem('busquedarut');
     localStorage.removeItem('from_indx');
+    const indx = '0';
+    localStorage.setItem('from_indx', indx);
   }
 
   async onCambiarpass() {
