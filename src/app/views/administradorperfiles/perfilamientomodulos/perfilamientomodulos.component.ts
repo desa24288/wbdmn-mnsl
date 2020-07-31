@@ -51,7 +51,6 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   public profile: Userprofile = new Userprofile();
   public mensajeSweetAlert: MensajeSweetAlert = new MensajeSweetAlert();
   public idrol = null;
-  public nomrol = null;
   public execname = null;
   public accionmodal = 0;
   public existeperfil = false;
@@ -78,14 +77,11 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log(this.profile.rutusuario);
-    console.log(this.uForm.controls.perfil.value);
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.setData();
-      console.log(this.uForm.controls.perfil.value);
     });
   }
 
@@ -117,17 +113,18 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     this.menus = [];
   }
 
-  /* 1 si corresponde a un nuevo perfil, 2 si es modificar perfil*/
   async onMantenedorEdit(accion: number) {
     this.accionmodal  = accion;
     this.bsModalRef = this.bsModalService.show(MantenedorperfilesComponent, this.setModal());
     this.bsModalRef.content.onClose.subscribe(estado => {
       if (estado === true) {
+        this.setData();
       }
     });
   }
 
   setModal() {
+    /* tipomodal=1 si corresponde a un nuevo perfil, 2 si es modificar perfil*/
     let dtModal: any = {};
     dtModal = {
       keyboard: false,
@@ -145,11 +142,11 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
     // Graba a @Perfil los Exec con @CctlExecname indicando @AccionDcto = '1'
     // Borra a @Perfil los Exec con @CctlExecname indicando @AccionDcto = '2'
     // LiGraRolExes 1, 'licman', '2'
-    this.alertSwalConfirmar.title = `¿Desea Modificar Perfil ${ this.nomrol } ?`; // <- poner rut usuario
+    this.alertSwalConfirmar.title = `¿Desea Modificar Perfil ?`; // <- poner rut usuario
     this.alertSwalConfirmar.show().then(ok => {
       if (ok.value) {
         this.modificarPerfil();
-        this.alertSwal.title = `Perfil ${ this.nomrol } Modificado`;
+        this.alertSwal.title = `Perfil Modificado`;
         this.alertSwal.show();
       }
       // this.buscarUsuarios();
@@ -160,12 +157,9 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   }
 
   modificarPerfil() {
-    // this.loading = true;
-    // this.load = true;
     const ejecutable: Actualizar = new Actualizar();
     ejecutable.id_RolLM = this.idrol;
     ejecutable.ejecutable = this.arrejecutable;
-    console.log(ejecutable);
     this.perfilamientoService.putActualizarPerfil(ejecutable).subscribe( res => {
       return true;
     });
@@ -173,10 +167,8 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
 
   async onSelectPerfil() {
     const perfil: any = this.uForm.controls.perfil.value;
-    const desperfil = perfil.split('-');
-    this.idrol = desperfil[0];
+    this.idrol = perfil;
     this.setBusqueda(perfil);
-    this.nomrol = desperfil[1];
     this.existeperfil = true;
     this.load = true;
     this.progressBar.start();
@@ -260,8 +252,6 @@ export class PerfilamientomodulosComponent implements OnInit, AfterViewInit {
   async onCheckObjecto(ejecutable: Ejecutable) {
     this.selectedRow = ejecutable.CCtlExeName;
     this.execname = ejecutable.CCtlExeName;
-    console.log('CLICK');
-    console.log(ejecutable);
     const selecexec: Ejecutables = new Ejecutables();
     this.selectedRow = ejecutable.CCtlExeName;
     this.perfilamientoService.getMenu(this.execname, this.idrol).subscribe( res => {

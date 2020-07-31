@@ -13,8 +13,6 @@ import { CambiarpasswordService } from 'src/app/services/cambiarpassword/cambiar
 /*MODELS */
 import { Crearusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/crearusuario';
 import { RutValidator } from 'ng2-rut';
-import { Utils } from 'src/app/models/utils/utils';
-import { Enviarmail } from 'src/app/models/entity/usuario/enviarmail';
 
 @Component({
   selector: 'app-restablecerpassword',

@@ -37,7 +37,7 @@
             <select class='form-control form-control-sm' formControlName='perfil' 
             [compareWith]='compare_perfil' (change)="onSelectPerfil()">
               <option *ngFor='let perfil of perfiles'
-                value="{{ perfil.id_RolLM }}-{{ perfil.ds_rolLM}}">
+                value="{{ perfil.id_RolLM }}">
                 {{ perfil.id_RolLM }} {{ perfil.ds_rolLM }}
               </option>
             </select>

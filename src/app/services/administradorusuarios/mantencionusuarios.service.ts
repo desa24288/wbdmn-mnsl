@@ -67,4 +67,10 @@ export class MantencionusuariosService {
     return this.httpClient.put<Actualizarcompin>(
       this.TARGET_URL_COMPINES.concat('/compines/'), compin);
   }
+
+  public getMail(rutusuario): Observable<any> {
+    return this.httpClient.get<any>(
+      this.TARGET_URL.concat('/mail/').
+      concat(rutusuario), this.tokenService.get());
+  }
 }

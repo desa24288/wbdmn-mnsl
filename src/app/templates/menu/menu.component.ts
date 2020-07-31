@@ -88,6 +88,11 @@ export class MenuComponent implements OnInit, AfterViewInit {
     this.router.navigate(['cambiopass']);
   }
 
+  async onCambiaremail() {
+    // await this.loadPropiedadesclave();
+    this.router.navigate(['cambioemail']);
+  }
+
   onCerrar() {
     this.cerrarsesion();
   }

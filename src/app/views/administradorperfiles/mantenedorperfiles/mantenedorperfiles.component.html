@@ -56,7 +56,7 @@
           <div class="row">
               <div class="col-md-6">
                   <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="ACTUALIZAR PROPIEDADES"
-                      (click)="onGuardar()" [disabled]="!lForm.valid"><i class="fas fa-save"></i>
+                      (click)="onAceptar()" [disabled]="!lForm.valid"><i class="fas fa-save"></i>
                       GUARDAR</button>
               </div>
               <div class="col-md-6 text-right">
@@ -72,6 +72,8 @@
       <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
 
       <swal #alertSwalError title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+      <swal #alertSwalConfirmar title="" text="" type="question" [showCancelButton]="true"> </swal>
 
       <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
   </div>

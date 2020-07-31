@@ -23,6 +23,7 @@ import { Perfil } from 'src/app/models/entity/adminperfiles/perfil';
 export class MantenedorperfilesComponent implements OnInit, AfterViewInit {
   @ViewChild('alertSwal') alertSwal: SwalComponent;
   @ViewChild('alertSwalAlert') alertSwalAlert: SwalComponent;
+  @ViewChild('alertSwalConfirmar') alertSwalConfirmar: SwalComponent;
   @ViewChild('alertSwalError') alertSwalError: SwalComponent;
   @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
   @Input() rolid: any;
@@ -34,6 +35,7 @@ export class MantenedorperfilesComponent implements OnInit, AfterViewInit {
   public load = false;
   public estado = false;
   public loading = false;
+  public acepta = false;
 
   public cabecera = 'Mantenedor Perfiles de Usuarios';
   public tipoperfiles: Array<Tipo> = [];
@@ -71,6 +73,7 @@ export class MantenedorperfilesComponent implements OnInit, AfterViewInit {
   }
 
   onCerrar() {
+    this.onClose.next(this.acepta);
     this.bsModalRef.hide();
   }
 
@@ -119,22 +122,36 @@ export class MantenedorperfilesComponent implements OnInit, AfterViewInit {
   }
 
   async onGuardar() {
+    this.modificarperfil.ds_rolLM = this.lForm.controls.descperfil.value;
+    this.modificarperfil.id_RolLM = this.lForm.controls.codperfil.value;
+    this.modificarperfil.id_estrol = this.lForm.controls.estadoperfil.value;
+    this.modificarperfil.id_tipoperfil = this.lForm.controls.tipoperfil.value;
+    console.log(this.modificarperfil);
+    this.mantenedorServices.putActualizarperfil(this.modificarperfil).subscribe( res => {
+      this.acepta = true;
+      this.alertSwal.title = 'Proceso exitoso';
+      this.alertSwal.show();
+      this.loading = false;
+    }, err => {
+      this.loading = false;
+      this.alertSwalError.title = err.error.mensaje;
+      this.alertSwalError.show();
+    });
+  }
+
+  onAceptar() {
+    this.loading = true;
     if (this.lForm.valid) {
-      this.loading = true;
-      this.modificarperfil.ds_rolLM = this.lForm.controls.descperfil.value;
-      this.modificarperfil.id_RolLM = this.lForm.controls.codperfil.value;
-      this.modificarperfil.id_estrol = this.lForm.controls.estadoperfil.value;
-      this.modificarperfil.id_tipoperfil = this.lForm.controls.tipoperfil.value;
-      console.log(this.modificarperfil);
-      this.mantenedorServices.putActualizarperfil(this.modificarperfil).subscribe( res => {
-        this.alertSwal.title = 'Proceso exitoso';
-        this.alertSwal.show();
-        this.loading = false;
-      }, err => {
-        this.loading = false;
-        this.alertSwalError.title = err.error.mensaje;
-        this.alertSwalError.show();
-      });
+      if (this.tipomodal === 2) {
+        this.alertSwalConfirmar.title = `¿Desea Modificar Perfil ?`;
+        this.alertSwalConfirmar.show().then(ok => {
+          if (ok.value) {
+            this.onGuardar();
+          } else { this.loading = false; }
+        });
+      } else {
+        this.onGuardar();
+      }
     } else {
       this.loading = false;
       this.alertSwalError.title = 'Campos Faltantes';

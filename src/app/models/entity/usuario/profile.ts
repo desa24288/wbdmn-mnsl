@@ -7,6 +7,7 @@ export class Profile {
   estado: string; // Estado usuario
   // clavecad: string; // Si clave expiro respecto a los dias permitidos
   fechaupd: string;
+  correo: string;
   sucursales: Array<Serviciosalud>;
   perfiles: Array<Rol>;
   // RutUsuario: string;
@@ -25,6 +26,7 @@ export class Profile {
     estado?: string,
     // clavecad?: string,
     fechaupd?: string,
+    correo?: string,
     sucursales?: Array<Serviciosalud>,
     perfiles?: Array<Rol>
     // RutUsuario?: string,
@@ -42,6 +44,7 @@ export class Profile {
     this.estado = estado;
     // this.clavecad = clavecad;
     this.fechaupd = fechaupd;
+    this.correo = correo;
     this.sucursales = sucursales;
     this.perfiles = perfiles;
     // this.RutUsuario = RutUsuario;

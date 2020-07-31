@@ -9,6 +9,7 @@ import { NgProgressComponent } from '@ngx-progressbar/core';
 /* SERVICES */
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
 import { MantencionusuariosService } from 'src/app/services/administradorusuarios/mantencionusuarios.service';
+import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
 /* MODELS */
 import { MensajeSweetAlert } from 'src/app/models/utils/mensaje';
 import { Perfildisponible } from 'src/app/models/entity/adminusuarios/mantencionusuarios/perfildisponible';
@@ -16,6 +17,8 @@ import { Compindisponible } from 'src/app/models/entity/adminusuarios/mantencion
 import { Utils } from 'src/app/models/utils/utils';
 import { Actualizarperfil } from 'src/app/models/entity/adminusuarios/mantencionusuarios/actualizarperfil';
 import { Actualizarcompin } from 'src/app/models/entity/adminusuarios/mantencionusuarios/actualizarcompin';
+import { Userprofile } from 'src/app/config/userprofile';
+import { Crearusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/crearusuario';
 
 @Component({
   selector: 'app-mantencionusuarios',
@@ -29,6 +32,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
   @ViewChild('alertSwalError') alertSwalError: SwalComponent;
   @ViewChild('alertSwalConfirmar') alertSwalConfirmar: SwalComponent;
 
+  public profile: Userprofile = new Userprofile();
   public uForm: FormGroup;
   public mForm: FormGroup;
   public bForm: FormGroup;
@@ -65,13 +69,14 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
     public router: Router,
     public formBuilder: FormBuilder,
     public mantencionService: MantencionusuariosService,
-    private activatedRoute: ActivatedRoute
+    public usuarioService: ClaveusuariosService,
   ) {
 
     this.uForm = this.formBuilder.group(
       {
-        rutusuario: [{ value: null, disabled: false }, Validators.required],
-        nomusuario: [{ value: null, disabled: true }, Validators.required]
+        rutusuario: [{ value: null, disabled: true }, Validators.required],
+        nomusuario: [{ value: null, disabled: true }, Validators.required],
+        email: [null, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(250), Validators.email])]
       });
     this.mForm = this.formBuilder.group(
       {
@@ -87,24 +92,27 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const indx = localStorage.getItem('from_indx');
-    if (indx === '1') {
+    if (indx === '1' || indx === '2' ) {
     this.logicaBread(indx);
     }
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
+      if (this.fromindex === 2) {
+        this.uForm.controls.rutusuario.enable();
+      }
       this.getBusquedausuario();
     });
   }
 
-  logicaBread(valor: any) {
+  async logicaBread(valor: any) {
     // tslint:disable-next-line: radix
     this.fromindex = parseInt(valor);
     console.log(this.fromindex);
-    if (this.fromindex === 1) {
-    this.breadname = 'Administrador de Claves de Usuario';
-    this.breadroute = '/claveusuarios';
+    if (this.fromindex >= 1 ) {
+      this.breadname = 'Administrador de Claves de Usuario';
+      this.breadroute = '/claveusuarios';
     }
   }
 
@@ -117,128 +125,209 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       }
   }
 
-  async onBuscarusuario(value: any) {
-    // Rut testing:
-    // 11230223-9
-    // 18058988-0
+  async onBuscarusuario() {
+    const rutusuario = this.uForm.controls.rutusuario.value;
+    console.log(rutusuario);
     this.progressBar.start();
-    if (value == null || value === '') {
+    if (rutusuario === null || rutusuario === '') {
+      this.onLimpiar();
+      this.progressBar.complete();
       return;
     } else {
       this.load = true;
-      this.rutusuario = Utils.formatRut(this.uForm.controls.rutusuario.value);
+      this.rutusuario = Utils.formatRut(rutusuario);
       this.mantencionService.getNombreUsuario(this.rutusuario).subscribe( res => {
-        this.uForm.controls.nomusuario.setValue(res);
+        this.uForm.controls.nomusuario.setValue(res[0]);
         this.setParametros(this.rutusuario);
       }, err => {
         this.alertSwalAlert.title = err.error.mensaje;
         this.alertSwalAlert.show();
-        this.progressBar.complete();
         this.load = false;
       });
-      await this.mantencionService.getPerfilesDisponibles(this.rutusuario).subscribe( res => {
-        this.perfildisponibles = res;
+      await this.mantencionService.getMail(this.rutusuario).subscribe( res => {
+        this.uForm.controls.email.setValue(res);
       }, err => {
-        this.alertSwalAlert.title = err.error.mensaje;
-        this.alertSwalAlert.show();
-        this.progressBar.complete();
         this.load = false;
       });
-      await this.mantencionService.getPerfilesUsuario(this.rutusuario).subscribe( res => {
-        this.perfilasignados = res;
-      }, err => {
-        this.alertSwalAlert.title = err.error.mensaje;
-        this.alertSwalAlert.show();
-        this.progressBar.complete();
-        this.load = false;
-      });
-      await this.mantencionService.getCompinesDisponibles(this.rutusuario).subscribe( res => {
-        this.compindisponibles = res;
-      }, err => {
-        this.alertSwalAlert.title = err.error.mensaje;
-        this.alertSwalAlert.show();
-        this.progressBar.complete();
-        this.load = false;
-      });
-      await this.mantencionService.getCompinesUsuario(this.rutusuario).subscribe( res => {
-        this.compinasignados = res;
-        this.progressBar.complete();
-        this.load = false;
-      }, err => {
-        this.alertSwalAlert.title = err.error.mensaje;
-        this.alertSwalAlert.show();
-        this.progressBar.complete();
-        this.load = false;
-      });
+      await this.cargaPerfilesDisponibles();
+      await this.cargaPefilAsignados();
+      await this.cargaCompinDisponibles();
+      await this.cargaCompinAsignados();
+      this.load = false;
+      this.progressBar.complete();
+      this.logicaGrabar();
     }
-    this.logicaGrabar();
+  }
+
+  async cargaPerfilesDisponibles() {
+    this.mantencionService.getPerfilesDisponibles(this.rutusuario).subscribe( res => {
+      this.perfildisponibles = res;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.load = false;
+    });
+  }
+
+  async cargaPefilAsignados() {
+    this.mantencionService.getPerfilesUsuario(this.rutusuario).subscribe( res => {
+      this.perfilasignados = res;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.load = false;
+    });
+  }
+
+  async cargaCompinDisponibles() {
+    this.mantencionService.getCompinesDisponibles(this.rutusuario).subscribe( res => {
+      this.compindisponibles = res;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.load = false;
+    });
+  }
+
+  async cargaCompinAsignados() {
+    this.mantencionService.getCompinesUsuario(this.rutusuario).subscribe( res => {
+      this.compinasignados = res;
+    }, err => {
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.load = false;
+    });
+  }
+
+  async eliminaPerfil() {
+    const eliminaPerfil: Actualizarperfil = new Actualizarperfil();
+    const arrperfil: Array<any> = [];
+    eliminaPerfil.rutusuario = this.rutusuario;
+    eliminaPerfil.idupd = 3;
+    this.perfileliminados.forEach( data => {
+      // tslint:disable-next-line: radix
+      const arrid  = { idrol: parseInt(data.id_rollm) };
+      arrperfil.push(arrid);
+    });
+    eliminaPerfil.perfiles = arrperfil;
+    this.mantencionService.putActualizarPerfiles(eliminaPerfil).subscribe(res => { 
+      this.perfileliminados = [];
+      this.arrperfilasig = [];
+    }, err => {
+      this.alertSwalAlert.text = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.loading = false;
+    } );
+  }
+
+  async actualizaPerfil() {
+    const actualizaPerfil: Actualizarperfil = new Actualizarperfil();
+    const arrperfil: Array<any> = [];
+    actualizaPerfil.rutusuario = this.rutusuario;
+    actualizaPerfil.idupd = 1;
+    this.perfilasignados.forEach( data => {
+      // tslint:disable-next-line: radix
+      const arrid  = { idrol: parseInt(data.id_rollm) };
+      arrperfil.push(arrid);
+    });
+    actualizaPerfil.perfiles = arrperfil;
+    this.mantencionService.putActualizarPerfiles(actualizaPerfil).subscribe(res => {
+      this.arrperfilasig = [];
+      this.actualizaCompin();
+    }, err => {
+      this.alertSwalAlert.text = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.loading = false;
+    } );
+  }
+
+  async eliminaCompin() {
+    const eliminaCompin: Actualizarcompin = new Actualizarcompin();
+    const arrcompin: Array<any> = [];
+    eliminaCompin.rutusuario = this.rutusuario;
+    eliminaCompin.idupd = 3;
+    this.compineliminados.forEach( data => {
+      // tslint:disable-next-line: radix
+      const arrid  = { idnss: parseInt(data.CodEstablecimiento) };
+      arrcompin.push(arrid);
+    });
+    eliminaCompin.compines = arrcompin;
+    this.mantencionService.putActualizarCompin(eliminaCompin).subscribe(res => {
+      this.compineliminados = [];
+      this.arrcompinasig = [];
+    }, err => {
+      this.alertSwalAlert.text = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.loading = false;
+    } );
+  }
+
+  async actualizaCompin() {
+    const actualizaCompin: Actualizarcompin = new Actualizarcompin();
+    const arrcompin: Array<any> = [];
+    actualizaCompin.rutusuario = this.rutusuario;
+    actualizaCompin.idupd = 1;
+    this.compinasignados.forEach( data => {
+      // tslint:disable-next-line: radix
+      const arrid  = { idnss: parseInt(data.CodEstablecimiento) };
+      arrcompin.push(arrid);
+    });
+    actualizaCompin.compines = arrcompin;
+    this.mantencionService.putActualizarCompin(actualizaCompin).subscribe(res => {
+      this.arrcompinasig = [];
+      this.alertSwal.title = 'Proceso exitoso!';
+      this.alertSwal.show();
+      this.loading = false;
+    }, err => {
+      this.alertSwalAlert.text = err.error.mensaje;
+      this.alertSwalAlert.show();
+      this.loading = false;
+    } );
+  }
+
+  verificaArreglos() {
+    if (this.compinasignados.length === 0 ||
+      this.perfilasignados.length === 0 ) {
+        return false;
+    } else { return true; }
   }
 
   async onGuardar() {
-    console.log(this.compinasignados);
+    console.log(this.compineliminados);
     if ((await this.mensajeSweetAlert.Msgconfirm('¿Desea guardar los cambios?')).value) {
-      this.loading = true;
-      let i = 1;
-      let tipoPerfil = [];
-      let tipoCompin = [];
-      if (this.perfileliminados.length > 0 ||
-        this.compineliminados.length > 0) {
-        console.log('Hay Eliminados');
-        i = 0;
-      }
-      for (i; i < 2; i++) {
-        if (i === 0) {
-          tipoPerfil = this.perfileliminados;
-          tipoCompin = this.compineliminados;
-          console.log('Hay Eliminados');
-          this.codupdate = 3;
-          if (tipoPerfil.length === 0) {
-            tipoPerfil = this.perfilasignados;
-          }
-          if (tipoCompin.length === 0) {
-            console.log('No Hay Eliminados');
-            tipoCompin = this.compinasignados;
-          }
-        } else {
-          tipoPerfil = this.perfilasignados;
-          tipoCompin = this.compinasignados;
-          this.codupdate = 1;
-        }
-        this.actualizarPerfil.rutusuario = this.rutusuario;
-        this.actualizarPerfil.idupd = this.codupdate;
-        this.actualizarCompin.rutusuario = this.rutusuario;
-        this.actualizarCompin.idupd = this.codupdate;
-        const arrperfil: Array<any> = [];
-        const arrcompin: Array<any> = [];
-        /* Agregar los idrol de los Perfiles agregados */
-        tipoPerfil.forEach( data => {
-          // tslint:disable-next-line: radix
-          const arrid  = { idrol: parseInt(data.id_rollm) };
-          arrperfil.push(arrid);
-        });
-        /* Agregar los idnss de los Compin agregados */
-        tipoCompin.forEach( data => {
-          // tslint:disable-next-line: radix
-          const arrid  = { idnss: parseInt(data.CodEstablecimiento) };
-          arrcompin.push(arrid);
-        });
-
-        this.actualizarPerfil.perfiles = arrperfil;
-        this.actualizarCompin.compines = arrcompin;
-        this.mantencionService.putActualizarPerfiles(this.actualizarPerfil).subscribe(res => {
+      /** Verifica si existen casillas vacias */
+      if (this.verificaArreglos()) {
+        this.loading = true;
+        const crearuser: Crearusuario = new Crearusuario();
+        crearuser.rutusuario = this.rutusuario;
+        crearuser.nombre = this.uForm.controls.nomusuario.value;
+        crearuser.correo = this.uForm.controls.email.value;
+        /** Crea Usuario / Actualiza correo */
+        this.usuarioService.postCrearUsuario(crearuser).subscribe(async res => {
+            /** Verifica si existen registros eliminados desde grilla Perfil Asignados a Usuarios */
+            if (this.perfileliminados.length > 0) {
+              await this.eliminaPerfil();
+              console.log(this.perfileliminados);
+            }
+            /** Verifica si existen registros eliminados desde grilla Compin Asignados a Usuarios */
+            if (this.compineliminados.length > 0) {
+                await this.eliminaCompin();
+                console.log(this.compineliminados);
+            }
+            /** Actualiza perfil / compin*/
+            await this.actualizaPerfil();
+            this.loading = false;
         }, err => {
           this.alertSwalAlert.text = err.error.mensaje;
           this.alertSwalAlert.show();
           this.loading = false;
         });
-        this.mantencionService.putActualizarCompin(this.actualizarCompin).subscribe(res => {
-        }, err => {
-          this.alertSwalAlert.text = err.error.mensaje;
-          this.alertSwalAlert.show();
-          this.loading = false;
-        });
-        this.alertSwal.title = 'Proceso exitoso!';
-        this.alertSwal.show();
+        /** Crea Usuario / Actualiza correo */
+        // await this.verificaUser();
+        // this.loading = false;
+      } else {
+        this.alertSwalAlert.text = 'Debe seleccionar Perfil y Compin';
+        this.alertSwalAlert.show();
         this.loading = false;
       }
     }
@@ -250,7 +339,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       const rutusuario = admusuarios.rutusuario;
       this.uForm.controls.rutusuario.setValue(rutusuario);
       // localStorage.setItem('busquedausuario', JSON.stringify(admusuarios));
-      this.onBuscarusuario(rutusuario);
+      this.onBuscarusuario();
     }
   }
 
@@ -269,11 +358,11 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
         this.arrperfildisp.forEach(a => {
           if (this.perfilasignados.findIndex(b => b.id_rollm === a.id_rollm) < 0) {
             this.perfilasignados.push(a);
-          } else { }
+          }
+          /** Elimina registro del arreglo de eliminados */
           if (this.perfileliminados.findIndex(z => z.id_rollm === a.id_rollm) >= 0) {
             this.perfileliminados.splice(this.perfileliminados.findIndex(x => x.id_rollm === a.id_rollm), 1);
           }
-
         });
       }
       this.arrperfildisp = [];
@@ -281,10 +370,10 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       this.mForm.reset();
       this.logicaGrabar();
     }
-    console.log(this.perfileliminados);
+    this.logicaGrabar();
   }
 
-  onQuitarperfil() {
+  async onQuitarperfil() {
     this.arrperfilasig.forEach( z => {
       const indx =  this.perfilasignados.findIndex(a => a.id_rollm === z.id_rollm);
       if ( indx >= 0) {
@@ -298,6 +387,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
           }
       }
     });
+    console.log(this.perfileliminados);
     this.logicaGrabar();
   }
 
@@ -321,9 +411,10 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       this.logicaGrabar();
     }
     console.log(this.compineliminados);
+    this.logicaGrabar();
   }
 
-  onQuitarcompin() {
+  async onQuitarcompin() {
     this.arrcompinasig.forEach( z => {
       const indx =  this.compinasignados.findIndex(a => a.CodEstablecimiento === z.CodEstablecimiento);
       if ( indx >= 0) {
@@ -361,6 +452,9 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
       case 1:
         this.router.navigate([this.breadroute]);
         break;
+      case 2:
+        this.router.navigate([this.breadroute]);
+        break;
     }
   }
 
@@ -395,6 +489,7 @@ export class MantencionusuariosComponent implements OnInit, AfterViewInit {
     } else {
       // this.arrperfildisp.splice(this.inPerfil(value), 1);
       this.arrcompinasig.splice(this.arrcompinasig.findIndex( x => x.CodEstablecimiento === value.CodEstablecimiento), 1);
+      console.log(this.arrcompinasig);
     }
   }
 

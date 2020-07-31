@@ -45,6 +45,7 @@ import { NuevousuarioComponent } from './views/administradorusuarios/nuevousuari
 import { CambiopasswordComponent } from './templates/cambiarpassword/cambiopassword.component';
 import { RestablecerpasswordComponent } from './templates/cambiarpassword/restablecerpassword/restablecerpassword.component';
 import { ValidarutComponent } from './templates/cambiarpassword/validarut/validarut.component';
+import { RegistrarcorreoComponent } from './templates/registrarcorreo/registrarcorreo.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ValidarutComponent } from './templates/cambiarpassword/validarut/valida
     NuevousuarioComponent,
     CambiopasswordComponent,
     RestablecerpasswordComponent,
-    ValidarutComponent
+    ValidarutComponent,
+    RegistrarcorreoComponent
   ],
   imports: [
     BrowserModule,

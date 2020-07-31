@@ -12,7 +12,8 @@ import { PropiedadescuentaService } from 'src/app/services/administradorusuarios
 import { DatePipe } from '@angular/common';
 import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
 /** COMPONENTS */
-import { ValidarutComponent } from '../cambiarpassword/validarut/validarut.component';
+// import { ValidarutComponent } from '../cambiarpassword/validarut/validarut.component';
+import { RestablecerpasswordComponent } from 'src/app/templates/cambiarpassword/restablecerpassword/restablecerpassword.component';
 /** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
@@ -98,7 +99,7 @@ export class LoginComponent implements OnInit {
   }
 
   onRecovery() {
-    this.bsModalRef = this.bsModalService.show(ValidarutComponent, this.setModal());
+    this.bsModalRef = this.bsModalService.show(RestablecerpasswordComponent, this.setModal());
     this.bsModalRef.content.onClose.subscribe(estado => {
       if (estado === true) {
       }
@@ -155,6 +156,9 @@ export class LoginComponent implements OnInit {
                   this.router.navigate(['cambiopass']);
                 }
               });
+            } else {
+              this.uimensaje('danger', err.error.mensaje, 3000);
+              this.load = false;
             }
           } else {
             /** Funcion que guarda los registros fallidos y muestra intentos restantes previo a bloquear cuenta */
@@ -162,6 +166,7 @@ export class LoginComponent implements OnInit {
             this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, 2).subscribe( res => {
             this.load = false;
             this.uimensaje('danger', 'Error en Usuario u Contraseña', 4000);
+            this.load = false;
             if (res.intentos === '0') {
                 this.intentosmsj('danger', 'Cuenta Bloqueada', 4000);
             } else {
@@ -170,10 +175,12 @@ export class LoginComponent implements OnInit {
           // tslint:disable-next-line: no-shadowed-variable
           }, err => {
             this.uimensaje('danger', err.message, 3000);
+            this.load = false;
           });
         }
       } else {
         this.uimensaje('danger', err.message, 3000);
+        this.load = false;
       }
     });
   }
