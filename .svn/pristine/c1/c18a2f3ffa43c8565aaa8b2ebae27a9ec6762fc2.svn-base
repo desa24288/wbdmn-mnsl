@@ -1,0 +1,122 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext" style="margin-bottom: -2px;">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ cabecera }}</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container"> 
+  <div class="card">
+    <div class="card-header"> 
+      <div class="row">
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="NUEVO PERFIL" (click)="onMantenedorEdit(1)" 
+        [disabled]="load">
+            <i class="fas fa-user"></i>
+            NUEVO PERFIL</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="MODIFICAR PERFIL" (click)="onMantenedorEdit(2)"
+        [disabled]="!existeperfil">
+        <i class="fas fa-edit"></i>
+          MODIFICAR PERFIL</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="LIMPIAR" (click)="onLimpiar()"
+        [disabled]="load"><i class="fas fa-broom"></i>
+        LIMPIAR</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1 btn-cerrar" tooltip="CERRAR" (click)="onCerrar()"><i
+          class="fas fa-window-close"></i>
+          CERRAR</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- uForm -->
+      <form novalidate [formGroup]="uForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="perfil">PERFIL</label>
+            <select class='form-control form-control-sm' formControlName='perfil' 
+            [compareWith]='compare_perfil' (change)="onSelectPerfil()">
+              <option *ngFor='let perfil of perfiles'
+                value="{{ perfil.id_RolLM }}">
+                {{ perfil.id_RolLM }} {{ perfil.ds_rolLM }}
+              </option>
+            </select>
+            <p class="text-danger text-form-valid"
+              *ngIf="uForm.controls['perfil'].invalid && (uForm.controls['perfil'].dirty || uForm.controls['perfil'].touched)">
+              Requerido</p>
+          </div>
+        </div>
+      </form>
+      <!-- END uForm -->
+      <!-- mForm  -->
+      <form novalidate [formGroup]="mForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="card-header col-md-12 text-center">Seleccione Opciones del Módulo para el Perfil</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+                <div class="card-body table-responsive mt-1" style="height: 390px;">
+                  <table class="table table-hover" style="font-size: 12px">
+                    <thead>
+                      <tr>
+                        <th>Seleccione <br>Ejecutable</th>
+                        <th>Nombre <br>Ejecutable</th>
+                        <th>Descripción <br>Ejecutable</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+                      <tr *ngFor="let ejecutable of ejecutables" class="ml-2 pointer"
+                      [ngClass]="{'highlight':ejecutable.CCtlExeName===selectedRow}" (click)="onCheckObjecto(ejecutable)">
+                        <td>
+                          <input formControlName='ejecutablelist' class="ml-1 mr-2" type="checkbox"
+                            (click)="onCheckEjecutable($event, ejecutable.CCtlExeName)" id='lm-{{ ejecutable.CCtlExeName }}'
+                            [checked]="ejecutable.Seleccionado_1">
+                        </td>
+                        <td>{{ ejecutable.CCtlExeName }}</td>
+                        <td>{{ ejecutable.CCtlExeDescription }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+          </div>
+
+          <div class="form-group col-sm-5">
+            <div class="card-body table-responsive mt-1" style="height: 390px;">
+              <table class="table table-hover" style="font-size: 12px">
+                  <thead>
+                    <tr>
+                      <th>Activar <br>Menu</th>
+                      <th>Menu</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-nowrap">
+                    <tr *ngFor="let menu of menus"  class="ml-2">
+                      <td>
+                        <input formControlName='menulist' class="ml-1 mr-2" type="checkbox"
+                          (click)="onCheckMenu($event, menu)" id='lm-{{ menu.ID_Menu }}'
+                          [checked]="menu.Seleccionado_1">
+                      </td>
+                      <td class="text-uppercase">{{ menu.DS_Menu }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+      </form>
+      <!-- END mForm -->
+      <div *ngFor="let alert of alerts">
+        <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+        </alert>
+      </div>
+    </div>
+
+    
+  </div>
+</div>
+
+<swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+<swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+<swal #alertSwalConfirmar title="" text="" type="question" [showCancelButton]="true"> </swal>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
