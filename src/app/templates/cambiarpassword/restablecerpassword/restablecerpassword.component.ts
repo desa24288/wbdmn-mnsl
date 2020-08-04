@@ -92,10 +92,17 @@ export class RestablecerpasswordComponent implements OnInit, AfterViewInit {
           this.alertSwalError.show();
           return;
         } else {
-          this.loading = false;
-          this.alertSwalError.title = err.error.mensaje;
-          this.alertSwalError.show();
-          return;
+          if (err.error.mensaje === 'BLQ') {
+            this.loading = false;
+            this.alertSwalError.title = 'Cuenta Bloqueada favor comunicarse con Administrador';
+            this.alertSwalError.show();
+            return;
+          } else {
+            this.loading = false;
+            this.alertSwalError.title = err.error.mensaje;
+            this.alertSwalError.show();
+            return;
+          }
         }
       });
     }

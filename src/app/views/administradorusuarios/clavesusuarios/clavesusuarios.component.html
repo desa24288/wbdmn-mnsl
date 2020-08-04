@@ -17,7 +17,7 @@
         <div class="row">
           <div class="col-md-10">
             <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="BUSCAR USUARIOS" (click)="onBuscar()"
-              [disabled]="!pForm.valid"><i class="fas fa-search"></i>
+              [disabled]="!btnbuscar"><i class="fas fa-search"></i>
               BUSCAR</button>
             <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="LIMPIAR" (click)="onLimpiar()"
               [disabled]="load"><i class="fas fa-broom"></i>
@@ -33,12 +33,12 @@
     <div class="card">
       <div class="card-body div-top">
         <tabset #tabBusqueda>
-          <tab customClass="tabClass" heading="Servicio / Estado Usuario" id="tabServiciosaludestado" (selectTab)="onSelect($event)">
+          <tab customClass="tabClass" heading="Servicio / Estado Usuario" id="tabSSalud" (selectTab)="onSelect($event)">
             <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
               <div class="row mt-1 mb-2">
                 <div class="form-goup col-sm-3 ml-3">
                   <label for="serviciosalud">Servicio de Salud</label>
-                  <select class='form-control form-control-sm' name='serviciosalud'
+                  <select class='form-control form-control-sm' name='serviciosalud' (change)="logicaGuardar()"
                   formControlName='serviciosalud' [compareWith]='compare_serviciosalud'>
                     <option *ngFor='let servicios of serviciosalud'
                       value="{{ servicios.NumServicioSalud }}">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-goup col-sm-2">
                   <label for="estadousuario">Estado Usuarios</label>
-                  <select class='form-control form-control-sm' name='estadousuario'
+                  <select class='form-control form-control-sm' name='estadousuario' (change)="logicaGuardar()"
                   formControlName='estadousuario' [compareWith]='compare_estadousuarios'>
                     <option *ngFor='let estado of estadosusuarios'
                       value="{{ estado.CodEstadoUsr }}">
@@ -65,13 +65,13 @@
               </div>
             </form>
           </tab>
-          <tab customClass="tabClass" heading="Rut Usuario" id="tabBusquedaRut" (selectTab)="onSelect($event)">
+          <tab customClass="tabClass" heading="Rut Usuario" id="tabRut" (selectTab)="onSelect($event)">
             <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
               <div class="row mt-1 mb-2">
                 <div class="form-goup col-sm-3 ml-3">
                   <label for="estadousuario">Rut Usuario</label>
                     <input appSelecttext placeholder="Ingrese Rut" type="text" class="form-control form-control-sm"
-                      formControlName='rutusuario' formatRut />
+                    (input)="logicaGuardar()" formControlName='rutusuario' formatRut />
                 </div>
               </div><p class="text-danger text-form-valid ml-3 mb-1"
                 *ngIf="qForm.controls['rutusuario'].invalid && (qForm.controls['rutusuario'].dirty || qForm.controls['rutusuario'].touched)">
