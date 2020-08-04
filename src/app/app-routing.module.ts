@@ -13,14 +13,12 @@ import { ClavesusuariosComponent } from './views/administradorusuarios/clavesusu
 import { MantencionusuariosComponent } from './views/administradorusuarios/mantencionusuarios/mantencionusuarios.component';
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 import { CambiopasswordComponent } from './templates/cambiarpassword/cambiopassword.component';
-import { RegistrarcorreoComponent } from './templates/registrarcorreo/registrarcorreo.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'cambiopass', component: CambiopasswordComponent},
-  { path: 'cambioemail', component: RegistrarcorreoComponent, canActivate: [AuthGuard] },
 
   { path: 'consultabono', component: ConsultabonoComponent, canActivate: [AuthGuard] },
   { path: 'consultacambioestado', component: ConsultacambioestadoComponent, canActivate: [AuthGuard] },

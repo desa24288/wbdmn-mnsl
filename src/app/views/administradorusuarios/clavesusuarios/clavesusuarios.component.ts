@@ -16,8 +16,6 @@ import { ClaveusuariosService } from 'src/app/services/administradorusuarios/cla
 import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/paramusuario';
 import { Serviciosalud } from 'src/app/models/entity/adminusuarios/claveusuarios/serviciosalud';
 import { Estadousuario } from 'src/app/models/entity/adminusuarios/claveusuarios/estadousuario';
-// import { NuevousuarioComponent } from '../nuevousuario/nuevousuario.component';
-// import { BrowserStack } from 'protractor/built/driverProviders';
 import { RutValidator } from 'ng2-rut';
 
 @Component({
@@ -54,7 +52,8 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   public usuario: Paramusuario = new Paramusuario();
   public isIngresado = true;
-  public tabSelect = 'tabServiciosaludestado';
+  public tabSelect = 'tabSSalud';
+  public btnbuscar = false;
 
   constructor(
     public router: Router,
@@ -107,10 +106,6 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   onAsignarserviciosalud() {}
 
-  onSelect(data: TabDirective): void {
-    this.tabSelect = data.id;
-  }
-
   async onCheck(event: any, usuario: Paramusuario) {
     if (event.target.checked) {
       if (this.usuariosseleccionados.indexOf(usuario) < 0) {
@@ -123,7 +118,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
 
   onBuscar() {
     switch (this.tabSelect) {
-      case 'tabServiciosaludestado':
+      case 'tabSSalud':
         if (this.pForm.valid) {
           this.buscarUsuarios();
         } else {
@@ -131,7 +126,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
         }
         break;
 
-      case 'tabBusquedaRut':
+      case 'tabRut':
         if (this.qForm.valid) {
           this.buscarUsuariosrut();
         } else {
@@ -153,7 +148,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
         this.usuariosseleccionados = [];
         this.usuarios = data;
         this.setRowPagination();
-        this.setParametros(serviciosalud, estadousuario);
+        this.setParametros(serviciosalud, estadousuario, null);
         this.progressBar.complete();
         this.load = false;
       }, err => {
@@ -172,7 +167,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       this.usuariosseleccionados = [];
       this.usuarios = data;
       this.setRowPagination();
-      this.setParametrosrut(rutusuario);
+      this.setParametros(null, null, rutusuario);
       this.progressBar.complete();
       this.load = false;
     }, err => {
@@ -184,32 +179,33 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   async getBusquedausuario() {
-    const admusuarios = JSON.parse(localStorage.getItem('busquedausuario'));
-    const admusuariosrut = JSON.parse(localStorage.getItem('busquedausuariorut'));
-    if (admusuarios !== null) {
-      this.pForm.controls.serviciosalud.setValue(admusuarios.serviciosalud);
-      this.pForm.controls.estadousuario.setValue(admusuarios.estadousuario);
-      this.buscarUsuarios();
-    } else {
-      this.qForm.controls.serviciosalud.setValue(admusuariosrut.rutusuario);
-      this.buscarUsuariosrut();
+    const parambusqueda = JSON.parse(localStorage.getItem('claveusuariobusqueda'));
+    if (parambusqueda === null) {
+     return;
+    } else {
+      if (parambusqueda.tab === 'tabSSalud') {
+        this.pForm.controls.serviciosalud.setValue(parambusqueda.serviciosalud);
+        this.pForm.controls.estadousuario.setValue(parambusqueda.estadousuario);
+        this.tabBusquedaTabs.tabs[0].active = true;
+        this.buscarUsuarios();
+      } else if (parambusqueda.tab === 'tabRut') {
+        this.qForm.controls.rutusuario.setValue(parambusqueda.rutusuario);
+        this.tabBusquedaTabs.tabs[1].active = true;
+        this.buscarUsuariosrut();
+      }
     }
+    this.logicaGuardar();
   }
 
- setParametros(paramserviciosalud: number, paramestado: number) {
-    const paramusuario = {
-      serviciosalud: paramserviciosalud,
-      estadousuario: paramestado};
-    localStorage.removeItem('busquedausuario');
-    localStorage.setItem('busquedausuario', JSON.stringify(paramusuario));
-  }
-
-  setParametrosrut(rut: string) {
-    const paramusuario = {
-      rutusuario: rut };
-    localStorage.removeItem('busquedausuariorut');
-    localStorage.setItem('busquedausuariorut', JSON.stringify(paramusuario));
-  }
+setParametros(paramserviciosalud: number, paramestado: number, rut: string) {
+  const parambusqueda = {
+    tab: this.tabSelect,
+    serviciosalud: paramserviciosalud,
+    estadousuario: paramestado,
+    rutusuario: rut };
+  localStorage.removeItem('claveusuariobusqueda');
+  localStorage.setItem('claveusuariobusqueda', JSON.stringify(parambusqueda));
+}
 
  setParamBusquedarut(rut: string) {
     const paramusuario = {
@@ -219,10 +215,11 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   }
 
   onLimpiar() {
-    this.pForm.controls.serviciosalud.setValue('');
-    this.pForm.controls.estadousuario.setValue('');
+    this.pForm.reset();
+    this.qForm.reset();
     this.usuariospag = [];
     this.usuarios = [];
+    this.btnbuscar = false;
   }
 
   setRowPagination() {
@@ -262,7 +259,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
           return;
       }
       const rutusuario =  Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario);
-      this.alertSwalConfirmar.title = `¿Desea ${ textstart } Usuario ${ rutusuario } ?`; // <- poner rut usuario
+      this.alertSwalConfirmar.title = `¿Desea ${ textstart } Usuario ${ rutusuario } ?`;
       this.alertSwalConfirmar.show().then(ok => {
         if (ok.value) {
           if (codaccion === 1) {
@@ -273,7 +270,14 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
             this.reiniciarclave(rutusuario);
           }
           this.alertSwal.title = `Usuario ${ rutusuario } ${ textend }`;
-          this.buscarUsuarios();
+          if (this.tabSelect === 'tabSSalud') {
+            this.buscarUsuarios();
+          } else if (this.tabSelect === 'tabSSalud') {
+            this.buscarUsuariosrut();
+          } else {
+            this.loading = false;
+            this.progressBar.complete();
+          }
           this.usuariosseleccionados = [];
           this.alertSwal.show();
         }
@@ -349,6 +353,28 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       }
     };
     return dtModal;
+  }
+
+  logicaGuardar() {
+    if (this.qForm.valid || this.pForm.valid) {
+      this.btnbuscar = true;
+    }
+  }
+
+  onSelect(data: TabDirective): void {
+    this.tabSelect = data.id;
+    switch (this.tabSelect) {
+      case 'tabSSalud':
+        setTimeout(() => {
+          // this.fechainicioField.nativeElement.focus();
+        }, 100);
+        break;
+      case 'tabRut':
+        setTimeout(() => {
+          // this.nrolicenciaField.nativeElement.focus();
+        }, 100);
+        break;
+    }
   }
 
   onCerrar() {
