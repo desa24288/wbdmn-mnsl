@@ -54,6 +54,7 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
   public isIngresado = true;
   public tabSelect = 'tabSSalud';
   public btnbuscar = false;
+  public sucessfnc = false;
 
   constructor(
     public router: Router,
@@ -151,11 +152,13 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
         this.setParametros(serviciosalud, estadousuario, null);
         this.progressBar.complete();
         this.load = false;
+        this.loading = false;
       }, err => {
         this.alertSwalAlert.title = err.error.mensaje;
         this.alertSwalAlert.show();
         this.progressBar.complete();
         this.load = false;
+        this.loading = false;
       });
   }
 
@@ -170,11 +173,13 @@ export class ClavesusuariosComponent implements OnInit, AfterViewInit {
       this.setParametros(null, null, rutusuario);
       this.progressBar.complete();
       this.load = false;
+      this.loading = false;
     }, err => {
       this.alertSwalAlert.title = err.error.mensaje;
       this.alertSwalAlert.show();
       this.progressBar.complete();
       this.load = false;
+      this.loading = false;
     });
   }
 
@@ -259,49 +264,80 @@ setParametros(paramserviciosalud: number, paramestado: number, rut: string) {
           return;
       }
       const rutusuario =  Utils.formatRut(this.usuariosseleccionados[0].Col_RutUsuario);
+      const nomusuario =  this.usuariosseleccionados[0].Col_NombreUsuario;
+      const correousuario =  this.usuariosseleccionados[0].Col_CorreoUsuario;
       this.alertSwalConfirmar.title = `¿Desea ${ textstart } Usuario ${ rutusuario } ?`;
       this.alertSwalConfirmar.show().then(ok => {
         if (ok.value) {
+          this.loading = true;
           if (codaccion === 1) {
             this.bloquearusuario(rutusuario);
           } else if (codaccion === 2) {
             this.borrarusuario(rutusuario);
           } else if (codaccion === 3) {
-            this.reiniciarclave(rutusuario);
+            this.reiniciarclave(rutusuario, nomusuario, correousuario);
           }
-          this.alertSwal.title = `Usuario ${ rutusuario } ${ textend }`;
-          if (this.tabSelect === 'tabSSalud') {
-            this.buscarUsuarios();
-          } else if (this.tabSelect === 'tabSSalud') {
-            this.buscarUsuariosrut();
-          } else {
-            this.loading = false;
-            this.progressBar.complete();
-          }
-          this.usuariosseleccionados = [];
-          this.alertSwal.show();
         }
       });
     }
   }
 
-  bloquearusuario(rutusuario: string) {
+  successModal() {
+    this.alertSwal.title = 'Proceso exitoso';
+    this.alertSwal.show().then( ok => {
+      if (ok.value) {
+        if (this.tabSelect === 'tabSSalud') {
+          this.usuariosseleccionados = [];
+          this.buscarUsuarios();
+        } else if (this.tabSelect === 'tabSSalud') {
+          this.buscarUsuariosrut();
+        } else {
+          this.loading = false;
+          this.progressBar.complete();
+        }
+      }
+    });
+  }
+
+  async bloquearusuario(rutusuario: string) {
     this.claveusuariosService.postBloquearUsuario(
       rutusuario
-    ).subscribe(data => true );
+      ).subscribe(data => {
+        this.loading = false;
+        this.successModal();
+      }, err => {
+        this.loading = false;
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+      } );
   }
 
   borrarusuario(rutusuario: string) {
     this.claveusuariosService.postDeleteUsuario(
       rutusuario
-    ).subscribe(data => true);
-  }
+      ).subscribe(data => {
+        this.loading = false;
+        this.successModal();
+      }, err => {
+        this.loading = false;
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+      } );
+    }
 
-  reiniciarclave(rutusuario: string) {
+  reiniciarclave(rutusuario: string, nomusuario: string, correousuario: string) {
     this.claveusuariosService.postReiniciarClave(
-      rutusuario
+      rutusuario,
+      nomusuario,
+      correousuario
     ).subscribe(data => {
-      return true;
+      this.loading = false;
+      this.successModal();
+    }, err => {
+      this.loading = false;
+      this.alertSwalAlert.title = err.error.mensaje;
+      this.alertSwalAlert.text = 'Verifique si usuario tiene correo asignado';
+      this.alertSwalAlert.show();
     } );
   }
 
