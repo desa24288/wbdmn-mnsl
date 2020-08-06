@@ -71,7 +71,7 @@ export class CambiopasswordComponent implements OnInit {
     this.usrconectado = this.propiedadesclave.conectado;
     /** Si propiedadesclave.letrasnum==2 newpass1 debe tener solo Letras y Números */
     if (this.letrasnum === '2') {
-      this.passpattern = `^[a-zA-Z0-9_]{${this.mincaracteres},30}$`;
+      this.passpattern = `^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)[0-9a-zA-Z]*$`;
     }
     this.cantpassusadas = this.propiedadesclave.passwordusadas;
     this.rutusuario = this.propiedadesclave.rutusuario;
@@ -104,17 +104,7 @@ export class CambiopasswordComponent implements OnInit {
     this.cambiopass.provisoria = this.lForm.controls.temppass.value;
     this.cambiopass.newpassword = this.lForm.controls.newpass.value;
     this.cambioService.postCambioClave(this.cambiopass).subscribe(res => {
-        this.load = false;
-        this.loading = false;
-        this.alertSwal.title = 'Contraseña Cambiada';
-        this.alertSwal.show().then( ok => {
-          if (ok.value) {
-            /** registrar success log <--- */
-            this.successlog(this.rutusuario, 1);
-            this.router.navigate(['home']);
-          }
-        });
-
+        this.successlog(this.rutusuario, 1);
       }, err => {
         console.log(err);
         this.load = false;
@@ -136,7 +126,16 @@ export class CambiopasswordComponent implements OnInit {
   /* Este registro en conjunto con las conexiones fallidas sirven para el bloqueo de cuenta */
   /** @MLobos */
   async successlog(rutusuario: string, connexitosa: number) {
-    this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, connexitosa).subscribe(async res => {
+      /** registrar success log <--- */
+      this.usuarioService.getIntentoslog(this.aplicativo, rutusuario, connexitosa).subscribe(async res => {
+        this.load = false;
+        this.loading = false;
+        this.alertSwal.title = 'Contraseña Cambiada';
+        this.alertSwal.show().then( ok => {
+          if (ok.value) {
+          this.router.navigate(['home']);
+          }
+        });
       }, err => {
         this.uimensaje('danger', err.message, 3000);
       });

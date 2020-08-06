@@ -51,9 +51,11 @@ export class ClaveusuariosService {
       this.TARGET_URL.concat('/usuario/'), usuario);
   }
 
-  public postReiniciarClave(rut: string): Observable<any> {
+  public postReiniciarClave(rut: string, nombre: string, correo: string): Observable<any> {
     return this.httpClient.post<string>(
       this.TARGET_URL.concat('/reiniciar_clave/'),
-      { rutusuario: rut });
+      { rutusuario: rut,
+        nomusuario: nombre,
+        correousuario: correo });
   }
 }
