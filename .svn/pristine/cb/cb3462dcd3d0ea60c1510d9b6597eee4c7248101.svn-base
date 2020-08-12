@@ -1,0 +1,177 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Administrador de Claves de Usuario</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container">
+  <div class="container-full">
+
+    <div class="card" style="margin-bottom: -2px;">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-md-10">
+            <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="BUSCAR USUARIOS" (click)="onBuscar()"
+              [disabled]="!btnbuscar"><i class="fas fa-search"></i>
+              BUSCAR</button>
+            <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="LIMPIAR" (click)="onLimpiar()"
+              [disabled]="load"><i class="fas fa-broom"></i>
+              LIMPIAR</button>
+            <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="CERRAR" (click)="onCerrar()"><i
+                class="fas fa-window-close"></i>
+              CERRAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body div-top">
+        <tabset #tabBusqueda>
+          <tab customClass="tabClass" heading="Servicio / Estado Usuario" id="tabSSalud" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-3 ml-3">
+                  <label for="serviciosalud">Servicio de Salud</label>
+                  <select class='form-control form-control-sm' name='serviciosalud' (change)="logicaGuardar()"
+                  formControlName='serviciosalud' [compareWith]='compare_serviciosalud'>
+                    <option *ngFor='let servicios of serviciosalud'
+                      value="{{ servicios.NumServicioSalud }}">
+                    {{ servicios.NumServicioSalud }} - {{ servicios.GloServicioSalud }}
+                    </option>
+                  </select>
+                  <p class="text-danger text-form-valid"
+                    *ngIf="pForm.controls['serviciosalud'].invalid && (pForm.controls['serviciosalud'].dirty || pForm.controls['serviciosalud'].touched)">
+                    Requerido</p>
+                </div>
+                <div class="form-goup col-sm-2">
+                  <label for="estadousuario">Estado Usuarios</label>
+                  <select class='form-control form-control-sm' name='estadousuario' (change)="logicaGuardar()"
+                  formControlName='estadousuario' [compareWith]='compare_estadousuarios'>
+                    <option *ngFor='let estado of estadosusuarios'
+                      value="{{ estado.CodEstadoUsr }}">
+                      {{ estado.CodEstadoUsr }} - {{ estado.GloEstadoUsr }}
+                    </option>
+                  </select>
+                  <p class="text-danger text-form-valid"
+                    *ngIf="pForm.controls['estadousuario'].invalid && (pForm.controls['estadousuario'].dirty || pForm.controls['estadousuario'].touched)">
+                    Requerido</p>
+                </div>
+              </div>
+            </form>
+          </tab>
+          <tab customClass="tabClass" heading="Rut Usuario" id="tabRut" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-3 ml-3">
+                  <label for="estadousuario">Rut Usuario</label>
+                    <input appSelecttext placeholder="Ingrese Rut" type="text" class="form-control form-control-sm"
+                    (input)="logicaGuardar()" formControlName='rutusuario' formatRut />
+                </div>
+              </div><p class="text-danger text-form-valid ml-3 mb-1"
+                *ngIf="qForm.controls['rutusuario'].invalid && (qForm.controls['rutusuario'].dirty || qForm.controls['rutusuario'].touched)">
+                Requerido, mínimo 9 y máximo 10 caracteres, Rut inválido</p>
+            </form>
+          </tab>
+        </tabset>
+      </div>
+
+      <div class="card-body" [hidden]="this.alerts.length <= 0">
+        <div *ngFor="let alert of alerts">
+          <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+          </alert>
+        </div>
+      </div>
+
+      <div class="card-header" style="margin-top: -25px;">
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="NUEVO USUARIO"
+              [disabled]="load" (click)="onNuevousuario()"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                NUEVO USUARIO</span></button>
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="MODIFICAR USUARIO"
+              [disabled]="load || !isIngresado" (click)="onAccion(4)"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                MODIFICAR USUARIO</span></button>
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ELIMINAR USUARIO"
+            [disabled]="load" (click)="onAccion(2)"><i class="far fa-window-maximize"></i><span
+              class="btn-span-tool">
+              ELIMINAR USUARIO</span></button>
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="BLOQUEAR USUARIO"
+            [disabled]="load" (click)="onAccion(1)"><i class="far fa-window-maximize"></i><span
+              class="btn-span-tool">
+              BLOQUEAR USUARIO</span></button>
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="REINICIAR CONTRASEÑA"
+              [disabled]="load" (click)="onAccion(3)"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                REINICIAR CONTRASEÑA</span></button>
+            
+            <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ASIGNAR SERVICIO DE SALUD"
+              [disabled]="true" (click)="onAsignarserviciosalud()"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                ASIGNAR S.DE SALUD</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body table-responsive" style="height: 410px;">
+        <table class="table table-hover" style="font-size: 12px;">
+          <thead>
+            <tr>
+              <th>RUT USUARIO</th>
+              <th>NOMBRE USUARIO</th>
+              <th>CORREO</th>
+              <th>ESTADO</th>
+            </tr>
+          </thead>
+          <tbody class="text-nowrap">
+            <tr *ngFor="let usuario of usuariospag" class="ml-2">
+              <td><label class="pointer" for="lm--{{ usuario.Col_RutUsuario }}">
+                <input type="checkbox" id="lm--{{ usuario.Col_RutUsuario }}" (click)='onCheck($event, usuario)' 
+                  class="mr-1" />
+                  {{ usuario.Col_RutUsuario }}
+              </label>
+              </td>
+              <td>{{ usuario.Col_NombreUsuario }}</td>
+              <td>{{ usuario.Col_CorreoUsuario }}</td>
+              <td>{{ usuario.Col_GloEstadoUsuario }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-body">
+        <div class="row mt-2 justify-content-end">
+          <div class="col-sm-10" *ngIf="usuarios.length>6">
+            <pagination class="pagination-sm" [totalItems]="usuarios.length" [itemsPerPage]="6" [previousText]="'Anterior'"
+              [boundaryLinks]="true" [nextText]="'Siguiente'" [firstText]="'&laquo;'" [lastText]="'&raquo;'"
+              (pageChanged)="pageChanged($event)" [(ngModel)]="currentPage" [maxSize]="4">
+            </pagination>
+          </div>
+          <div class="col-sm-2">
+            TOTAL DE REGISTROS: ({{ usuarios.length }})
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="row" style="margin-bottom: -16px;">
+      </div>
+    </div>
+  </div>
+  <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"></swal>
+  <swal #alertSwalConfirmar title="" text="" type="warning" [showCancelButton]="true"> </swal>
+  <swal #alertSwal title="" text="" type="success" [showCancelButton]="false"></swal>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+
+</div>

@@ -110,8 +110,8 @@ export class LoginComponent implements OnInit {
       rutusuario: this.rutfuncionario,
       conectado: false
     };
-    localStorage.removeItem('propclavecontralor');
-    localStorage.setItem('propclavecontralor', JSON.stringify(propiedadesclave));
+    localStorage.removeItem('propiedadesclave');
+    localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
   }
 
   async autenticacion(value: any) {

@@ -1,0 +1,184 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext" style="margin-bottom: -2px;">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item" *ngIf="fromindex >=1"><a 
+      [routerLink]="[breadroute]">{{ breadname }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ cabecera }}</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container"> 
+  <div class="card">
+    <div class="card-header"> 
+      <div class="row">
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="GRABAR" [disabled]="load || !uForm.valid" (click)="onGuardar()">
+            <i class="fas fa-save"></i>
+            GRABAR</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1" tooltip="LIMPIAR" (click)="onLimpiar()">
+          <i class="fas fa-broom"></i>
+          LIMPIAR</button>
+        <button type="button" class="btn btn-primary btn-sm ml-1 mx-1 btn-cerrar" tooltip="CERRAR" (click)="onCerrar()"><i
+          class="fas fa-window-close"></i>
+          CERRAR</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- uForm -->
+      <form novalidate [formGroup]="uForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="form-group col-sm-2 pr-3">
+            <label for="rutusuario" class="col-form-label-sm">RUT USUARIO</label>
+            <input appSelecttext type="text" class="form-control form-control-sm text-uppercase" formControlName="rutusuario"
+              placeholder="Ingrese Rut" (focusout)="onBuscarusuario()">
+            <p class="text-danger text-form-valid"
+            *ngIf="uForm.controls['rutusuario'].invalid && (uForm.controls['rutusuario'].dirty || uForm.controls['rutusuario'].touched)">
+            Requerido, mínimo caracteres 9 y máximo 10, Rut inválido</p>
+          </div>
+          <div class="form-group col-sm-4 pl-3">
+            <label for="nomtrabajador" class="col-form-label-sm">NOMBRE USUARIO</label>
+            <input type="text" class="form-control form-control-sm" formControlName="nomusuario">
+          </div>
+          <div class="form-row col-sm-4 mb-3 mt-2 ml-1">
+                <label for="email">Email</label>
+                <input type="email" appAutofocus class="form-control form-control-sm" placeholder="correo@dominio.cl" formControlName="email">
+                <p class="text-danger text-form-valid"
+                  *ngIf="uForm.controls['email'].invalid && (uForm.controls['email'].dirty || uForm.controls['email'].touched)">
+                  Requerido, Email inválido</p>
+              </div>
+        </div>
+      </form>
+      <!-- END uForm -->
+      <div class="card col-sm-10 mr-3 pl-1 pt-1">
+        <div class="form-row">
+          <div class="card-header col-md-12 text-center pt-1">Seleccione Perfiles para el Usuario</div>
+        </div>
+      <form novalidate [formGroup]="mForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="form-group col-sm-5 ml-2">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Perfiles Disponibles</div>
+                <div class="card table-responsive mt-1" style="height: 165px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let perfildisponible of perfildisponibles">
+                        <td class="estilogrilla text-uppercase">
+                          <input  class="ml-1 mr-2" type="checkbox" formControlName="perfildisponible"
+                            (change)="onChangePerfildisp($event, perfildisponible)" 
+                            id='lm-{{ perfildisponible.ds_rollm }} {{ perfildisponible.id_rollm }}'>
+                          <label class="pointer mt-2" for='lm-{{ perfildisponible.ds_rollm }} {{ perfildisponible.id_rollm }}'>
+                            <p class="small">{{ perfildisponible.ds_rollm }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+          <div class="form-group mt-5 mr-3 ml-2 text-center">
+            <button type="button" class="btn btn-primary btn-sm" tooltip="AGREGAR PERFIL" (click)="onAgregarperfil()">
+              >></button><br><br><br>
+            <button type="button" class="btn btn-primary btn-sm" tooltip="QUITAR PERFIL" (click)="onQuitarperfil()">
+              <<</button>
+          </div>
+          <div class="form-group col-sm-5 ml-2">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Perfiles Asignados al Usuario</div>
+                <div class="card table-responsive mt-1" style="height: 165px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let perfilasignado of perfilasignados">
+                        <td class="estilogrilla text-uppercase">
+                          <input class="ml-1 mr-2" type="checkbox"
+                            (change)="onChangePerfilasig($event, perfilasignado)"
+                            id='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.ds_rollm }}'>
+                          <label class="pointer mt-2" for='lm-{{ perfilasignado.id_rollm }} {{ perfilasignado.ds_rollm }}'>
+                            <p class="small">{{ perfilasignado.ds_rollm }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    
+        <div class="form-row">
+          <div class="card-header col-md-12 text-center pt-1">Seleccione Compines para el Usuario</div>
+        </div>
+      <form novalidate [formGroup]="bForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="form-group col-sm-5 ml-2">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Compines Disponibles
+              </div>
+                <div class="card table-responsive mt-1" style="height: 165px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let compindisponible of compindisponibles">
+                        <td class="estilogrilla text-uppercase"> 
+                          <input class="ml-1 mr-2" type="checkbox" formControlName="compindisponible"
+                            (change)="onChangeCompindisp($event, compindisponible)" 
+                            id='lm-{{ compindisponible.GloEstablecimiento }} {{ compindisponible.CodEstablecimiento }}'>
+                          <label class="pointer mt-2" for='lm-{{ compindisponible.GloEstablecimiento }} {{ compindisponible.CodEstablecimiento }}'>
+                            <p class="small">{{ compindisponible.GloEstablecimiento }}</p>
+                          </label>
+                        </td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+          <div class="form-group mt-5 mr-3 ml-2 text-center">
+            <button type="button" class="btn btn-primary btn-sm" tooltip="AGREGAR COMPIN" (click)="onAgregarcompin()">
+              >></button><br><br><br>
+            <button type="button" class="btn btn-primary btn-sm" tooltip="QUITAR COMPIN" (click)="onQuitarcompin()">
+              <<</button>
+          </div>
+          <div class="form-group col-sm-5 ml-2">
+            <div class="card mr-3">
+              <div class="card-header col-form-label-sm">Compines Asignados al Usuario
+              </div>
+                <div class="card table-responsive mt-1" style="height: 165px">
+                  <table class="table table-hover">
+                    <tbody class="table-body-text table-responsive" style="font-size: 15px">
+                      <tr *ngFor="let compinasignado of compinasignados">
+                        <td class="estilogrilla text-uppercase">
+                          <input class="ml-1 mr-2" type="checkbox" (change)="onChangeCompinasig($event, compinasignado)" 
+                            id='lm-{{ compinasignado.CodEstablecimiento }} {{ compinasignado.GloEstablecimiento }}' 
+                            formControlName="compinasignado">
+                          <label class="pointer mt-2" for='lm-{{ compinasignado.CodEstablecimiento }} {{ compinasignado.GloEstablecimiento }}'>
+                            <p class="small">{{ compinasignado.GloEstablecimiento }}</p>
+                          </label>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+      <div *ngFor="let alert of alerts">
+        <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+        </alert>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+<swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+<swal #alertSwalConfirmar title="" text="" type="question" [showCancelButton]="true"> </swal>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
