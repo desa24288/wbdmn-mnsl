@@ -12,14 +12,11 @@ import { PropiedadescuentaService } from 'src/app/services/administradorusuarios
 import { DatePipe } from '@angular/common';
 import { ClaveusuariosService } from 'src/app/services/administradorusuarios/claveusuarios.service';
 /** COMPONENTS */
-// import { ValidarutComponent } from '../cambiarpassword/validarut/validarut.component';
 import { RestablecerpasswordComponent } from 'src/app/templates/cambiarpassword/restablecerpassword/restablecerpassword.component';
 /** MODELS */
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
-import { Profile } from 'src/app/models/entity/usuario/profile';
 import { Actualizarpropiedades } from 'src/app/models/entity/adminusuarios/propiedadescuenta/actualizarpropiedades';
-import { exit } from 'process';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +26,7 @@ import { exit } from 'process';
 export class LoginComponent implements OnInit {
   @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
   @ViewChild('alertSwalAlert') alertSwalAlert: SwalComponent;
-  @ViewChild('alertSwal') alertSwal: SwalComponent;
+
   public bsModalRef: BsModalRef;
   public alerts: any[] = [];
   public alertintentos: any[] = [];
@@ -46,8 +43,6 @@ export class LoginComponent implements OnInit {
   public passwordusadas = 0;
   public aplicativo = 'webadmin-minsal';
   public rutfuncionario = '';
-
-  public profile: Profile = new Profile();
 
   constructor(
     public router: Router,
@@ -95,6 +90,7 @@ export class LoginComponent implements OnInit {
     }, err => {
       this.uimensaje('danger', err.error, 3000);
     });
+    await this.setPropiedades();
   }
 
   onRecovery() {
@@ -105,11 +101,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  async autenticacion(value: any) {
-    this.load = true;
-    const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
-    console.log(rutusuario);
-    this.rutfuncionario = rutusuario;
+  async setPropiedades() {
     /* Guarda las propiedades para ser usadas en pantalla Cambiopassword */
     const propiedadesclave = {
       mincaracteres: this.mincaracteres,
@@ -118,8 +110,16 @@ export class LoginComponent implements OnInit {
       rutusuario: this.rutfuncionario,
       conectado: false
     };
-    localStorage.removeItem('propiedadesclave');
-    localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
+    localStorage.removeItem('propclavecontralor');
+    localStorage.setItem('propclavecontralor', JSON.stringify(propiedadesclave));
+  }
+
+  async autenticacion(value: any) {
+    this.load = true;
+    const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
+    console.log(rutusuario);
+    this.rutfuncionario = rutusuario;
+    await this.setPropiedades();
     this.usuarioService.auth(new Login(rutusuario, value.password)).subscribe(
       data => {
         const uiwebadminminsal = {
@@ -127,26 +127,14 @@ export class LoginComponent implements OnInit {
         };
         localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
         this.load = false;
-        this.profile =  this.getDecodedAccessToken(data.token);
-        // this.validaUsr();
         this.successlog(this.rutfuncionario, 1);
         this.router.navigate(['home']);
       },  err => {
-        /** Verifica primero si el error es por No Autorizado */
+        /** Verifica primero si el error es por No Autorizado / bloqueado / clave provisoria caducada / reiniciado */
         /** @MLobos */
         if (err.statusText === null || err.statusText === undefined || err.statusText === 'Unauthorized') {
           if (err.error !== null) {
-            if (err.error.mensaje === 'Bloqueado') {
-              /** Luego si cuenta esta bloqueada */
-              this.alertSwalAlert.title = 'Cuenta Bloqueada favor comunicarse con Administrador';
-              this.alertSwalAlert.show();
-              this.load = false;
-            } else if (err.error.mensaje === 'CambiarClaveProv') {
-               /** Si clave provisoria caducó */
-              this.alertSwalAlert.title = 'Su Contraseña Provisoria ha expirado, debe Recuperar Password';
-              this.alertSwalAlert.show();
-              this.load = false;
-            } else if (err.error.mensaje === 'CambiarClave') {
+            if (err.error.mensaje === 'cambiarclave') {
               /* Si hay diferencia de dias y si está en estado reiniciado */
               this.load = false;
               this.alertSwalAlert.title = 'Debe crear una nueva contraseña';
@@ -156,8 +144,9 @@ export class LoginComponent implements OnInit {
                 }
               });
             } else {
-              this.uimensaje('danger', err.error.mensaje, 3000);
               this.load = false;
+              this.alertSwalAlert.title = err.error.mensaje;
+              this.alertSwalAlert.show();
             }
           } else {
             /** Funcion que guarda los registros fallidos y muestra intentos restantes previo a bloquear cuenta */
@@ -192,13 +181,6 @@ export class LoginComponent implements OnInit {
       }, err => {
         this.uimensaje('danger', err.message, 3000);
       });
-  }
-
-  private getDecodedAccessToken(token: string): any {
-    try {
-      return jwt_decode(token);
-    } catch (err) {
-    }
   }
 
   setModal() {
