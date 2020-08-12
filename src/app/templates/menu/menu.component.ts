@@ -23,8 +23,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     private usuarioService: UsuarioService,
     private bsModalService: BsModalService,
     public propiedadesService: PropiedadescuentaService
-  ) { 
-    this.loadPropiedadesclave();
+  ) {
   }
 
   ngOnInit() {
@@ -50,6 +49,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
         };
       localStorage.removeItem('propiedadesclave');
       localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
+      this.router.navigate(['cambiopass']);
     }, err => { });
   }
 
@@ -87,8 +87,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   async onCambiarpass() {
-    // await this.loadPropiedadesclave();
-    this.router.navigate(['cambiopass']);
+    await this.loadPropiedadesclave();
   }
 
   onCerrar() {

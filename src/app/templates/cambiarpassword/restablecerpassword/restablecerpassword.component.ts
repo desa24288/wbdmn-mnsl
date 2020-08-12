@@ -11,7 +11,6 @@ import { Subject } from 'rxjs';
 import { ParametroService } from 'src/app/services/parametros/parametro.service';
 import { CambiarpasswordService } from 'src/app/services/cambiarpassword/cambiarpassword.service';
 /*MODELS */
-import { Crearusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/crearusuario';
 import { RutValidator } from 'ng2-rut';
 
 @Component({
@@ -31,14 +30,7 @@ export class RestablecerpasswordComponent implements OnInit, AfterViewInit {
   public load = false;
   public estado = false;
   public loading = false;
-
   public cabecera = 'Restablecer Contraseña';
-  public nuevousuario: Crearusuario = new Crearusuario();
-
-  public tipoperfiles: Array<any> = [];
-  public estadosperfiles: Array<any> = [];
-
-  public rutusuario = '0009163696-4'; // <- Hacer SP que obtenga NOMUSUARIO con Email
 
   constructor(
     public router: Router,
