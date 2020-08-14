@@ -77,30 +77,17 @@ export class RestablecerpasswordComponent implements OnInit, AfterViewInit {
         this.alertSwal.show();
         this.loading = false;
       }, err => {
-        if (err.error.mensaje === null || err.error.mensaje === undefined) {
-          console.log(err);
+        if (err.error !== null || err.statusText === 'Unauthorized') {
           this.loading = false;
-          this.alertSwalError.title = 'Ocurrio un error';
+          this.alertSwalError.title = err.error.mensaje;
           this.alertSwalError.show();
           return;
         } else {
-          if (err.error.mensaje === 'BLQ') {
             this.loading = false;
-            this.alertSwalError.title = 'Cuenta Bloqueada favor comunicarse con Administrador';
-            this.alertSwalError.show();
-            return;
-          } else if (err.error.mensaje === 'DEL') {
-            this.loading = false;
-            this.alertSwalError.title = 'Cuenta Eliminada favor comunicarse con Administrador';
-            this.alertSwalError.show();
-            return;
-          } else {
-            this.loading = false;
-            this.alertSwalError.title = err.error.mensaje;
+            this.alertSwalError.title = 'Ocurrio un error';
             this.alertSwalError.show();
             return;
           }
-        }
       });
     }
   }
