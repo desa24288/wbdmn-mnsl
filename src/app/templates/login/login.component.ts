@@ -17,6 +17,7 @@ import { RestablecerpasswordComponent } from 'src/app/templates/cambiarpassword/
 import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
 import { Actualizarpropiedades } from 'src/app/models/entity/adminusuarios/propiedadescuenta/actualizarpropiedades';
+import { ok } from 'assert';
 
 @Component({
   selector: 'app-login',
@@ -114,6 +115,27 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('propiedadesclave', JSON.stringify(propiedadesclave));
   }
 
+  diasClave() {
+    this.usuarioService.diasclave(this.rutfuncionario).subscribe( res => {
+      console.log(res);
+      const diasres = parseInt(res);
+      console.log(diasres);
+      if(diasres <= 5) {
+        this.load = false;
+        this.alertSwalAlert.title = `Faltan ${diasres} días para que su clave caduque`;;
+        this.alertSwalAlert.show().then( ok => {
+          if (ok.value) {
+            this.router.navigate(['home']);    
+          }
+        });
+      } else {
+        this.router.navigate(['home']);
+      }
+    }, err=> {
+    }
+    );
+  }
+
   async autenticacion(value: any) {
     this.load = true;
     const rutusuario = Utils.formatRut(this.lForm.controls.rutbeneficiario.value);
@@ -128,7 +150,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('uiwebadminminsal', JSON.stringify(uiwebadminminsal));
         this.load = false;
         this.successlog(this.rutfuncionario, 1);
-        this.router.navigate(['home']);
+        // this.router.navigate(['home']);
+        this.diasClave();
       },  err => {
         /** Verifica primero si el error es por No Autorizado(bloqueado, clave provisoria caducada, eliminado) */
          /**  o por Redireccion(reiniciado, clave caducada) */

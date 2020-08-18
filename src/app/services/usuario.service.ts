@@ -39,4 +39,9 @@ export class UsuarioService {
       .concat(bloqueo.toString())
       , this.tokenService.get());
   }
+
+  public diasclave(rutusuario: string): Observable<any> {
+    return this.httpClient.get<any>(this.TARGET_URL.concat('/clavexpira/').
+    concat(rutusuario), this.tokenService.get());
+  }
 }
