@@ -130,23 +130,24 @@ export class LoginComponent implements OnInit {
         this.successlog(this.rutfuncionario, 1);
         this.router.navigate(['home']);
       },  err => {
-        /** Verifica primero si el error es por No Autorizado / bloqueado / clave provisoria caducada / reiniciado */
+        /** Verifica primero si el error es por No Autorizado(bloqueado, clave provisoria caducada, eliminado) */
+         /**  o por Redireccion(reiniciado, clave caducada) */
         /** @MLobos */
-        if (err.statusText === null || err.statusText === undefined || err.statusText === 'Unauthorized') {
+        if (err.statusText !== null || err.statusText !== undefined) {
           if (err.error !== null) {
-            if (err.error.mensaje === 'cambiarclave') {
-              /* Si hay diferencia de dias y si está en estado reiniciado */
+            if (err.statusText === 'Unauthorized') {
               this.load = false;
-              this.alertSwalAlert.title = 'Debe crear una nueva contraseña';
+              this.alertSwalAlert.title = err.error.mensaje;
+              this.alertSwalAlert.show();
+            } else if (err.statusText === 'Temporary Redirect') {
+              this.load = false;
+              this.alertSwalAlert.title = err.error.mensaje;
+              this.alertSwalAlert.text = 'Debe crear una nueva contraseña';
               this.alertSwalAlert.show().then( val => {
                 if (val.value) {
                   this.router.navigate(['cambiopass']);
                 }
               });
-            } else {
-              this.load = false;
-              this.alertSwalAlert.title = err.error.mensaje;
-              this.alertSwalAlert.show();
             }
           } else {
             /** Funcion que guarda los registros fallidos y muestra intentos restantes previo a bloquear cuenta */
