@@ -118,14 +118,15 @@ export class LoginComponent implements OnInit {
   diasClave() {
     this.usuarioService.diasclave(this.rutfuncionario).subscribe( res => {
       console.log(res);
+      // tslint:disable-next-line: radix
       const diasres = parseInt(res);
       console.log(diasres);
-      if(diasres <= 5) {
+      if (diasres <= 5) {
         this.load = false;
         this.alertSwalAlert.title = `Faltan ${diasres} días para que su clave caduque`;;
-        this.alertSwalAlert.show().then( ok => {
-          if (ok.value) {
-            this.router.navigate(['home']);    
+        this.alertSwalAlert.show().then( val => {
+          if (val.value) {
+            this.router.navigate(['home']);
           }
         });
       } else {
