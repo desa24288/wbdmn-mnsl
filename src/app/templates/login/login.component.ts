@@ -123,7 +123,7 @@ export class LoginComponent implements OnInit {
       console.log(diasres);
       if (diasres <= 5) {
         this.load = false;
-        this.alertSwalAlert.title = `Faltan ${diasres} días para que su clave caduque`;;
+        this.alertSwalAlert.title = `Faltan ${diasres} días para que su clave caduque`;
         this.alertSwalAlert.show().then( val => {
           if (val.value) {
             this.router.navigate(['home']);
@@ -132,7 +132,14 @@ export class LoginComponent implements OnInit {
       } else {
         this.router.navigate(['home']);
       }
-    }, err=> {
+    }, err => {
+      if (err.error !== null) {
+        this.alertSwalAlert.title = err.error.mensaje;
+        this.alertSwalAlert.show();
+      } else {
+        this.alertSwalAlert.title = 'Ocurrio un Error';
+        this.alertSwalAlert.show();
+      }
     }
     );
   }
