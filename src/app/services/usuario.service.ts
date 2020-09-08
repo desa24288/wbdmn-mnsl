@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 })
 export class UsuarioService {
 
+  public tkn = 'F0jNUygW';
+
   private TARGET_URL = environment.api.url.concat(environment.api.port.toString())
     .concat(environment.api.app).concat('/usuarios/autenticacion');
 

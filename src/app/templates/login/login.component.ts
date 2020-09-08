@@ -18,6 +18,8 @@ import { Login } from 'src/app/models/entity/usuario/login';
 import { Utils } from 'src/app/models/utils/utils';
 import { Actualizarpropiedades } from 'src/app/models/entity/adminusuarios/propiedadescuenta/actualizarpropiedades';
 import { ok } from 'assert';
+import { ParametroService } from 'src/app/services/parametros/parametro.service';
+
 
 @Component({
   selector: 'app-login',
@@ -53,7 +55,8 @@ export class LoginComponent implements OnInit {
     public usuarioService: UsuarioService,
     public propiedadesService: PropiedadescuentaService,
     public datePipe: DatePipe,
-    public claveService: ClaveusuariosService
+    public claveService: ClaveusuariosService,
+    public paramService: ParametroService
   ) {
     this.lForm = this.formBuilder.group({
       rutbeneficiario: [null, [Validators.required, rutValidator]],
@@ -64,6 +67,11 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     localStorage.removeItem('uiwebadminminsal');
     this.validaPropiedades();
+    this.paramService.servicioSalud().subscribe( res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    });
   }
 
   onLogin(value: any) {
