@@ -49,7 +49,35 @@
 
         </div>
       </li>
-      <!-- -->
+      <!-- End Adm Usuarios -->
+
+
+      <!-- Adm Invalidez -->
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuAdminv" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Administración Invalideces
+        </a>
+        <div class="dropdown-menu" routerLinkActive="active" aria-labelledby="navbarDropdownMenuAdminv">
+
+          <!-- <ng-container *ngFor="let formulario of rol['Formularios']"> -->
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" (click)="modalCargamasiva()">
+              Carga masiva</a>
+          </ng-container>
+
+          <ng-container>
+            <!-- <a *ngIf="formulario.Name=='creadoemitido'" class="dropdown-item pointer" routerLink="/creadoemitido">
+              Claves de Usuarios</a> -->
+            <a class="dropdown-item pointer" routerLink="/gestioninv">
+              Gestionar</a>
+          </ng-container>
+
+        </div>
+      </li>
+      <!-- End Adm Invalidez -->
 
     </ul>
 

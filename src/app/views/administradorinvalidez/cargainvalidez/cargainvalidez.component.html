@@ -1,0 +1,60 @@
+<div class="loading-container">
+  <div class="card">
+    <div class="card-header">{{ cabecera }}</div>
+    <div class="card-body">
+      <form novalidate [formGroup]="lForm" autocomplete="off" spellcheck="false">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+          <label for="selectfile" class="btn btn-primary btn-sm pt-2 pb-2">
+            <i class="fas fa-upload" style="font-size: 15px"></i>
+           <strong> SELECCIONE ARCHIVO..</strong></label>
+            <span class="file-name ml-2" *ngIf="filename !== null">{{ filename }}</span>
+          </div>
+        </div>
+        <input type="file" id="selectfile" style="visibility:hidden;" multiple="false"
+        (change)="handleFileInput($event)">
+        <div class="form-row">
+          <div class="table-responsive">
+          <div class="form-group col-md-12" style="width: 100%;height: 400px"> 
+            <table *ngIf="preload" class="table table-sm table-striped table-condensed table-hover">
+              <tbody>
+                <tr *ngFor="let row of data| slice:0:5">
+                <td *ngFor="let val of row">
+                  {{val}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <!-- <button (click)="export()">Exportar</button> -->
+          </div>
+        </div>
+        </div>
+      </form>
+      <div *ngFor="let alert of alerts">
+        <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+        </alert>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="row">
+        <div class="col-md-6">
+          <button type="button" [disabled]="filename===null" class="btn btn-primary btn-sm ml-1" tooltip="GRABAR CAMBIOS A DB"
+            (click)="onGrabarabd()"><i class="fas fa-save"></i>
+            GRABAR</button>
+        </div>
+        <div class="col-md-6 text-right">
+          <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="CERRAR" (click)="onCerrar()"><i
+              class="fas fa-window-close"></i>
+            CERRAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <swal #alertSwal title="" text="" type="success" [showCancelButton]="false" (confirm)="onCerrar()"></swal>
+  <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"> </swal>
+
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+
+</div>

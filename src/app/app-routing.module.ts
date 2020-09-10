@@ -13,6 +13,7 @@ import { ClavesusuariosComponent } from './views/administradorusuarios/clavesusu
 import { MantencionusuariosComponent } from './views/administradorusuarios/mantencionusuarios/mantencionusuarios.component';
 import { PerfilamientomodulosComponent } from './views/administradorperfiles/perfilamientomodulos/perfilamientomodulos.component';
 import { CambiopasswordComponent } from './templates/cambiarpassword/cambiopassword.component';
+import { GestioninvalidezComponent } from './views/administradorinvalidez/gestioninvalidez/gestioninvalidez.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -27,6 +28,8 @@ const routes: Routes = [
   { path: 'claveusuarios', component: ClavesusuariosComponent, canActivate: [AuthGuard] },
   { path: 'mantencionusuarios', component: MantencionusuariosComponent, canActivate: [AuthGuard] },
   { path: 'perfilamiento', component: PerfilamientomodulosComponent, canActivate: [AuthGuard] },
+
+  { path: 'gestioninv', component: GestioninvalidezComponent, canActivate: [AuthGuard] },
 
   { path: '**', component: ErrorComponent }
 ];

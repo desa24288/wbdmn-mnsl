@@ -7,6 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PropiedadescuentaComponent } from 'src/app/views/administradorusuarios/propiedadescuenta/propiedadescuenta.component';
 import { MantenedorperfilesComponent } from 'src/app/views/administradorperfiles/mantenedorperfiles/mantenedorperfiles.component';
 import { PropiedadescuentaService } from 'src/app/services/administradorusuarios/propiedadescuenta.service';
+import { CargainvalidezComponent } from 'src/app/views/administradorinvalidez/cargainvalidez/cargainvalidez.component';
 
 @Component({
   selector: 'app-menu',
@@ -69,12 +70,31 @@ export class MenuComponent implements OnInit, AfterViewInit {
     });
   }
 
+  modalCargamasiva() {
+    this.bsModalRef = this.bsModalService.show(CargainvalidezComponent, this.setModalMasivo());
+    this.bsModalRef.content.onClose.subscribe(estado => {
+      if (estado === true) {
+      }
+    });
+  }
+
   setModal() {
     let dtModal: any = {};
     dtModal = {
       keyboard: false,
       backdrop: 'static',
       class: 'modal-dialog-centered',
+    };
+    return dtModal;
+  }
+
+  setModalMasivo() {
+    let dtModal: any = {};
+    dtModal = {
+      keyboard: false,
+      backdrop: 'static',
+      class: 'modal-dialog-centered modal-xl',
+      size: 'xl',
     };
     return dtModal;
   }

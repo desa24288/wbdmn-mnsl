@@ -1,0 +1,183 @@
+<app-menu></app-menu>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumbtext">
+    <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Administrador de Invalideces</li>
+  </ol>
+</nav>
+
+<ng-progress></ng-progress>
+
+<div class="loading-container">
+  <div class="container-full">
+
+    <div class="card" style="margin-bottom: -2px;">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-md-10">
+            <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="BUSCAR USUARIOS" (click)="onBuscar()"
+              [disabled]=""><i class="fas fa-search"></i>
+              BUSCAR</button>
+            <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="LIMPIAR" (click)="onLimpiar()"
+              [disabled]="load"><i class="fas fa-broom"></i>
+              LIMPIAR</button>
+            <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="CERRAR" (click)="onCerrar()"><i
+                class="fas fa-window-close"></i>
+              CERRAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body div-top">
+        <tabset #tabBusqueda>
+          <tab customClass="tabClass" heading="Busqueda por Fecha de carga" id="tabFecha" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-2">
+                  <label for="fechainicio" class="col-form-label-sm">FECHA INICIO</label>
+                  <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY" 
+                  bsDatepicker [bsConfig]="bsConfig" placement="right" formControlName="fechainicio">
+                  <p class="text-danger text-form-valid"
+                  *ngIf="pForm.controls.fechainicio.invalid && pForm.controls.fechainicio.touched">
+                  Requerido, Fecha Inicio debe ser Menor a Fecha Término
+                  </p>
+              </div>
+                  <div class="form-goup col-sm-2">
+                    <label for="fechatermino" class="col-form-label-sm">FECHA TÉRMINO</label>
+                    <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY" 
+                    bsDatepicker [bsConfig]="bsConfig" placement="right" formControlName="fechatermino">
+                    <p class="text-danger text-form-valid"
+                    *ngIf="pForm.controls.fechatermino.invalid && pForm.controls.fechatermino.touched">
+                    Requerido, Fecha Término debe ser Mayor a Fecha Inicio
+                    </p>
+                </div>
+              </div>
+            </form>
+          </tab>
+          <tab customClass="tabClass" heading="Busqueda por Rut" id="tabRut" (selectTab)="onSelect($event)">
+            <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
+              <div class="row mt-1 mb-2">
+                <div class="form-goup col-sm-3 ml-3">
+                  <label for="rutusuario">RUT TRABAJADOR</label>
+                    <input appSelecttext placeholder="Ingrese Rut" type="text" class="form-control form-control-sm"
+                    (input)="logicaGuardar()" formControlName='rutusuario' formatRut />
+                </div>
+              </div><p class="text-danger text-form-valid ml-3 mb-1"
+                *ngIf="qForm.controls['rutusuario'].invalid && (qForm.controls['rutusuario'].dirty || qForm.controls['rutusuario'].touched)">
+                Requerido, mínimo 9 y máximo 10 caracteres, Rut inválido</p>
+            </form>
+          </tab>
+        </tabset>
+      </div>
+
+      <div class="card-body" [hidden]="this.alerts.length <= 0">
+        <div *ngFor="let alert of alerts">
+          <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}
+          </alert>
+        </div>
+      </div>
+
+      <div class="card-header" style="margin-top: -25px;">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="NUEVO USUARIO"
+              [disabled]="load" (click)="onNuevousuario()"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                NUEVO USUARIO</span></button>
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="MODIFICAR USUARIO"
+              [disabled]="load || !isIngresado" (click)="onAccion(4)"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                MODIFICAR USUARIO</span></button> -->
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ELIMINAR USUARIO"
+            [disabled]="load" (click)="onAccion(2)"><i class="far fa-window-maximize"></i><span
+              class="btn-span-tool">
+              ELIMINAR REGISTRO</span></button>
+
+            <!-- <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="BLOQUEAR USUARIO"
+            [disabled]="load" (click)="onAccion(1)"><i class="far fa-window-maximize"></i><span
+              class="btn-span-tool">
+              BLOQUEAR USUARIO</span></button>
+
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="REINICIAR CONTRASEÑA"
+              [disabled]="load" (click)="onAccion(3)"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                REINICIAR CONTRASEÑA</span></button> -->
+            
+            <!-- <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ASIGNAR SERVICIO DE SALUD"
+              [disabled]="true" (click)="onAsignarserviciosalud()"><i class="far fa-window-maximize"></i><span
+                class="btn-span-tool">
+                ASIGNAR S.DE SALUD</span></button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body table-responsive" style="height: 410px;">
+        <table class="table table-hover" style="font-size: 12px;">
+          <thead>
+            <tr>
+              <th>RUT TRABAJADOR</th>
+              <th>NOMBRE TRABAJADOR</th>
+              <th>FECHA</th>
+              <th>EMISOR</th>
+              <th>NRO<br> DICTAMEN</th>
+              <th>COD TIPO<br> INVALIDEZ</th>
+              <th>FECHA EJECUTORIADO</th>
+              <th>TIENE<br> DIAGNOSTICO</th>
+              <th>TIPO RECLAMO</th>
+              <th>% INVALIDEZ</th>
+              <th>PRC ESTADO</th>
+            </tr>
+          </thead>
+          <tbody class="text-nowrap">
+            <tr *ngFor="let invalidez of invalidecespag" class="ml-2">
+              <td><label class="pointer" for="lm--{{ invalidez.RutTrabajador }}">
+                <input type="checkbox" id="lm--{{ invalidez.RutTrabajador }}" (click)='onCheck($event, invalidez)' 
+                  class="mr-1" />
+                  {{ invalidez.RutTrabajador }}
+              </label>
+              </td>
+              <td>{{ invalidez.NomTrabajador }}</td>
+              <td>{{ invalidez.Fecha | date: "dd-MM-yyyy" }}</td>
+              <td>{{ invalidez.Emisor }}</td>
+              <td>{{ invalidez.NroDictamen }}</td>
+              <td>{{ invalidez.CodTipoInvalidez }}</td>
+              <td>{{ invalidez.FechaEjecutoriado | date: "dd-MM-yyyy"}}</td>
+              <td>{{ invalidez.TieneDiagnostico }}</td>
+              <td>{{ invalidez.TipoReclamo }}</td>
+              <td>{{ invalidez.PorcentajeInvalidez }}</td>
+              <td>{{ invalidez.PrcEstado }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-body">
+        <div class="row mt-2 justify-content-end">
+          <div class="col-sm-10" *ngIf="invalideces.length>6">
+            <pagination class="pagination-sm" [totalItems]="invalideces.length" [itemsPerPage]="6" [previousText]="'Anterior'"
+              [boundaryLinks]="true" [nextText]="'Siguiente'" [firstText]="'&laquo;'" [lastText]="'&raquo;'"
+              (pageChanged)="pageChanged($event)" [(ngModel)]="currentPage" [maxSize]="4">
+            </pagination>
+          </div>
+          <div class="col-sm-2">
+            TOTAL DE REGISTROS: ({{ invalideces.length }})
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="row" style="margin-bottom: -16px;">
+      </div>
+    </div>
+  </div>
+  <swal #alertSwalAlert title="" text="" type="warning" [showCancelButton]="false"></swal>
+  <swal #alertSwalConfirmar title="" text="" type="warning" [showCancelButton]="true"> </swal>
+  <swal #alertSwal title="" text="" type="success" [showCancelButton]="false"></swal>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"> </ngx-loading>
+
+</div>
