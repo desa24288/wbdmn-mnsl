@@ -69,6 +69,8 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
   public tabSelect = 'tabFecha';
   public btnbuscar = false;
   public sucessfnc = false;
+  public vfechainicio: string;
+  public vfechatermino: string;
 
   constructor(
     public router: Router,
@@ -94,12 +96,14 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setDate();
+    this.vfechainicio = this.datePipe.transform(new Date(), 'dd-MM-yyyy');
+    this.vfechatermino = this.datePipe.transform(new Date(), 'dd-MM-yyyy');
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       /** Busca los parametros de la última busqueda */
-      // this.getParam(); <--- CORREGIR
+      this.getParam();
     });
   }
 
@@ -114,7 +118,6 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
     this.load = true;
     try {
       this.getBusquedausuario();
-      this.progressBar.complete();
       this.load = false;
     } catch (err) {
       this.mensaje('danger', err.error.mensaje, 3000);
@@ -165,17 +168,16 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
   async buscarUsuariosfecha() {
       this.load = true;
       this.progressBar.start();
-      const finicio = this.formatearFecha(this.datePipe.transform(this.pForm.controls.fechainicio.value, 'dd/MM/yyyy'));
-      const fterm = this.formatearFecha(this.datePipe.transform(this.pForm.controls.fechatermino.value, 'dd/MM/yyyy'));
+      const finicio = this.formatearFecha(this.vfechainicio);
+      const fterm = this.formatearFecha(this.vfechatermino);
       this.gestionService.getInvfecha(
         finicio,
         fterm
        ).subscribe(data => {
          this.invalidezseleccionados = [];
          this.invalideces = data;
-         console.log(this.invalideces);
          this.setRowPagination();
-         this.setParametros(finicio, fterm, null);
+         this.setParametros(null);
          this.progressBar.complete();
          this.load = false;
          this.loading = false;
@@ -189,7 +191,7 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
   }
 
   formatearFecha(value: string) {
-    const prefecha = value.split('/');
+    const prefecha = value.split('-');
     const dia = prefecha[0];
     const mes = prefecha[1];
     const anio = prefecha[2];
@@ -205,7 +207,7 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
       this.invalidezseleccionados = [];
       this.invalideces = data;
       this.setRowPagination();
-      this.setParametros(null, null, rutbeneficiario);
+      this.setParametros(rutbeneficiario);
       this.progressBar.complete();
       this.load = false;
       this.loading = false;
@@ -220,14 +222,16 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
 
   async getBusquedausuario() {
     const parambusqueda = JSON.parse(localStorage.getItem('invalidezbusqueda'));
-    const finicio = this.formatearFecha(this.datePipe.transform(parambusqueda.fechainicio, 'dd/MM/yyyy'));
-    const fterm = this.formatearFecha(this.datePipe.transform(parambusqueda.fechatermino, 'dd/MM/yyyy'));
     if (parambusqueda === null) {
      return;
     } else {
       if (parambusqueda.tab === 'tabFecha') {
-        this.pForm.controls.fechainicio.setValue(finicio);
-        this.pForm.controls.fechatermino.setValue(fterm);
+        // const finicio = parambusqueda.fechainicio;
+        // const fterm = parambusqueda.fechatermino;
+        // this.pForm.controls.fechainicio.setValue(finicio);
+        // this.pForm.controls.fechatermino.setValue(fterm);
+        this.vfechainicio = parambusqueda.fechainicio;
+        this.vfechatermino = parambusqueda.fechatermino;
         this.tabBusquedaTabs.tabs[0].active = true;
         this.buscarUsuariosfecha();
       } else if (parambusqueda.tab === 'tabRut') {
@@ -239,13 +243,15 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
     this.logicaGuardar();
   }
 
-  setParametros(fechaini: string, fechaterm: string, rut: string) {
+  setParametros(rut: string) {
+    localStorage.removeItem('invalidezbusqueda');
+    // const fini: string = this.datePipe.transform(this.pForm.controls.fechainicio.value, 'dd-MM-yyyy');
+    // const fterm: string =  this.datePipe.transform(this.pForm.controls.fechatermino.value, 'dd-MM-yyyy');
     const parambusqueda = {
       tab: this.tabSelect,
-      fechainicio: fechaini,
-      fechatermino: fechaterm,
+      fechainicio: this.vfechainicio,
+      fechatermino: this.vfechatermino,
       rutusuario: rut };
-    localStorage.removeItem('invalidezbusqueda');
     localStorage.setItem('invalidezbusqueda', JSON.stringify(parambusqueda));
   }
 
@@ -402,6 +408,13 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
     if (this.qForm.valid || this.pForm.valid) {
       this.btnbuscar = true;
     }
+  }
+
+  async onFechaInicio() {
+    this.vfechainicio = this.datePipe.transform(this.pForm.controls.fechainicio.value, 'dd-MM-yyyy');
+  }
+  async onFechaTermino() {
+    this.vfechatermino = this.datePipe.transform(this.pForm.controls.fechatermino.value, 'dd-MM-yyyy');
   }
 
   onSelect(data: TabDirective): void {

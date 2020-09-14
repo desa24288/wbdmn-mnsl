@@ -38,8 +38,9 @@
               <div class="row mt-1 mb-2">
                 <div class="form-goup col-sm-2">
                   <label for="fechainicio" class="col-form-label-sm">FECHA INICIO</label>
-                  <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY" 
-                  bsDatepicker [bsConfig]="bsConfig" placement="right" formControlName="fechainicio">
+                  <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY" bsDatepicker [bsConfig]="bsConfig" 
+                  placement="right" formControlName="fechainicio" (onHidden)="onFechaInicio()" (focusout)="onFechaInicio()" 
+                  value='{{vfechainicio }}'/>
                   <p class="text-danger text-form-valid"
                   *ngIf="pForm.controls.fechainicio.invalid && pForm.controls.fechainicio.touched">
                   Requerido, Fecha Inicio debe ser Menor a Fecha Término
@@ -48,7 +49,8 @@
                   <div class="form-goup col-sm-2">
                     <label for="fechatermino" class="col-form-label-sm">FECHA TÉRMINO</label>
                     <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY" 
-                    bsDatepicker [bsConfig]="bsConfig" placement="right" formControlName="fechatermino">
+                    bsDatepicker [bsConfig]="bsConfig" placement="right" formControlName="fechatermino" (onHidden)="onFechaTermino()"
+                    (focusout)="onFechaTermino()" value='{{vfechatermino }}'/>
                     <p class="text-danger text-form-valid"
                     *ngIf="pForm.controls.fechatermino.invalid && pForm.controls.fechatermino.touched">
                     Requerido, Fecha Término debe ser Mayor a Fecha Inicio
