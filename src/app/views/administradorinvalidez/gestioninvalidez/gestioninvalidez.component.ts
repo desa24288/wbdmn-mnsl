@@ -19,6 +19,7 @@ import { DatePipe } from '@angular/common';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { DateMenorValidation } from 'src/app/models/validations/DateMenorValidation';
+import { DateRangeValidation } from 'src/app/models/validations/DateRangeValidation';
 /*Models */
 import { Paramusuario } from 'src/app/models/entity/adminusuarios/claveusuarios/paramusuario';
 import { Serviciosalud } from 'src/app/models/entity/adminusuarios/claveusuarios/serviciosalud';
@@ -87,7 +88,9 @@ export class GestioninvalidezComponent implements OnInit, AfterViewInit {
       fechainicio: [{ value: new Date(), disabled: false }, Validators.required],
       fechatermino: [{ value: new Date(), disabled: false }, Validators.required],
     },
-      { validators: [DateMenorValidation('fechainicio', 'fechatermino')]}
+      { validators: [
+        DateMenorValidation('fechainicio', 'fechatermino'),
+        DateRangeValidation('fechainicio', 'fechatermino', 31)]}
     );
     this.qForm = this.formBuilder.group({
       rutusuario: [null, [Validators.required, rutValidator]]

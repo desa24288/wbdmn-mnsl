@@ -16,7 +16,7 @@
       <div class="card-header">
         <div class="row">
           <div class="col-md-10">
-            <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="BUSCAR USUARIOS" (click)="onBuscar()"
+            <button type="button" class="btn btn-primary btn-sm ml-1" tooltip="BUSCAR REGISTRO" (click)="onBuscar()"
               [disabled]=""><i class="fas fa-search"></i>
               BUSCAR</button>
             <button type="button" class="btn btn-primary btn-sm ml-2" tooltip="LIMPIAR" (click)="onLimpiar()"
@@ -33,17 +33,17 @@
     <div class="card">
       <div class="card-body div-top">
         <tabset #tabBusqueda>
-          <tab customClass="tabClass" heading="Busqueda por Fecha de carga" id="tabFecha" (selectTab)="onSelect($event)">
+          <tab customClass="tabClass" heading="Búsqueda por Fecha de carga" id="tabFecha" (selectTab)="onSelect($event)">
             <form novalidate [formGroup]="pForm" autocomplete="off" spellcheck="false">
               <div class="row mt-1 mb-2">
-                <div class="form-goup col-sm-2">
+                <div class="form-goup col-sm-2 ml-1">
                   <label for="fechainicio" class="col-form-label-sm">FECHA INICIO</label>
                   <input type="text" appSelecttext class="form-control form-control-sm" placeholder="DD/MM/YYYY" bsDatepicker [bsConfig]="bsConfig" 
                   placement="right" formControlName="fechainicio" (onHidden)="onFechaInicio()" (focusout)="onFechaInicio()" 
                   value='{{vfechainicio }}'/>
                   <p class="text-danger text-form-valid"
                   *ngIf="pForm.controls.fechainicio.invalid && pForm.controls.fechainicio.touched">
-                  Requerido, Fecha Inicio debe ser Menor a Fecha Término
+                  Requerido, Fecha Inicio debe ser Menor a Fecha Término.
                   </p>
               </div>
                   <div class="form-goup col-sm-2">
@@ -53,16 +53,16 @@
                     (focusout)="onFechaTermino()" value='{{vfechatermino }}'/>
                     <p class="text-danger text-form-valid"
                     *ngIf="pForm.controls.fechatermino.invalid && pForm.controls.fechatermino.touched">
-                    Requerido, Fecha Término debe ser Mayor a Fecha Inicio
+                    Requerido, Fecha Término debe ser Mayor a Fecha Inicio, Rango 31 días.
                     </p>
                 </div>
               </div>
             </form>
           </tab>
-          <tab customClass="tabClass" heading="Busqueda por Rut" id="tabRut" (selectTab)="onSelect($event)">
+          <tab customClass="tabClass" heading="Búsqueda por Rut" id="tabRut" (selectTab)="onSelect($event)">
             <form novalidate [formGroup]="qForm" autocomplete="off" spellcheck="false">
               <div class="row mt-1 mb-2">
-                <div class="form-goup col-sm-3 ml-3">
+                <div class="form-goup col-sm-3 ml-1 mt-2">
                   <label for="rutusuario">RUT TRABAJADOR</label>
                     <input appSelecttext placeholder="Ingrese Rut" type="text" class="form-control form-control-sm"
                     (input)="logicaGuardar()" formControlName='rutusuario' formatRut />
@@ -95,7 +95,7 @@
                 class="btn-span-tool">
                 MODIFICAR USUARIO</span></button> -->
 
-              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ELIMINAR USUARIO"
+              <button type="button" class="btn btn-primary btn-sm ml-1 btn-fixed-tool" tooltip="ELIMINAR REGISTRO"
             [disabled]="load" (click)="onAccion(2)"><i class="far fa-window-maximize"></i><span
               class="btn-span-tool">
               ELIMINAR REGISTRO</span></button>
@@ -129,7 +129,7 @@
               <th>NRO<br> DICTAMEN</th>
               <th>COD TIPO<br> INVALIDEZ</th>
               <th>FECHA EJECUTORIADO</th>
-              <th>TIENE<br> DIAGNOSTICO</th>
+              <th>TIENE<br> DIAGNÓSTICO</th>
               <th>TIPO RECLAMO</th>
               <th>% INVALIDEZ</th>
               <th>PRC ESTADO</th>
